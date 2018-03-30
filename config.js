@@ -78,6 +78,10 @@ module.exports = {
         {
             name: "SharePoint",
             percentage: 80
+        },
+        {
+            name: "Fortnite",
+            percentage: 10
         }
     ],
 };

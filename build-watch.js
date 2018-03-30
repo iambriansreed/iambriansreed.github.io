@@ -4,12 +4,19 @@ const build = () => {
     require('./build')();
 }
 
-fs.watch('build.js', {
-    encoding: 'buffer'
-}, (eventType, filename) => { build(); console.info('build.js updated!') });
+const filesToWatch = [
+    'config.js',
+    'build.js',
+    'src/index.html',
+];
 
-fs.watch('src/index.html', {
-    encoding: 'buffer'
-}, (eventType, filename) => { build(); console.info('index updated!') });
+filesToWatch.forEach(file => {
+    fs.watch(file, {
+        encoding: 'buffer'
+    }, (eventType, filename) => {
+        build();
+        console.info(file + ' updated!')
+    });
+});
 
 build();
