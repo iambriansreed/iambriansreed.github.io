@@ -1,0 +1,25 @@
+{
+  "name": "iambriansreed.github.io",
+  "version": "1.0.0",
+  "description": "",
+  "main": "build.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "node build.js",
+    "build:watch": "node-sass src/style.scss css/style.css -w",
+    "start": "http-server -o"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://iambriansreed@github.com/iambriansreed/iambriansreed.github.io.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/iambriansreed/iambriansreed.github.io/issues"
+  },
+  "homepage": "https://github.com/iambriansreed/iambriansreed.github.io#readme",
+  "devDependencies": {
+    "node-sass": "^4.8.3"
+  }
+}
