@@ -114,8 +114,9 @@ $squareSize: 50px;
     padding-top: 30px + $navigationHeight;
     text-align: center;
     @extend .checker-background;
-    .name {
+    h1.name {
         font-weight: 700;
+        font-size: 280%;
     }
     .title {
         font-size: 160%;
