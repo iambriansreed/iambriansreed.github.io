@@ -5,7 +5,7 @@
   "main": "build.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "node build.js",
+    "build:html": "node build-watch.js",
     "build:watch": "node-sass src/style.scss css/style.css -w",
     "start": "http-server -o"
   },

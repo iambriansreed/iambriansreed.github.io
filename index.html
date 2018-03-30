@@ -74,102 +74,102 @@
             <div class="skillset">
     <h5>React</h5>
     <div class="progress-bar">
-        <div class="percentage" style="width: 65%;"><span>65%</span></div>
+        <div class="percentage" data-percentage="65" style="width: 0;"><span>65%</span></div>
     </div>
 </div><div class="skillset">
     <h5>HTML5</h5>
     <div class="progress-bar">
-        <div class="percentage" style="width: 90%;"><span>90%</span></div>
+        <div class="percentage" data-percentage="90" style="width: 0;"><span>90%</span></div>
     </div>
 </div><div class="skillset">
     <h5>CSS3</h5>
     <div class="progress-bar">
-        <div class="percentage" style="width: 85%;"><span>85%</span></div>
+        <div class="percentage" data-percentage="85" style="width: 0;"><span>85%</span></div>
     </div>
 </div><div class="skillset">
     <h5>Less</h5>
     <div class="progress-bar">
-        <div class="percentage" style="width: 65%;"><span>65%</span></div>
+        <div class="percentage" data-percentage="65" style="width: 0;"><span>65%</span></div>
     </div>
 </div><div class="skillset">
     <h5>SASS</h5>
     <div class="progress-bar">
-        <div class="percentage" style="width: 65%;"><span>65%</span></div>
+        <div class="percentage" data-percentage="65" style="width: 0;"><span>65%</span></div>
     </div>
 </div><div class="skillset">
     <h5>Nunchucks</h5>
     <div class="progress-bar">
-        <div class="percentage" style="width: 10%;"><span>10%</span></div>
+        <div class="percentage" data-percentage="10" style="width: 0;"><span>10%</span></div>
     </div>
 </div><div class="skillset">
     <h5>JavaScript</h5>
     <div class="progress-bar">
-        <div class="percentage" style="width: 75%;"><span>75%</span></div>
+        <div class="percentage" data-percentage="75" style="width: 0;"><span>75%</span></div>
     </div>
 </div><div class="skillset">
     <h5>Angular 1</h5>
     <div class="progress-bar">
-        <div class="percentage" style="width: 85%;"><span>85%</span></div>
+        <div class="percentage" data-percentage="85" style="width: 0;"><span>85%</span></div>
     </div>
 </div><div class="skillset">
     <h5>Angular 2+</h5>
     <div class="progress-bar">
-        <div class="percentage" style="width: 45%;"><span>45%</span></div>
+        <div class="percentage" data-percentage="45" style="width: 0;"><span>45%</span></div>
     </div>
 </div><div class="skillset">
     <h5>Node.js</h5>
     <div class="progress-bar">
-        <div class="percentage" style="width: 60%;"><span>60%</span></div>
+        <div class="percentage" data-percentage="60" style="width: 0;"><span>60%</span></div>
     </div>
 </div><div class="skillset">
     <h5>WordPress</h5>
     <div class="progress-bar">
-        <div class="percentage" style="width: 85%;"><span>85%</span></div>
+        <div class="percentage" data-percentage="85" style="width: 0;"><span>85%</span></div>
     </div>
 </div><div class="skillset">
     <h5>jQuery</h5>
     <div class="progress-bar">
-        <div class="percentage" style="width: 85%;"><span>85%</span></div>
+        <div class="percentage" data-percentage="85" style="width: 0;"><span>85%</span></div>
     </div>
 </div><div class="skillset">
     <h5>TypeScript</h5>
     <div class="progress-bar">
-        <div class="percentage" style="width: 40%;"><span>40%</span></div>
+        <div class="percentage" data-percentage="40" style="width: 0;"><span>40%</span></div>
     </div>
 </div><div class="skillset">
     <h5>Sails.JS</h5>
     <div class="progress-bar">
-        <div class="percentage" style="width: 80%;"><span>80%</span></div>
+        <div class="percentage" data-percentage="80" style="width: 0;"><span>80%</span></div>
     </div>
 </div><div class="skillset">
     <h5>Bowstaff</h5>
     <div class="progress-bar">
-        <div class="percentage" style="width: 15%;"><span>15%</span></div>
+        <div class="percentage" data-percentage="15" style="width: 0;"><span>15%</span></div>
     </div>
 </div><div class="skillset">
     <h5>C#</h5>
     <div class="progress-bar">
-        <div class="percentage" style="width: 65%;"><span>65%</span></div>
+        <div class="percentage" data-percentage="65" style="width: 0;"><span>65%</span></div>
     </div>
 </div><div class="skillset">
     <h5>ASP.NET</h5>
     <div class="progress-bar">
-        <div class="percentage" style="width: 50%;"><span>50%</span></div>
+        <div class="percentage" data-percentage="50" style="width: 0;"><span>50%</span></div>
     </div>
 </div><div class="skillset">
     <h5>PHP</h5>
     <div class="progress-bar">
-        <div class="percentage" style="width: 70%;"><span>70%</span></div>
+        <div class="percentage" data-percentage="70" style="width: 0;"><span>70%</span></div>
     </div>
 </div><div class="skillset">
     <h5>SQL</h5>
     <div class="progress-bar">
-        <div class="percentage" style="width: 45%;"><span>45%</span></div>
+        <div class="percentage" data-percentage="45" style="width: 0;"><span>45%</span></div>
     </div>
 </div><div class="skillset">
     <h5>SharePoint</h5>
     <div class="progress-bar">
-        <div class="percentage" style="width: 80%;"><span>80%</span></div>
+        <div class="percentage" data-percentage="80" style="width: 0;"><span>80%</span></div>
     </div>
 </div>
         </div>
@@ -209,6 +209,13 @@
             </p>
         </div>
     </div>
+    <script>
+        window.onload = () => {
+            Array.from(document.querySelectorAll('.percentage')).forEach(bar => {
+                bar.style.width = bar.getAttribute('data-percentage') + '%';
+            });
+        };
+    </script>
 </body>
 
 </html>

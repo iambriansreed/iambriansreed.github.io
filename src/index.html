@@ -106,6 +106,13 @@
             </p>
         </div>
     </div>
+    <script>
+        window.onload = () => {
+            Array.from(document.querySelectorAll('.percentage')).forEach(bar => {
+                bar.style.width = bar.getAttribute('data-percentage') + '%';
+            });
+        };
+    </script>
 </body>
 
 </html>
