@@ -23,7 +23,17 @@ module.exports = () =>
             return result.replace(value, svg);
         }, data);
 
-        fs.writeFile('index.html', data, 'utf8', (err) => {
+        data = data.replace(/\/\* style \*\//g,
+            fs.readFileSync('css/style.css', 'utf8')
+            .replace(/\:\s*/g, ':')
+            .replace(/\s*;\s*/g, ';')
+            .replace(/;\s*\}\s*/g, '}')
+            .replace(/\s*\{\s*/g, '{')
+        );
+
+        data = data.replace(/\s{2,}\</g, ' <')
+
+        fs.writeFile('index.html', data.replace(/\n|\r|\s*\n\s*|\s*\r\s*/g, ''), 'utf8', (err) => {
             if (err) return console.log(err);
         });
     });
