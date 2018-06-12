@@ -8,6 +8,7 @@ const filesToWatch = [
     'config.js',
     'build.js',
     'src/index.html',
+    'css/style.css',
 ];
 
 filesToWatch.forEach(file => {
