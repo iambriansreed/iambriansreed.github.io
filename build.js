@@ -9,31 +9,43 @@ const skillsetTemplate = (name, percentage) => `<div class="skillset">
 </div>`;
 
 module.exports = () =>
-    fs.readFile('src/index.html', 'utf8', (err, data) => {
-        if (err) {
-            return console.log(err);
-        }
+  fs.readFile('src/index.html', 'utf8', (err, data) => {
+    if (err) {
+      return console.log(err);
+    }
 
-        data = data.replace(/<!-- skillsets -->/g,
-            config.skillsets.map(s => skillsetTemplate(s.name, s.percentage)).join(''));
+    data = data.replace(
+      /<!-- skillsets -->/g,
+      config.skillsets.map(s => skillsetTemplate(s.name, s.percentage)).join('')
+    );
 
-        data = (data.match(/<!-- (.*?)\.svg -->/g) || []).reduce((result, value) => {
-            const name = value.match(/\s(.*?)\.svg/)[1];
-            const svg = fs.readFileSync(`src/${name}.svg`, 'utf8');
-            return result.replace(value, svg);
-        }, data);
+    data = (data.match(/<!-- (.*?)\.svg -->/g) || []).reduce(
+      (result, value) => {
+        const name = value.match(/\s(.*?)\.svg/)[1];
+        const svg = fs.readFileSync(`src/${name}.svg`, 'utf8');
+        return result.replace(value, svg);
+      },
+      data
+    );
 
-        data = data.replace(/\/\* style \*\//g,
-            fs.readFileSync('css/style.css', 'utf8')
-            .replace(/\:\s*/g, ':')
-            .replace(/\s*;\s*/g, ';')
-            .replace(/;\s*\}\s*/g, '}')
-            .replace(/\s*\{\s*/g, '{')
-        );
+    data = data.replace(
+      /\/\* style \*\//g,
+      fs
+        .readFileSync('css/style.css', 'utf8')
+        .replace(/\:\s*/g, ':')
+        .replace(/\s*;\s*/g, ';')
+        .replace(/;\s*\}\s*/g, '}')
+        .replace(/\s*\{\s*/g, '{')
+    );
 
-        data = data.replace(/\s{2,}\</g, ' <')
+    data = data.replace(/\s{2,}\</g, ' <');
 
-        fs.writeFile('index.html', data.replace(/\n|\r|\s*\n\s*|\s*\r\s*/g, ''), 'utf8', (err) => {
-            if (err) return console.log(err);
-        });
-    });
+    fs.writeFile(
+      'index.html',
+      data.replace(/\n|\r|\s*\n\s*|\s*\r\s*/g, ''),
+      'utf8',
+      err => {
+        if (err) return console.log(err);
+      }
+    );
+  });
