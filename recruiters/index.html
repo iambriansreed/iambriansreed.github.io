@@ -1,0 +1,185 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-51020929-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', 'UA-51020929-1');
+    </script>
+    <title>Recruiters</title>
+    <style>
+        @font-face {
+            font-family: system;
+            font-style: normal;
+            font-weight: 300;
+            src: local(".SFNSText-Light"), local(".HelveticaNeueDeskInterface-Light"),
+            local(".LucidaGrandeUI"), local("Ubuntu Light"), local("Segoe UI Light"),
+            local("Roboto-Light"), local("DroidSans"), local("Tahoma");
+        }
+
+        html {
+            font-family: "system";
+            line-height: 1.3;
+            font-size: 18px;
+        }
+
+        button {
+            font-size: 18px;
+        }
+
+        body {
+            background-image: linear-gradient(45deg, #f9f9f9 25%, transparent 25%),
+            linear-gradient(-45deg, #f9f9f9 25%, transparent 25%),
+            linear-gradient(45deg, transparent 75%, #f9f9f9 75%),
+            linear-gradient(-45deg, transparent 75%, #f9f9f9 75%);
+            background-size: 50px 50px;
+            background-position: 0 0, 0 25px, 25px -25px, -25px 0px;
+        }
+
+        button {
+            padding: 0 10px;
+            line-height: 34px;
+            border-radius: 5px;
+        }
+
+        .page {
+            margin: 20px auto;
+            padding: 0 20px;
+            max-width: 700px;
+            box-sizing: border-box;
+        }
+
+        a,
+        a:link,
+        a:active,
+        a:visited,
+        a:hover {
+            color: dodgerblue;
+            text-decoration: none
+        }
+    </style>
+</head>
+
+<body>
+    <div class="page">
+        <h1>Hi Recruiters!</h1>
+        <p>You're here because you think I might be a good fit for a position you are trying to fill. To not waste your time
+            or mine I have some basic questions you need to answer first.</p>
+        <p>
+            <button id="btn-next" type="button">Next</button>
+        </p>
+        <form>
+            <div id="sections">Loading...</div>
+        </form>
+        <div id="bad-fit" style="display: none;">
+            <h3>Oh no!</h3>
+            <p>I don't think the opportunity is a good fit, but if you still think this might work out contact me on
+                <a href="https://www.linkedin.com/in/iambriansreed/">LinkedIn</a>.</p>
+        </div>
+        <div id="good-fit" style="display: none;">
+            <h3>Nice going!</h3>
+            <p>I think this opportunity is a good fit.</p>
+            <p>Email me for more information,
+                <a href="mailto:me@iambrian.com">me@iambrian.com</a>, and tell me the fit score is
+                <strong id="fit-score">1</strong>. You can also download my resume
+                <a href="/resume/resume.pdf">here</a>.</p>
+        </div>
+    </div>
+    <script>
+        class App {
+            constructor(sectionsData) {
+                const sections = shuffle(sectionsData.map(section => ({
+                    question: section.question,
+                    answers: shuffle(section.answers),
+                })));
+                this.form = document.forms[0];
+                this.btnNext = document.getElementById('btn-next');
+                this.badFit = document.getElementById('bad-fit');
+                this.goodFit = document.getElementById('good-fit');
+                this.fitScore = document.getElementById('fit-score');
+                this.sectionIndex = -1;
+                this.totalValue = 0;
+                this.btnNext.onclick = () => {
+                    if (this.sectionIndex === -1) {
+                        this.sectionIndex++;
+                        return this.display(this.getSection(this.sectionIndex));
+                    }
+                    const value = parseInt(this.getQuestion(this.sectionIndex).value, 10);
+                    if (value) {
+                        this.display(this.getSection(this.sectionIndex), false);
+                        this.sectionIndex++;
+                        const nextSection = this.getSection(this.sectionIndex);
+                        if (nextSection) {
+                            this.display(nextSection);
+                            this.totalValue += value;
+                        } else {
+                            this.display(this.btnNext, false);
+                            this.display(this.form, false);
+                            this.fitScore.innerText = this.totalValue;
+                            this.display(this.goodFit);
+                        }
+                        return;
+                    }
+                    this.display(this.btnNext, false);
+                    this.display(this.form, false);
+                    this.display(this.badFit);
+                };
+                document.getElementById('sections').innerHTML =
+                    sections.map(makeSectionsHtml).join('');
+            }
+            getSection(sectionIndex) {
+                return document.getElementById(`section-${sectionIndex}`);
+            }
+            getQuestion(sectionIndex) {
+                return this.form.elements[`question-${sectionIndex}`];
+            }
+            display(element, show = true) {
+                element.style.display = show ? 'inherit' : 'none';
+            }
+        }
+
+        fetch('/recruiters/sections.json')
+            .then(response => response.json())
+            .then(sections => new App(sections));
+
+        function makeAnswersHtml(sectionIndex) {
+            return (answer, answerIndex) => `
+                        <label for="${sectionIndex}-${answerIndex}">
+                            <input 
+                            type="radio" 
+                            id="${sectionIndex}-${answerIndex}" 
+                            value="${answer.value}"
+                            ${answer.value ? 'checked' : ''} 
+                            name="question-${sectionIndex}"> 
+                            ${answer.text}
+                        </label>
+                        `;
+        }
+        function makeSectionsHtml(section, sectionIndex) {
+            return `
+                <section id="section-${sectionIndex}" style="display: none;">
+                    <fieldset>
+                        <legend>${section.question}</legend>
+                        ${section.answers.map(makeAnswersHtml(sectionIndex)).join('<br>')}
+                    </fieldset>
+                </section>
+                `;
+        }
+        function shuffle(array) {
+            var currentIndex = array.length, temporaryValue, randomIndex;
+            while (0 !== currentIndex) {
+                randomIndex = Math.floor(Math.random() * currentIndex);
+                currentIndex -= 1;
+                temporaryValue = array[currentIndex];
+                array[currentIndex] = array[randomIndex];
+                array[randomIndex] = temporaryValue;
+            }
+            return array;
+        }
+
+    </script>
+</body>
+
+</html>
