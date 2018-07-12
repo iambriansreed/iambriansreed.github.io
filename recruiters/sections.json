@@ -1,5 +1,26 @@
 [
   {
+    "question": "What kind of position is this?",
+    "answers": [
+      {
+        "text": "Junior",
+        "value": 0
+      },
+      {
+        "text": "Other",
+        "value": 1
+      },
+      {
+        "text": "Management",
+        "value": 2
+      },
+      {
+        "text": "Senior",
+        "value": 3
+      }
+    ]
+  },
+  {
     "question": "What is the base salary of the position?",
     "answers": [
       {
@@ -80,27 +101,6 @@
       {
         "text": "React",
         "value": 20000
-      }
-    ]
-  },
-  {
-    "question": "What kind of position is this?",
-    "answers": [
-      {
-        "text": "Junior",
-        "value": 0
-      },
-      {
-        "text": "Other",
-        "value": 100000
-      },
-      {
-        "text": "Management",
-        "value": 200000
-      },
-      {
-        "text": "Senior",
-        "value": 300000
       }
     ]
   }

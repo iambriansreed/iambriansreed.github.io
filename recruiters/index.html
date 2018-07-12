@@ -1,6 +1,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 
 <head>
+    <meta charset="UTF-8">
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-51020929-1"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
@@ -30,6 +31,7 @@
         }
 
         body {
+            margin: 0;
             background-image: linear-gradient(45deg, #f9f9f9 25%, transparent 25%),
             linear-gradient(-45deg, #f9f9f9 25%, transparent 25%),
             linear-gradient(45deg, transparent 75%, #f9f9f9 75%),
@@ -45,10 +47,20 @@
         }
 
         .page {
-            margin: 20px auto;
-            padding: 0 20px;
+            margin: 0 auto;
+            padding: 20px 20px 50px;
             max-width: 700px;
             box-sizing: border-box;
+            position: relative;
+            height: 100vh;
+
+        }
+
+        .footer {
+            position: absolute;
+            bottom: 0;
+            line-height: 50px;
+            width: 100%;
         }
 
         a,
@@ -64,6 +76,13 @@
 
 <body>
     <div class="page">
+        <div class="footer">
+            Made with ❤️ by
+            <a href="/">Brian</a>.
+            <span style="float: right; font-size: 70%">Thanks
+                <a href="https://giphy.com"> GIPHY</a>.
+            </span>
+        </div>
         <h1>Hi Recruiters!</h1>
         <p>You're here because you think I might be a good fit for a position you are trying to fill. To not waste your time
             or mine I have some basic questions you need to answer first.</p>
@@ -77,14 +96,16 @@
             <h3>Oh no!</h3>
             <p>I don't think the opportunity is a good fit, but if you still think this might work out contact me on
                 <a href="https://www.linkedin.com/in/iambriansreed/">LinkedIn</a>.</p>
+            <img src="https://media.giphy.com/media/f72BA6kQXT4uQ/giphy.gif" width="320" />
         </div>
         <div id="good-fit" style="display: none;">
             <h3>Nice going!</h3>
             <p>I think this opportunity is a good fit.</p>
-            <p>Email me for more information,
-                <a href="mailto:me@iambrian.com">me@iambrian.com</a>, and tell me the fit score is
-                <strong id="fit-score">1</strong>. You can also download my resume
+            <p>Email me more information,
+                <a href="mailto:me@iambrian.com">me@iambrian.com</a>, and make sure to tell me the fit score is
+                <strong id="fit-score">Loading...</strong>. You can also download my resume
                 <a href="/resume/resume.pdf">here</a>.</p>
+            <img src="https://media.giphy.com/media/111ebonMs90YLu/giphy.gif" width="320" />
         </div>
     </div>
     <script>
@@ -104,16 +125,16 @@
                 this.btnNext.onclick = () => {
                     if (this.sectionIndex === -1) {
                         this.sectionIndex++;
-                        return this.display(this.getSection(this.sectionIndex));
+                        return this.display(this.getSection());
                     }
-                    const value = parseInt(this.getQuestion(this.sectionIndex).value, 10);
+                    const value = parseInt(this.getQuestion().value);
                     if (value) {
-                        this.display(this.getSection(this.sectionIndex), false);
+                        this.display(this.getSection(), false);
+                        this.totalValue += value;
                         this.sectionIndex++;
-                        const nextSection = this.getSection(this.sectionIndex);
+                        const nextSection = this.getSection();
                         if (nextSection) {
                             this.display(nextSection);
-                            this.totalValue += value;
                         } else {
                             this.display(this.btnNext, false);
                             this.display(this.form, false);
@@ -129,11 +150,11 @@
                 document.getElementById('sections').innerHTML =
                     sections.map(makeSectionsHtml).join('');
             }
-            getSection(sectionIndex) {
-                return document.getElementById(`section-${sectionIndex}`);
+            getSection() {
+                return document.getElementById(`section-${this.sectionIndex}`);
             }
-            getQuestion(sectionIndex) {
-                return this.form.elements[`question-${sectionIndex}`];
+            getQuestion() {
+                return this.form.elements[`question-${this.sectionIndex}`];
             }
             display(element, show = true) {
                 element.style.display = show ? 'inherit' : 'none';
