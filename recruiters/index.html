@@ -88,7 +88,7 @@
         <p>You're here because you think I might be a good fit for a position you are trying to fill. To not waste your time
             or mine I have some basic questions I'd like you to answer before we go any futher.</p>
         <p>
-            <button id="btn-next" type="button">Next</button>
+            <button id="btn-next" type="button" style="display: none">Next</button>
         </p>
         <form>
             <div id="sections">Loading...</div>
@@ -111,62 +111,63 @@
         </div>
     </div>
     <script>
-        class App {
-            constructor(sectionsData) {
-                const sections = shuffle(sectionsData.map(section => ({
-                    question: section.question,
-                    answers: shuffle(section.answers),
-                })));
-                this.form = document.forms[0];
-                this.btnNext = document.getElementById('btn-next');
-                this.badFit = document.getElementById('bad-fit');
-                this.goodFit = document.getElementById('good-fit');
-                this.fitScore = document.getElementById('fit-score');
-                this.sectionIndex = -1;
-                this.totalValue = 0;
-                this.btnNext.onclick = () => {
-                    if (this.sectionIndex === -1) {
-                        this.sectionIndex++;
-                        return this.display(this.getSection());
-                    }
-                    const value = parseInt(this.getQuestion().value);
-                    if (value) {
-                        this.display(this.getSection(), false);
-                        this.totalValue += value;
-                        this.sectionIndex++;
-                        const nextSection = this.getSection();
-                        if (nextSection) {
-                            this.display(nextSection);
-                        } else {
-                            this.display(this.btnNext, false);
-                            this.display(this.form, false);
-                            this.fitScore.innerText = this.totalValue;
-                            this.display(this.goodFit);
-                        }
-                        return;
-                    }
-                    this.display(this.btnNext, false);
-                    this.display(this.form, false);
-                    this.display(this.badFit);
-                };
-                document.getElementById('sections').innerHTML =
-                    sections.map(makeSectionsHtml).join('');
-            }
-            getSection() {
-                return document.getElementById(`section-${this.sectionIndex}`);
-            }
-            getQuestion() {
-                return this.form.elements[`question-${this.sectionIndex}`];
-            }
-            display(element, show = true) {
-                element.style.display = show ? 'inherit' : 'none';
-            }
-        }
 
         fetch('/recruiters/sections.json')
             .then(response => response.json())
             .then(sections => new App(sections));
 
+        function App(sectionsData) {
+
+            this.form = document.forms[0];
+            this.btnNext = document.getElementById('btn-next');
+            this.badFit = document.getElementById('bad-fit');
+            this.goodFit = document.getElementById('good-fit');
+            this.fitScore = document.getElementById('fit-score');
+
+            this.sectionIndex = -1;
+            this.totalValue = 0;
+            this.btnNext.onclick = () => {
+                if (this.sectionIndex === -1) {
+                    this.sectionIndex++;
+                    return show(this.getSection());
+                }
+                const value = parseInt(this.getQuestion().value);
+                if (value) {
+                    hide(this.getSection());
+                    this.totalValue += value;
+                    this.sectionIndex++;
+                    const nextSection = this.getSection();
+                    if (nextSection) {
+                        show(nextSection);
+                    } else {
+                        hide(this.btnNext);
+                        hide(this.form);
+                        this.fitScore.innerText = this.totalValue;
+                        show(this.goodFit);
+                    }
+                    return;
+                }
+                hide(this.btnNext);
+                hide(this.form);
+                show(this.badFit);
+            };
+
+            this.getSection = () => document.getElementById(`section-${this.sectionIndex}`);
+            this.getQuestion = () => this.form.elements[`question-${this.sectionIndex}`];
+
+            const sectionsShuffled = shuffle(sectionsData.map(section => ({
+                question: section.question,
+                answers: shuffle(section.answers),
+            })));
+
+            document.getElementById('sections').innerHTML =
+                sectionsShuffled.map(makeSectionsHtml).join('');
+
+            show(this.btnNext);
+        }
+
+        function show(element) { element.style.display = 'inherit'; }
+        function hide(element) { element.style.display = 'none'; }
         function makeAnswersHtml(sectionIndex) {
             return (answer, answerIndex) => `
                         <label for="${sectionIndex}-${answerIndex}">
