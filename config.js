@@ -13,6 +13,10 @@ module.exports = {
       percentage: 90
     },
     {
+      name: "React Native",
+      percentage: 50
+    },
+    {
       name: "CSS3",
       percentage: 85
     },
@@ -34,11 +38,11 @@ module.exports = {
     },
     {
       name: "Angular 1",
-      percentage: 85
+      percentage: 75
     },
     {
       name: "Angular 2+",
-      percentage: 55
+      percentage: 45
     },
     {
       name: "Node.js",
@@ -54,11 +58,11 @@ module.exports = {
     },
     {
       name: "TypeScript",
-      percentage: 40
+      percentage: 70
     },
     {
       name: "Sails.JS",
-      percentage: 80
+      percentage: 50
     },
     {
       name: "Bowstaff",

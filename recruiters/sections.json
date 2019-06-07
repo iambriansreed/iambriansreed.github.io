@@ -17,6 +17,10 @@
       {
         "text": "Senior",
         "value": 3
+      },
+      {
+        "text": "Team Lead",
+        "value": 4
       }
     ]
   },
@@ -24,15 +28,15 @@
     "question": "What is the base salary of the position?",
     "answers": [
       {
-        "text": "less than $100k annual or $50 hourly",
+        "text": "less than $110k annual or $50 hourly",
         "value": 0
       },
       {
-        "text": "more than $100k or $50 hourly",
+        "text": "more than $110k or $50 hourly",
         "value": 10
       },
       {
-        "text": "more than $120k or $60 hourly",
+        "text": "more than $130k or $70 hourly",
         "value": 20
       }
     ]
@@ -41,7 +45,7 @@
     "question": "Where is this job located?",
     "answers": [
       {
-        "text": "At least 90% Remote",
+        "text": "Remote (At least 90%)",
         "value": 400
       },
       {
@@ -78,11 +82,11 @@
         "value": 0
       },
       {
-        "text": "A degree or equivalent experience (at least 10 years)",
+        "text": "A degree or equivalent experience of at least 10 years",
         "value": 2000
       },
       {
-        "text": "A degree or equivalent experience (at least 5 years)",
+        "text": "A degree or equivalent experience of at least 5 years",
         "value": 1000
       }
     ]
@@ -95,12 +99,20 @@
         "value": 10000
       },
       {
+        "text": "TypeScript",
+        "value": 10000
+      },
+      {
         "text": "Java",
         "value": 0
       },
       {
         "text": "React",
         "value": 20000
+      },
+      {
+        "text": "Angular",
+        "value": 10000
       }
     ]
   }
