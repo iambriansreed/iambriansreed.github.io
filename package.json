@@ -1,25 +1,27 @@
 {
-  "name": "iambriansreed.github.io",
-  "version": "1.0.0",
-  "description": "",
-  "main": "build.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build:html": "node build-watch.js",
-    "build:watch": "node-sass src/style.scss css/style.css -w",
-    "start": "http-server -o"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://iambriansreed@github.com/iambriansreed/iambriansreed.github.io.git"
-  },
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/iambriansreed/iambriansreed.github.io/issues"
-  },
-  "homepage": "https://github.com/iambriansreed/iambriansreed.github.io#readme",
-  "devDependencies": {
-    "node-sass": "^4.12.0"
-  }
+    "name": "iambriansreed.github.io",
+    "version": "1.0.0",
+    "description": "",
+    "main": "build.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "dev": "node dev.js",
+        "build:html": "node build-html.js",
+        "build:scss": "node-sass src/style.scss css/style.css",
+        "build:ts": "tsc src/script.ts --lib ES2019,DOM --target es2015 --outfile js/script.js",
+        "start": "http-server -o"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://iambriansreed@github.com/iambriansreed/iambriansreed.github.io.git"
+    },
+    "author": "",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/iambriansreed/iambriansreed.github.io/issues"
+    },
+    "homepage": "https://github.com/iambriansreed/iambriansreed.github.io#readme",
+    "devDependencies": {
+        "node-sass": "^6.0.1"
+    }
 }
