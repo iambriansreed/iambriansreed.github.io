@@ -9,7 +9,7 @@
         "build:html": "node build-html.js",
         "build:scss": "node-sass src/style.scss css/style.css",
         "build:ts": "tsc src/script.ts --lib ES2019,DOM --target es2015 --outfile js/script.js",
-        "start": "http-server -o"
+        "start": "http-server -o -S -C cert.pem"
     },
     "repository": {
         "type": "git",

@@ -4,7 +4,7 @@
     <head>
         <script async src="https://www.googletagmanager.com/gtag/js?id=UA-51020929-1"></script>
         <script>
-            if (location.protocol !== "https:") location.protocol = 'https:';
+            if (location.protocol !== "https:" && location.hostname !== "localhost") location.protocol = 'https:';
             window.dataLayer = window.dataLayer || [];
             function gtag() { dataLayer.push(arguments); }
             gtag('js', new Date());
