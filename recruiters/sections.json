@@ -106,6 +106,10 @@
             {
                 "text": "Contract to Hire",
                 "value": 0
+            },
+            {
+                "text": "Contract",
+                "value": 0
             }
         ]
     },
@@ -117,7 +121,7 @@
                 "value": 1000000
             },
             {
-                "text": "Contract to Hire",
+                "text": "4 or more",
                 "value": 0
             }
         ]
