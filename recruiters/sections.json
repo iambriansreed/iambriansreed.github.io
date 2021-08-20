@@ -1,6 +1,6 @@
 [
     {
-        "question": "What kind of position is this?",
+        "question": "What type of role is this?",
         "answers": [
             {
                 "text": "Junior",
@@ -8,11 +8,11 @@
             },
             {
                 "text": "Other",
-                "value": 1
+                "value": 5
             },
             {
                 "text": "Management",
-                "value": 2
+                "value": 4
             },
             {
                 "text": "Senior",
@@ -20,7 +20,11 @@
             },
             {
                 "text": "Team Lead",
-                "value": 4
+                "value": 2
+            },
+            {
+                "text": "Architect",
+                "value": 1
             }
         ]
     },
@@ -33,11 +37,11 @@
             },
             {
                 "text": "more than $160K",
-                "value": 30
+                "value": 20
             },
             {
                 "text": "more than $180k",
-                "value": 60
+                "value": 10
             }
         ]
     },
@@ -46,7 +50,7 @@
         "answers": [
             {
                 "text": "Remote (At least 99%)",
-                "value": 400
+                "value": 100
             },
             {
                 "text": "Other",
@@ -63,11 +67,11 @@
             },
             {
                 "text": "A degree or equivalent experience of at least 10 years",
-                "value": 2000
+                "value": 1000
             },
             {
                 "text": "A degree or equivalent experience of at least 5 years",
-                "value": 1000
+                "value": 2000
             }
         ]
     },
@@ -75,24 +79,24 @@
         "question": "This job requires expert knowledge in:",
         "answers": [
             {
-                "text": "JavaScript",
-                "value": 40000
-            },
-            {
-                "text": "TypeScript",
-                "value": 50000
-            },
-            {
                 "text": "Java",
                 "value": 0
             },
             {
                 "text": "React",
-                "value": 50000
+                "value": 10000
+            },
+            {
+                "text": "React Native",
+                "value": 30000
             },
             {
                 "text": "Angular",
-                "value": 10000
+                "value": 20000
+            },
+            {
+                "text": "Other",
+                "value": 40000
             }
         ]
     },
