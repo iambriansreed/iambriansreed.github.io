@@ -17,7 +17,10 @@ module.exports = () => {
 
         data = data.replace(
             /[\n\s]*\/\* style \*\//g,
-            fs.readFileSync('css/style.css', 'utf8')
+            fs
+                .readFileSync('css/style.css', 'utf8')
+                .replace(/\r|\n/g, ' ')
+                .replace(/\s+/g, ' ')
         );
 
         data = data.replace(

@@ -1,9 +1,3 @@
-window.onload = () => {
-    // Array.from(document.querySelectorAll('.percentage')).forEach((bar) => {
-    //     bar
-    // });
-};
-
 class Skill extends HTMLElement {
     private percentage = '';
     constructor() {

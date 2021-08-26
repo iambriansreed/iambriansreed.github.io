@@ -2,14 +2,12 @@
     "name": "iambriansreed.github.io",
     "version": "1.0.0",
     "description": "",
-    "main": "build.js",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
-        "dev": "node dev.js",
+        "dev": "node tools/dev.js | http-server -S -C ../cert.pem -K ../key.pem",
         "build:html": "node build-html.js",
         "build:scss": "sass src/style.scss css/style.css",
         "build:ts": "tsc src/script.ts --lib ES2019,DOM --target es2015 --outfile js/script.js",
-        "start": "http-server -S -C cert.pem",
         "rec": "ts-node tools/rec.ts"
     },
     "repository": {

@@ -1,12 +1,12 @@
 const fs = require('fs');
 const path = require('path');
-const buildHtml = require('./build-html');
+const buildHtml = require('../build-html');
 
 const filesToWatch = [
-    'src/script.ts',
-    'src/index.html',
-    'src/style.scss',
-    'src/reset.scss',
+    '../src/script.ts',
+    '../src/index.html',
+    '../src/style.scss',
+    '../src/reset.scss',
 ];
 
 const { exec } = require('child_process');
@@ -36,7 +36,7 @@ const updateFile = (file) => {
 };
 
 filesToWatch.forEach((file) => {
-    fs.watch(file, () => {
+    fs.watch(path.join(__dirname, file), () => {
         if (timeoutWaiting.includes(file)) return;
 
         timeoutWaiting.push(file);
