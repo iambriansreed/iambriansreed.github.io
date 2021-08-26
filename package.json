@@ -7,9 +7,10 @@
         "test": "echo \"Error: no test specified\" && exit 1",
         "dev": "node dev.js",
         "build:html": "node build-html.js",
-        "build:scss": "node-sass src/style.scss css/style.css",
+        "build:scss": "sass src/style.scss css/style.css",
         "build:ts": "tsc src/script.ts --lib ES2019,DOM --target es2015 --outfile js/script.js",
-        "start": "http-server -o -S -C cert.pem"
+        "start": "http-server -S -C cert.pem",
+        "rec": "ts-node tools/rec.ts"
     },
     "repository": {
         "type": "git",
@@ -22,6 +23,8 @@
     },
     "homepage": "https://github.com/iambriansreed/iambriansreed.github.io#readme",
     "devDependencies": {
-        "node-sass": "^6.0.1"
+        "@types/node": "^16.7.2",
+        "ts-node": "^10.2.1",
+        "typescript": "^4.3.5"
     }
 }
