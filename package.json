@@ -5,6 +5,7 @@
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
         "dev": "node tools/dev.js | http-server -S -C ../cert.pem -K ../key.pem",
+        "build": "yarn build:html && yarn build:scss && yarn build:ts",
         "build:html": "node build-html.js",
         "build:scss": "sass src/style.scss css/style.css",
         "build:ts": "tsc src/script.ts --lib ES2019,DOM --target es2015 --outfile js/script.js",
