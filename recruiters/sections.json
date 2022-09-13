@@ -142,5 +142,18 @@
                 "value": 10000000
             }
         ]
+    },
+    {
+        "question": "Do your development teams use Agile methodology?",
+        "answers": [
+            {
+                "text": "Yes",
+                "value": 100000000
+            },
+            {
+                "text": "No",
+                "value": 0
+            }
+        ]
     }
 ]
