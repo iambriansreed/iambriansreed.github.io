@@ -32,16 +32,16 @@
         "question": "What is the annual base salary of the position?",
         "answers": [
             {
-                "text": "less than $145k",
+                "text": "less than $150K",
                 "value": 0
             },
             {
-                "text": "more than $160K",
+                "text": "more than $150k",
                 "value": 20
             },
             {
-                "text": "more than $180k",
-                "value": 10
+                "text": "more than $200k",
+                "value": 30
             }
         ]
     },
@@ -127,6 +127,19 @@
             {
                 "text": "4 or more",
                 "value": 0
+            }
+        ]
+    },
+    {
+        "question": "Is this a contract position?",
+        "answers": [
+            {
+                "text": "Yes",
+                "value": 20000000
+            },
+            {
+                "text": "No",
+                "value": 10000000
             }
         ]
     }
