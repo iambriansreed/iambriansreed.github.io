@@ -21,53 +21,53 @@
         ]
     },
     {
-        "question": "What is the annual base salary of the position (not including a sign-on bonus)?",
+        "question": "What is the annual base compensation including salary and any sign-on bonuses?",
         "answers": [
             {
-                "text": "less than $170K",
+                "text": "less than $200k",
                 "value": 0
             },
             {
-                "text": "more than $170K",
+                "text": "more than $200k",
                 "value": 90
             }
         ]
     },
     {
-        "question": "Is there a sign-on bonus?",
+        "question": "What is your favorite food?",
         "answers": [
             {
-                "text": "No",
-                "value": 0
+                "text": "Other",
+                "value": 100
             },
             {
-                "text": "Yes, more than $50k",
-                "value": 800
+                "text": "Pizza",
+                "value": 500
             },
             {
-                "text": "Yes, less than $50k",
+                "text": "Pizza",
                 "value": 900
             }
         ]
     },
     {
-        "question": "Where is this job located?",
+        "question": "Is this role 100% remote?",
         "answers": [
             {
-                "text": "Remote (At least 99%)",
+                "text": "Yes",
                 "value": 9000
             },
             {
-                "text": "Other",
+                "text": "No",
                 "value": 0
             }
         ]
     },
     {
-        "question": "This job requires:",
+        "question": "This role requires:",
         "answers": [
             {
-                "text": "A degree",
+                "text": "A bachelors or masters degree",
                 "value": 0
             },
             {
@@ -81,7 +81,7 @@
         ]
     },
     {
-        "question": "This job requires expert knowledge in:",
+        "question": "This role requires expert knowledge in:",
         "answers": [
             {
                 "text": "Java",
