@@ -3,10 +3,7 @@
     <head>
         <meta charset="utf-8" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <meta
-            name="viewport"
-            content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
-        />
+        <meta name="viewport" content="width=device-width" />
         <meta
             name="description"
             content="Brian S. Reed is a frontend focused full stack engineer with over 15 years designing and developing software for the internet using React, TypeScript, and Node."
@@ -81,8 +78,8 @@
                 }
             }
         </style>
-      <script type="module" crossorigin src="/assets/index-Bn5IEVj9.js"></script>
-      <link rel="stylesheet" crossorigin href="/assets/index-C8FRkn83.css">
+      <script type="module" crossorigin src="/assets/index-CP9CmeGv.js"></script>
+      <link rel="stylesheet" crossorigin href="/assets/index-DsAqFK91.css">
     </head>
     <body>
         <div class="loading">
@@ -682,6 +679,7 @@
                         </div>
                         <fieldset>
                             <textarea
+                                name="message"
                                 placeholder="I have been trying to reach you about your car's extended warranty."
                             ></textarea>
                             <p class="error-description">
@@ -691,6 +689,14 @@
                             </p>
                         </fieldset>
                         <p class="found-email">Wow. <span></span> is a nice email address.</p>
+                        <div class="topyenoh">
+                            <input
+                                type="text"
+                                aria-label="do not enter a value here"
+                                name="topyenoh"
+                                autocomplete="off"
+                            />
+                        </div>
                         <footer>
                             <button type="submit">Send Message</button>
                         </footer>
@@ -1186,6 +1192,14 @@
                             <p class="error-description">This is a required field.</p>
                         </fieldset>
                         
+                        <div class="topyenoh">
+                            <input
+                                type="text"
+                                aria-label="do not enter a value here"
+                                name="topyenoh"
+                                autocomplete="off"
+                            />
+                        </div>
                         <footer>
                             <button type="submit" class="check-results">Check Results</button>
                         </footer>
@@ -1208,11 +1222,17 @@
                     <article class="quiz-pass">
                         <h3>Awesome! This might be a good fit!</h3>
                         <form method="dialog" class="send">
-                            <fieldset class="email" id="send-email">
+                            <fieldset class="email">
                                 <label for="send-email">
                                     One last step. Add your email and send me the results.
                                 </label>
-                                <input type="email" placeholder="Email" name="send-email" required />
+                                <input
+                                    type="email"
+                                    id="send-email"
+                                    placeholder="Email"
+                                    name="send-email"
+                                    required
+                                />
                                 <p class="error-description">That email address doesn't seem right.</p>
                             </fieldset>
                             <footer><button type="submit">Send Results</button></footer>
