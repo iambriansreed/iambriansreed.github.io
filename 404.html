@@ -15,6 +15,7 @@
         />
         <meta name="version" content="1.0.0" />
         <title>Brian S. Reed - UX Engineer</title>
+        <script src="https://js.hcaptcha.com/1/api.js" async defer></script>
         <link rel="apple-touch-icon" sizes="57x57" href="/icon/apple-touch-icon-57x57.png" />
         <link rel="apple-touch-icon" sizes="114x114" href="/icon/apple-touch-icon-114x114.png" />
         <link rel="apple-touch-icon" sizes="72x72" href="/icon/apple-touch-icon-72x72.png" />
@@ -78,8 +79,8 @@
                 }
             }
         </style>
-      <script type="module" crossorigin src="/assets/index-CP9CmeGv.js"></script>
-      <link rel="stylesheet" crossorigin href="/assets/index-DsAqFK91.css">
+      <script type="module" crossorigin src="/assets/index-C-1rH6Q4.js"></script>
+      <link rel="stylesheet" crossorigin href="/assets/index-BGuTeCce.css">
     </head>
     <body>
         <div class="loading">
@@ -688,17 +689,17 @@
                                 <span>Include an Email address in your message please.</span>
                             </p>
                         </fieldset>
-                        <p class="found-email">Wow. <span></span> is a nice email address.</p>
-                        <div class="topyenoh">
-                            <input
-                                type="text"
-                                aria-label="do not enter a value here"
-                                name="topyenoh"
-                                autocomplete="off"
-                            />
-                        </div>
                         <footer>
-                            <button type="submit">Send Message</button>
+                            <p class="found-email">Wow. <span></span> is a nice email address.</p>
+                            <p class="error missing-email">Missing your email address.</p>
+                            <button
+                                class="h-captcha"
+                                data-sitekey="3fca5cba-c2e8-4960-bf5c-4f284b585036"
+                                data-callback="onSubmitMessage"
+                                type="button"
+                            >
+                                Send Message
+                            </button>
                         </footer>
                     </form>
                 </main>
@@ -1192,16 +1193,15 @@
                             <p class="error-description">This is a required field.</p>
                         </fieldset>
                         
-                        <div class="topyenoh">
-                            <input
-                                type="text"
-                                aria-label="do not enter a value here"
-                                name="topyenoh"
-                                autocomplete="off"
-                            />
-                        </div>
                         <footer>
-                            <button type="submit" class="check-results">Check Results</button>
+                            <button
+                                class="h-captcha check-results"
+                                data-sitekey="3fca5cba-c2e8-4960-bf5c-4f284b585036"
+                                data-callback="onSubmitQuiz"
+                                type="submit"
+                            >
+                                Check Results
+                            </button>
                         </footer>
                     </form>
 
