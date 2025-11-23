@@ -79,7 +79,7 @@
                 }
             }
         </style>
-      <script type="module" crossorigin src="/assets/index-CqCSunNV.js"></script>
+      <script type="module" crossorigin src="/assets/index-C-1rH6Q4.js"></script>
       <link rel="stylesheet" crossorigin href="/assets/index-BGuTeCce.css">
     </head>
     <body>
@@ -1194,14 +1194,7 @@
                         </fieldset>
                         
                         <footer>
-                            <button
-                                class="h-captcha check-results"
-                                data-sitekey="3fca5cba-c2e8-4960-bf5c-4f284b585036"
-                                data-callback="onSubmitQuiz"
-                                type="button"
-                            >
-                                Check Results
-                            </button>
+                            <button type="submit">Check Results</button>
                         </footer>
                     </form>
 
@@ -1235,7 +1228,16 @@
                                 />
                                 <p class="error-description">That email address doesn't seem right.</p>
                             </fieldset>
-                            <footer><button type="submit">Send Results</button></footer>
+                            <footer>
+                                <button
+                                    type="submit"
+                                    class="h-captcha check-results"
+                                    data-sitekey="3fca5cba-c2e8-4960-bf5c-4f284b585036"
+                                    data-callback="onSubmitQuiz"
+                                >
+                                    Send Results
+                                </button>
+                            </footer>
                         </form>
                     </article>
 
