@@ -12,8 +12,17 @@ const data: {
         skills: string[];
         sources: { title: string; url: string }[];
     }[];
-    questions: { title: string; answers: { title: string; failReason?: string }[]; id: string }[];
-    skillLevels: { id: number; title: string; description: string; range: [number, number] }[];
+    questions: {
+        title: string;
+        answers: { title: string; failReason?: string }[];
+        id: string;
+    }[];
+    skillLevels: {
+        id: number;
+        title: string;
+        description: string;
+        range: [number, number];
+    }[];
 } = {
     titles: [
         'Web Designer',
@@ -25,26 +34,11 @@ const data: {
         'Senior Front End Engineer',
     ],
     navigation: [
-        {
-            id: 'welcome',
-            title: 'Welcome',
-        },
-        {
-            id: 'skills',
-            title: 'Skills',
-        },
-        {
-            id: 'projects',
-            title: 'Projects',
-        },
-        {
-            id: 'contact',
-            title: 'Contact',
-        },
-        {
-            id: 'recruiters',
-            title: 'Recruiters',
-        },
+        { id: 'welcome', title: 'Welcome' },
+        { id: 'skills', title: 'Skills' },
+        { id: 'projects', title: 'Projects' },
+        { id: 'contact', title: 'Contact' },
+        { id: 'recruiters', title: 'Recruiters' },
     ],
     svg: {
         github: `<svg viewBox="0 0 98 96" xmlns="http://www.w3.org/2000/svg">
@@ -54,36 +48,55 @@ const data: {
 </svg>`,
     },
     skillLevels: [
-        { id: 1, title: 'Beginner', description: 'basic knowledge', range: [0, 25] },
-        { id: 2, title: 'Novice', description: 'limited experience', range: [25, 50] },
-        { id: 3, title: 'Intermediate', description: 'practical application', range: [50, 75] },
-        { id: 4, title: 'Advanced', description: 'applied theory', range: [75, 100] },
+        {
+            id: 4,
+            title: 'Advanced',
+            description: 'applied theory',
+            range: [75, 100],
+        },
+        {
+            id: 3,
+            title: 'Intermediate',
+            description: 'practical application',
+            range: [50, 75],
+        },
+        {
+            id: 2,
+            title: 'Novice',
+            description: 'limited experience',
+            range: [25, 50],
+        },
+        {
+            id: 1,
+            title: 'Beginner',
+            description: 'basic knowledge',
+            range: [0, 25],
+        },
     ],
     skills: [
         { title: 'React', progress: 80, years: present - 2015 },
         { title: 'React Relay', progress: 50, years: 3 },
         { title: 'Redux', progress: 75, years: 5 },
-        { title: 'VR Paintball', progress: 35, years: 2 },
         { title: 'React Native', progress: 50, years: 0.5 },
-        { title: 'HyperText', progress: 60, years: present - 2007 },
         { title: 'CSS', progress: 85, years: present - 2007 },
         { title: 'Tailwind', progress: 70, years: 4 },
         { title: 'SASS', progress: 65, years: 6 },
-        { title: 'Nunchucks', progress: 95, years: present - 1998 },
         { title: 'JavaScript', progress: 85, years: present - 2009 },
         { title: 'Angular', progress: 65, years: 3 },
         { title: 'Node.js', progress: 70, years: present - 2015 },
         { title: 'GraphQL', progress: 85, years: 7 },
-        { title: 'Crane kick', progress: 70, years: present - 1984 },
         { title: 'TypeScript', progress: 76, years: present - 2015 },
-        { title: 'Bowstaff', progress: 15, years: present - 1998 },
         { title: 'Sass/SCSS', progress: 85, years: present - 2013 },
         { title: 'C#', progress: 55, years: 6 },
         { title: 'PHP', progress: 70, years: 7 },
         { title: 'SQL', progress: 45, years: 8 },
         { title: 'Java', progress: 1, years: 0.1 },
-        { title: 'Settlers of Catan', progress: 65, years: 18 },
-        { title: 'Next.js', progress: 5, years: 0.1 },
+        { title: 'Next.js', progress: 5, years: 1 },
+        { title: 'AI-Assisted Development', progress: 60, years: 2 },
+        { title: 'Motion/Animation', progress: 70, years: 6 },
+        { title: 'Design Tokens', progress: 65, years: 3 },
+        { title: 'Figma Plugin Authoring', progress: 60, years: 2 },
+        { title: 'Accessibility (WCAG)', progress: 80, years: 11 },
     ],
     projects: [
         {
@@ -92,8 +105,14 @@ const data: {
             description: `Enjoy unlimited Wordle games with this Wordle clone. It features a static backend and provides the definition(s) of the word.`,
             skills: ['TypeScript', 'SASS', 'Vite'],
             sources: [
-                { title: 'Frontend', url: 'https://github.com/iambriansreed/sordle' },
-                { title: 'Backend (Static)', url: 'https://github.com/iambriansreed/sordle-words' },
+                {
+                    title: 'Frontend',
+                    url: 'https://github.com/iambriansreed/sordle',
+                },
+                {
+                    title: 'Backend (Static)',
+                    url: 'https://github.com/iambriansreed/sordle-words',
+                },
             ],
         },
         {
@@ -101,17 +120,38 @@ const data: {
             url: 'https://connect4.iambrian.com',
             description: `Challenge yourself to a game of Connect 4 against a basic AI, designed to be competitive enough to keep you entertained while still being beatable.`,
             skills: ['TypeScript', 'SASS', 'Vite'],
-            sources: [{ title: 'Frontend', url: 'https://github.com/iambriansreed/connect4' }],
+            sources: [
+                {
+                    title: 'Frontend',
+                    url: 'https://github.com/iambriansreed/connect4',
+                },
+            ],
         },
         {
             title: `Socket Chat`,
             url: 'https://chat.iambrian.com',
             description: `A chat application that supports multiple private rooms, with data stored exclusively on the clients' devices.`,
-            skills: ['TypeScript', 'SASS', 'Socket.io', 'Tailwind', 'Jest', 'Vite'],
+            skills: [
+                'TypeScript',
+                'SASS',
+                'Socket.io',
+                'Tailwind',
+                'Jest',
+                'Vite',
+            ],
             sources: [
-                { title: 'Frontend', url: 'https://github.com/iambriansreed/comm-client' },
-                { title: 'Backend', url: 'https://github.com/iambriansreed/comm-server' },
-                { title: 'Utility', url: 'https://github.com/iambriansreed/comm-utils' },
+                {
+                    title: 'Frontend',
+                    url: 'https://github.com/iambriansreed/comm-client',
+                },
+                {
+                    title: 'Backend',
+                    url: 'https://github.com/iambriansreed/comm-server',
+                },
+                {
+                    title: 'Utility',
+                    url: 'https://github.com/iambriansreed/comm-utils',
+                },
             ],
         },
     ],
@@ -132,10 +172,15 @@ const data: {
             answers: [
                 {
                     title: 'A bachelors or masters degree',
-                    failReason: "Even though I love learning, I don't have a college degree.",
+                    failReason:
+                        "Even though I love learning, I don't have a college degree.",
                 },
-                { title: 'A degree OR equivalent experience of at least 10 years' },
-                { title: 'A degree OR equivalent experience of at least 5 years' },
+                {
+                    title: 'A degree OR equivalent experience of at least 10 years',
+                },
+                {
+                    title: 'A degree OR equivalent experience of at least 5 years',
+                },
             ],
             id: 'education',
         },
@@ -158,7 +203,8 @@ const data: {
             answers: [
                 {
                     title: 'Unavailable',
-                    failReason: "If budgets aren't transparent we can't move forward.",
+                    failReason:
+                        "If budgets aren't transparent we can't move forward.",
                 },
                 { title: 'below $150k' },
                 { title: '$150k - $200k' },
@@ -198,7 +244,11 @@ const data: {
         },
         {
             title: 'How many interviews are part of the hiring process?',
-            answers: [{ title: '3 or less' }, { title: '4 or more' }, { title: '5 or more' }],
+            answers: [
+                { title: '3 or less' },
+                { title: '4 or more' },
+                { title: '5 or more' },
+            ],
             id: 'interviews',
         },
         {
