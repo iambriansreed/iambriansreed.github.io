@@ -1,0 +1,427 @@
+import { Fragment } from 'react/jsx-runtime';
+import data from './data';
+
+export default function App() {
+    const { navigation, skillLevels, skills, projects, questions, svg } = data;
+
+    return (
+        <>
+            <div className="loading">
+                <div className="loader">
+                    <div className="blob"></div>
+                </div>
+            </div>
+            <div className="sections" data-style="display: none">
+                <nav>
+                    <ol>
+                        {navigation.map((link) => (
+                            <li key={link.id} data-section={link.id}>
+                                <a href={`/${link.id}`}>{link.title}</a>
+                            </li>
+                        ))}
+                    </ol>
+                </nav>
+                <section id="welcome">
+                    <div data-anchor-id="welcome"></div>
+                    <div className="title">
+                        <svg
+                            className="i-am"
+                            viewBox="0 0 219 90"
+                            xmlns="http://www.w3.org/2000/svg"
+                        >
+                            <path
+                                fill="currentColor"
+                                fillRule="nonzero"
+                                d="M4 8c2.133 0 4-1.733 4-4 0-2.133-1.867-4-4-4-2.267 0-4 1.867-4 4 0 2.267 1.733 4 4 4Zm2 80V22H1v66h5Zm74.958 2c9.66 0 21.253-4.336 26.405-12.244V88.47H112V48.294C112 32.35 102.34 21 86.368 21c-6.956 0-15.586 2.168-22.928 6.377l1.932 3.954c6.183-3.699 13.654-5.74 20.352-5.74 15.843 0 21.639 11.607 21.639 22.703v3.316c-7.47-2.678-16.23-4.592-23.571-4.592C67.69 47.018 57 56.074 57 68.828 57 81.328 67.176 90 80.958 90Zm-.003-4C69.81 86 61 79.072 61 69.192 61 59.185 70.2 52 83.806 52c7.774 0 16.326 2.31 23.194 4.619v11.675C104.408 80.226 91.192 86 80.955 86Zm51.685 3V45.377c0-11.547 8.25-19.758 19.979-19.758 10.827 0 18.56 8.468 18.56 20.4V89h4.641V45.377c0-11.547 8.25-19.758 19.979-19.758 10.827 0 18.56 8.468 18.56 20.4V89H219V45.377C219 31.136 209.72 21 196.443 21c-10.57 0-18.947 5.132-22.814 13.343C170.149 26.133 162.802 21 153.263 21c-10.053 0-17.787 4.49-20.623 11.547V22.54H128V89h4.64Z"
+                            />
+                        </svg>
+                        <svg
+                            className="brian"
+                            viewBox="0 0 293 99"
+                            xmlns="http://www.w3.org/2000/svg"
+                        >
+                            <path
+                                fill="currentColor"
+                                fillRule="nonzero"
+                                d="M47.16 97c17.16 0 29.38-9.88 29.38-24.18 0-9.88-6.11-18.2-16.51-22.88 7.93-4.16 12.61-10.79 12.61-19.89 0-13-11.18-22.36-27.17-22.36H.23V97h46.93Zm-6.37-53.3H19.34V24.07h21.45c7.02 0 12.09 4.16 12.09 9.75 0 5.72-5.07 9.88-12.09 9.88Zm2.86 36.92H19.34V58.78h24.31c7.67 0 13.13 4.55 13.13 10.92s-5.46 10.92-13.13 10.92ZM102.861 97V64.89c0-12.61 8.97-20.67 23.01-20.67V28.23c-10.27 0-18.59 5.46-23.01 14.17V29.79h-18.98V97h18.98Zm38.281-76.44c5.59 0 10.27-4.68 10.27-10.4 0-5.33-4.68-10.14-10.27-10.14-5.85 0-10.4 4.81-10.4 10.14 0 5.72 4.55 10.4 10.4 10.4Zm9.36 76.44V29.79h-18.98V97h18.98Zm31.001 1.56c7.41 0 15.08-2.99 19.89-8.32V97h18.33V56.83c0-17.55-12.09-28.6-29.64-28.6-9.36 0-18.59 2.6-28.08 7.41l6.37 12.61c5.33-2.73 11.18-4.81 17.42-4.81 11.05 0 15.6 6.24 15.6 13.39v1.43c-5.72-2.34-11.83-3.51-17.29-3.51-15.47 0-27.82 9.1-27.82 22.36 0 12.87 10.92 21.45 25.22 21.45Zm4.29-13.13c-6.5 0-11.44-3.38-11.44-8.84s5.59-9.49 12.48-9.49c5.2 0 10.27.91 14.56 2.6v6.11c-1.43 6.24-8.32 9.62-15.6 9.62ZM247.344 97V57.22c0-7.28 6.24-13 14.17-13 7.54 0 12.74 5.72 12.74 14.04V97h18.2V54.23c0-15.34-10.27-26-24.83-26-8.71 0-16.25 3.9-20.28 9.88v-8.32h-18.98V97h18.98Z"
+                            />
+                        </svg>
+                    </div>
+                </section>
+                <section id="skills">
+                    <div data-anchor-id="skills"></div>
+                    <h2>Skills</h2>
+                    <main>
+                        <article>
+                            <p>
+                                Hi, I'm Brian, a self-taught Software Engineer
+                                passionate about solving problems with
+                                thoughtful engineering and user-centric design.
+                                With nearly 20 years of coding experience, I
+                                continue to learn and evolve.
+                            </p>
+                            <p>
+                                Recently, I've been focused on React,
+                                TypeScript, Node.js, GraphQL, SCSS, and Tailwind
+                                CSS, but I'm also enthusiastic about new roles
+                                that involve other technologies.
+                            </p>
+                        </article>
+                        <div className="legend">
+                            <div className="progress-bar">
+                                <span>{skillLevels[0].title}</span>
+                                <span>{skillLevels[3].title}</span>
+                                <div data-style="width: 50%"></div>
+                            </div>
+                        </div>
+                        <article>
+                            <p>
+                                Below is a list of skills with progress bars
+                                indicating my level of proficiency and the
+                                number of years I have actively used each
+                                technology.
+                            </p>
+                        </article>
+
+                        {skillLevels.map((skillLevel) => (
+                            <Fragment key={skillLevel.title}>
+                                <h3>{skillLevel.title}</h3>
+                                <ul>
+                                    {skills
+                                        .filter(
+                                            (s) =>
+                                                s.progress >
+                                                    skillLevel.range[0] &&
+                                                s.progress <=
+                                                    skillLevel.range[1],
+                                        )
+                                        .map((skill) => (
+                                            <li
+                                                key={skill.title}
+                                                data-years={skill.years}
+                                                data-title={skill.title}
+                                                data-progress={skill.progress}
+                                            >
+                                                <h4>
+                                                    <span className="title">
+                                                        {skill.title}
+                                                    </span>
+                                                    <span className="years">
+                                                        {skill.years}{' '}
+                                                        {skill.years === 1
+                                                            ? ' yr'
+                                                            : ' yrs'}
+                                                    </span>
+                                                </h4>
+                                                <div className="progress-bar">
+                                                    <div
+                                                        style={{
+                                                            width: `${skill.progress}%`,
+                                                        }}
+                                                    ></div>
+                                                </div>
+                                            </li>
+                                        ))}
+                                </ul>
+                            </Fragment>
+                        ))}
+                    </main>
+                </section>
+                <section id="projects">
+                    <div data-anchor-id="projects"></div>
+                    <h2>Side Projects</h2>
+                    <main>
+                        <article className="intro">
+                            <p>
+                                I work on side projects to demonstrate my
+                                capabilities, create rudimentary AI from
+                                scratch, get more familiar with sockets, and
+                                play Wordle whenever I want.
+                            </p>
+                        </article>
+                        {projects.map((project) => (
+                            <article key={project.title}>
+                                <h3>{project.title}</h3>
+                                <p>
+                                    <a
+                                        href={project.url}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                    >
+                                        {project.url}
+                                    </a>
+                                </p>
+                                <p>{project.description}</p>
+                                <p>
+                                    <small>{project.skills.join(', ')}</small>
+                                </p>
+                                <footer>
+                                    <div className="sources">
+                                        {project.sources.map((source) => (
+                                            <Fragment key={source.url}>
+                                                <span> / </span>
+                                                <a
+                                                    target="_blank"
+                                                    href={source.url}
+                                                >
+                                                    <span
+                                                        dangerouslySetInnerHTML={{
+                                                            __html: svg.github,
+                                                        }}
+                                                    />
+                                                    {source.title}
+                                                </a>
+                                            </Fragment>
+                                        ))}
+                                    </div>
+                                </footer>
+                            </article>
+                        ))}
+                    </main>
+                </section>
+                <section id="contact">
+                    <div data-anchor-id="contact"></div>
+                    <h2>Contact</h2>
+                    <main>
+                        <article>
+                            <p>
+                                Find me on{' '}
+                                <a
+                                    target="_blank"
+                                    href="https://www.linkedin.com/in/iambriansreed/"
+                                >
+                                    LinkedIn
+                                </a>{' '}
+                                or send me a message below.
+                                <br />
+                                Make sure to include your email address anywhere
+                                in the message.
+                            </p>
+                        </article>
+                        <form method="dialog" className="contact-form">
+                            <div className="success">
+                                <h3>
+                                    Thanks for contacting me. I'll get back to
+                                    you as soon as possible.
+                                </h3>
+                            </div>
+                            <fieldset>
+                                <textarea
+                                    name="message"
+                                    placeholder="I have been trying to reach you about your car's extended warranty."
+                                ></textarea>
+                                <p className="error-description">
+                                    <span className="active">
+                                        Not seeing an email address above.
+                                    </span>
+                                    <span>
+                                        Please include an email address.
+                                    </span>
+                                    <span>
+                                        Include an Email address in your message
+                                        please.
+                                    </span>
+                                </p>
+                            </fieldset>
+                            <footer>
+                                <p className="found-email">
+                                    Wow. <span></span> is a nice email address.
+                                </p>
+                                <p className="error missing-email">
+                                    Missing your email address.
+                                </p>
+                                <button
+                                    className="h-captcha"
+                                    data-sitekey="3fca5cba-c2e8-4960-bf5c-4f284b585036"
+                                    data-callback="onSubmitMessage"
+                                    type="button"
+                                >
+                                    Send Message
+                                </button>
+                            </footer>
+                        </form>
+                    </main>
+                </section>
+                <section id="recruiters" data-state="intro">
+                    <div data-anchor-id="recruiters"></div>
+                    <h2>Recruiters</h2>
+                    <main>
+                        <article className="intro">
+                            <p>
+                                Hello there! If you think I might be a good fit
+                                for a position you are trying to fill please
+                                take the following quiz. I have some basic
+                                questions I'd like you to answer before we talk
+                                so we don't waste our time. If none of the
+                                answers are an exact match just pick the closest
+                                answer and explain it when we talk. Thanks!
+                            </p>
+
+                            <p>
+                                <button type="button" data-start-quiz>
+                                    Start Quiz
+                                </button>
+                            </p>
+                        </article>
+
+                        <form method="dialog" className="quiz">
+                            {questions.map((question) => (
+                                <fieldset
+                                    key={question.id}
+                                    id={`question-${question.id}`}
+                                    data-id={question.id}
+                                    data-title={question.title}
+                                    data-question-name={question.id}
+                                    className={`question ${question.id === 'role' ? 'active' : ''}`}
+                                >
+                                    <h4>{question.title}</h4>
+                                    <div className="options">
+                                        {question.answers.map(
+                                            (answer, index) => {
+                                                const labelId =
+                                                    question.id +
+                                                    (answer.failReason
+                                                        ? '-fail'
+                                                        : '-' + index);
+
+                                                return (
+                                                    <Fragment key={labelId}>
+                                                        <label
+                                                            htmlFor={labelId}
+                                                        >
+                                                            <input
+                                                                type="radio"
+                                                                name={
+                                                                    question.id
+                                                                }
+                                                                value={
+                                                                    answer.failReason
+                                                                        ? 'fail'
+                                                                        : answer.title
+                                                                }
+                                                                id={labelId}
+                                                                required
+                                                            />
+                                                            {answer.title}
+                                                        </label>
+
+                                                        {answer.failReason && (
+                                                            <p className="fail-reason">
+                                                                {
+                                                                    answer.failReason
+                                                                }
+                                                            </p>
+                                                        )}
+                                                    </Fragment>
+                                                );
+                                            },
+                                        )}
+                                    </div>
+                                    <p className="error-description">
+                                        This is a required field.
+                                    </p>
+                                </fieldset>
+                            ))}
+                            <footer>
+                                <button type="submit" className="check-results">
+                                    Check Results
+                                </button>
+                            </footer>
+                        </form>
+
+                        <article className="quiz-fail">
+                            <h3>Oh no!</h3>
+                            <p>
+                                Thank you for taking the time to fill out the
+                                form but I don't think this opportunity is a
+                                good fit.
+                            </p>
+                            <p>
+                                If you think you made a mistake, scroll up and
+                                look for the{' '}
+                                <span data-style="color: tomato">
+                                    messages in red
+                                </span>
+                                .<br />
+                                If you still think this might work out, contact
+                                me on{' '}
+                                <a
+                                    target="_blank"
+                                    href="https://www.linkedin.com/in/iambriansreed/"
+                                >
+                                    LinkedIn
+                                </a>
+                                .
+                            </p>
+                        </article>
+
+                        <article className="quiz-pass">
+                            <h3>Awesome! This might be a good fit!</h3>
+                            <form method="dialog" className="send">
+                                <fieldset className="email">
+                                    <label htmlFor="send-email">
+                                        One last step. Add your email and send
+                                        me the results.
+                                    </label>
+                                    <input
+                                        type="email"
+                                        id="send-email"
+                                        placeholder="Email"
+                                        name="send-email"
+                                        required
+                                    />
+                                    <p className="error-description">
+                                        That email address doesn't seem right.
+                                    </p>
+                                </fieldset>
+                                <footer>
+                                    <button
+                                        type="submit"
+                                        className="h-captcha"
+                                        data-sitekey="3fca5cba-c2e8-4960-bf5c-4f284b585036"
+                                        data-callback="onSubmitQuiz"
+                                    >
+                                        Send Results
+                                    </button>
+                                </footer>
+                            </form>
+                        </article>
+
+                        <article className="quiz-sent">
+                            <h3>Thanks for sending the quiz results!</h3>
+                            <p>
+                                I will review the results and get back to you as
+                                soon as possible. If you have any questions in
+                                the meantime, feel free to reach out on{' '}
+                                <a
+                                    target="_blank"
+                                    href="https://www.linkedin.com/in/iambriansreed/"
+                                >
+                                    LinkedIn
+                                </a>
+                                .
+                            </p>
+                        </article>
+                    </main>
+                </section>
+            </div>
+            <p data-style="position: relative; top: -4rem; text-align: center; font-size: 0.75rem">
+                This site is protected by hCaptcha and its{' '}
+                <a href="https://www.hcaptcha.com/privacy">Privacy Policy</a>{' '}
+                and{' '}
+                <a href="https://www.hcaptcha.com/terms">Terms of Service</a>{' '}
+                apply.
+            </p>
+            <footer data-style="display: none">
+                <p>
+                    <a
+                        target="_blank"
+                        href="https://quotesondesign.com/brian-reed/"
+                    >
+                        Everything is designed. Few things are designed well.
+                    </a>
+                </p>
+            </footer>
+        </>
+    );
+}

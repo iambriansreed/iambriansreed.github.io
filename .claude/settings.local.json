@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:localhost)",
+      "WebFetch(domain:local.local)"
+    ]
+  }
+}
