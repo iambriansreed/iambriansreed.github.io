@@ -1,3 +1,4 @@
+name: Deploy to GitHub Pages
 on:
     push:
         branches: ['main']
@@ -9,7 +10,7 @@ permissions:
     id-token: write
 jobs:
     deploy:
-        name: Deploy to GitHub Pages
+        name: Deploy
         concurrency:
             group: 'deploy-to-github-pages'
             cancel-in-progress: true
@@ -25,7 +26,7 @@ jobs:
               with:
                   node-version: '24'
             - name: Build project
-              run: npm install && npm run build
+              run: npm ci && npm run build
             - name: Upload artifact
               uses: actions/upload-pages-artifact@v3
               with:
