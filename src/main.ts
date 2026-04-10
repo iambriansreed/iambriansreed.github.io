@@ -89,7 +89,7 @@ async function main() {
             window.history.pushState(
                 {},
                 '',
-                sectionId !== 'welcome' ? '/' + sectionId : '/',
+                sectionId !== 'welcome' ? '/#' + sectionId : '/',
             );
 
             sectionElements.forEach((element) => {
@@ -121,10 +121,8 @@ async function main() {
         });
 
         setTimeout(() => {
-            const initialSection = sectionElements.find(
-                (element) =>
-                    window.location.pathname.includes(element.id) ||
-                    window.location.hash.includes(element.id),
+            const initialSection = sectionElements.find((element) =>
+                window.location.hash.includes(element.id),
             );
 
             if (initialSection) {
