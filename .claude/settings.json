@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cd /Users/brianreed/Projects; ls -la scratch 2>/dev/null | head -40; echo \"=== find skrapa ===\"; ls -la scratch/skrapa 2>/dev/null | head -40 || find scratch -maxdepth 2 -iname '*skrapa*' 2>/dev/null | head)",
+      "Read(//Users/brianreed/Projects/**)"
+    ]
+  }
+}

@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="800" viewBox="0 0 1600 800" role="img" aria-label="Skrapa — static site generator">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1c1c20"/>
+      <stop offset="1" stop-color="#0e0e11"/>
+    </linearGradient>
+    <!-- subtle sheen on the logo strokes -->
+    <linearGradient id="mark" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset="1" stop-color="#c7c7cc"/>
+    </linearGradient>
+  </defs>
+
+  <!-- background, matching the other project thumbnails -->
+  <rect width="1600" height="800" fill="url(#bg)"/>
+
+  <!-- ===== Left: the skrapa logo mark (assets/skrapa.svg), scaled up ===== -->
+  <g transform="translate(124 140) scale(2.6)" fill="none" stroke="url(#mark)"
+     stroke-width="8" stroke-linecap="round" stroke-linejoin="round">
+    <line x1="135" y1="42" x2="62" y2="52"/>
+    <line x1="62" y1="52" x2="82" y2="102"/>
+    <line x1="82" y1="102" x2="132" y2="92"/>
+    <line x1="132" y1="92" x2="118" y2="152"/>
+    <line x1="118" y1="152" x2="62" y2="158"/>
+  </g>
+
+  <!-- ===== Right: wordmark + tagline + command ===== -->
+  <g font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">
+    <!-- eyebrow -->
+    <text x="562" y="282" font-size="28" font-weight="700" letter-spacing="7" fill="#71717a">STATIC SITE GENERATOR</text>
+
+    <!-- wordmark -->
+    <text x="558" y="432" font-size="150" font-weight="800" letter-spacing="-4" fill="#fafafa">Skrapa</text>
+
+    <!-- tagline -->
+    <text x="562" y="608" font-size="34" font-weight="500" fill="#a1a1aa">TypeScript JSX → one HTML file. No framework. No bundler.</text>
+  </g>
+
+  <!-- terminal-style command pill -->
+  <g font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace">
+    <rect x="560" y="478" width="312" height="66" rx="12" fill="#ffffff" fill-opacity="0.05" stroke="#ffffff" stroke-opacity="0.12"/>
+    <text x="588" y="521" font-size="30" font-weight="500"><tspan fill="#71717a">$ </tspan><tspan fill="#71717a">npx </tspan><tspan fill="#5fb88f" font-weight="700">skrapa</tspan></text>
+  </g>
+</svg>

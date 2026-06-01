@@ -3,7 +3,16 @@
     "allow": [
       "WebFetch(domain:localhost)",
       "WebFetch(domain:local.local)",
-      "WebSearch"
+      "WebSearch",
+      "Bash(npx playwright *)",
+      "WebFetch(domain:francoruiz.dev)",
+      "WebFetch(domain:jonathontoon.com)",
+      "WebFetch(domain:www.ormanclark.com)",
+      "WebFetch(domain:cristinagomezruiz.com)",
+      "Bash(curl -sL https://fonts.gstatic.com/s/archivo/v25/k3kPo8UDI-1M0wlSV9XAw6lQkqWY8Q82sLydOxKsv4Rn.woff2 -o /Users/brianreed/Projects/iambriansreed.github.io/public/fonts/Archivo.woff2)",
+      "Bash(npm run *)",
+      "Bash(curl -s http://localhost:8675/style.css)",
+      "Bash(curl -s http://localhost:8675)"
     ]
   }
 }
