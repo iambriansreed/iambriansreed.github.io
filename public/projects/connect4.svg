@@ -1,0 +1,147 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="640" viewBox="0 0 1280 640" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#0f172a"/>
+      <stop offset="1" stop-color="#0b1120"/>
+    </linearGradient>
+    <linearGradient id="boardGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#4f46e5"/>
+      <stop offset="1" stop-color="#4338ca"/>
+    </linearGradient>
+    <mask id="holes">
+      <rect x="656" y="95" width="554" height="480" rx="28" fill="white"/>
+      <circle cx="711" cy="150" r="29.6" fill="black"/>
+      <circle cx="711" cy="224" r="29.6" fill="black"/>
+      <circle cx="711" cy="298" r="29.6" fill="black"/>
+      <circle cx="711" cy="372" r="29.6" fill="black"/>
+      <circle cx="711" cy="446" r="29.6" fill="black"/>
+      <circle cx="711" cy="520" r="29.6" fill="black"/>
+      <circle cx="785" cy="150" r="29.6" fill="black"/>
+      <circle cx="785" cy="224" r="29.6" fill="black"/>
+      <circle cx="785" cy="298" r="29.6" fill="black"/>
+      <circle cx="785" cy="372" r="29.6" fill="black"/>
+      <circle cx="785" cy="446" r="29.6" fill="black"/>
+      <circle cx="785" cy="520" r="29.6" fill="black"/>
+      <circle cx="859" cy="150" r="29.6" fill="black"/>
+      <circle cx="859" cy="224" r="29.6" fill="black"/>
+      <circle cx="859" cy="298" r="29.6" fill="black"/>
+      <circle cx="859" cy="372" r="29.6" fill="black"/>
+      <circle cx="859" cy="446" r="29.6" fill="black"/>
+      <circle cx="859" cy="520" r="29.6" fill="black"/>
+      <circle cx="933" cy="150" r="29.6" fill="black"/>
+      <circle cx="933" cy="224" r="29.6" fill="black"/>
+      <circle cx="933" cy="298" r="29.6" fill="black"/>
+      <circle cx="933" cy="372" r="29.6" fill="black"/>
+      <circle cx="933" cy="446" r="29.6" fill="black"/>
+      <circle cx="933" cy="520" r="29.6" fill="black"/>
+      <circle cx="1007" cy="150" r="29.6" fill="black"/>
+      <circle cx="1007" cy="224" r="29.6" fill="black"/>
+      <circle cx="1007" cy="298" r="29.6" fill="black"/>
+      <circle cx="1007" cy="372" r="29.6" fill="black"/>
+      <circle cx="1007" cy="446" r="29.6" fill="black"/>
+      <circle cx="1007" cy="520" r="29.6" fill="black"/>
+      <circle cx="1081" cy="150" r="29.6" fill="black"/>
+      <circle cx="1081" cy="224" r="29.6" fill="black"/>
+      <circle cx="1081" cy="298" r="29.6" fill="black"/>
+      <circle cx="1081" cy="372" r="29.6" fill="black"/>
+      <circle cx="1081" cy="446" r="29.6" fill="black"/>
+      <circle cx="1081" cy="520" r="29.6" fill="black"/>
+      <circle cx="1155" cy="150" r="29.6" fill="black"/>
+      <circle cx="1155" cy="224" r="29.6" fill="black"/>
+      <circle cx="1155" cy="298" r="29.6" fill="black"/>
+      <circle cx="1155" cy="372" r="29.6" fill="black"/>
+      <circle cx="1155" cy="446" r="29.6" fill="black"/>
+      <circle cx="1155" cy="520" r="29.6" fill="black"/>
+    </mask>
+  </defs>
+
+  <!-- page background -->
+  <rect width="1280" height="640" fill="url(#bg)"/>
+
+  <!-- falling 'next' checker -->
+  <circle cx="1155" cy="53.9" r="29.6" fill="#f43f5e"/>
+  <circle cx="1155" cy="53.9" r="18.352" fill="none" stroke="rgba(0,0,0,0.18)" stroke-width="2.664"/>
+
+  <!-- discs (show through the holes) -->
+    <circle cx="711" cy="520" r="29.6" fill="#f43f5e"/>
+    <circle cx="711" cy="520" r="18.352" fill="none" stroke="rgba(0,0,0,0.18)" stroke-width="2.664"/>
+    <circle cx="711" cy="446" r="29.6" fill="#0b1120"/>
+    <circle cx="711" cy="372" r="29.6" fill="#0b1120"/>
+    <circle cx="711" cy="298" r="29.6" fill="#0b1120"/>
+    <circle cx="711" cy="224" r="29.6" fill="#0b1120"/>
+    <circle cx="711" cy="150" r="29.6" fill="#0b1120"/>
+    <circle cx="785" cy="520" r="29.6" fill="#fbbf24"/>
+    <circle cx="785" cy="520" r="18.352" fill="none" stroke="rgba(0,0,0,0.18)" stroke-width="2.664"/>
+    <circle cx="785" cy="446" r="29.6" fill="#f43f5e"/>
+    <circle cx="785" cy="446" r="18.352" fill="none" stroke="rgba(0,0,0,0.18)" stroke-width="2.664"/>
+    <circle cx="785" cy="372" r="29.6" fill="#0b1120"/>
+    <circle cx="785" cy="298" r="29.6" fill="#0b1120"/>
+    <circle cx="785" cy="224" r="29.6" fill="#0b1120"/>
+    <circle cx="785" cy="150" r="29.6" fill="#0b1120"/>
+    <circle cx="859" cy="520" r="29.6" fill="#f43f5e"/>
+    <circle cx="859" cy="520" r="18.352" fill="none" stroke="rgba(0,0,0,0.18)" stroke-width="2.664"/>
+    <circle cx="859" cy="446" r="29.6" fill="#fbbf24"/>
+    <circle cx="859" cy="446" r="18.352" fill="none" stroke="rgba(0,0,0,0.18)" stroke-width="2.664"/>
+    <circle cx="859" cy="372" r="29.6" fill="#f43f5e"/>
+    <circle cx="859" cy="372" r="18.352" fill="none" stroke="rgba(0,0,0,0.18)" stroke-width="2.664"/>
+    <circle cx="859" cy="298" r="29.6" fill="#0b1120"/>
+    <circle cx="859" cy="224" r="29.6" fill="#0b1120"/>
+    <circle cx="859" cy="150" r="29.6" fill="#0b1120"/>
+    <circle cx="933" cy="520" r="29.6" fill="#fbbf24"/>
+    <circle cx="933" cy="520" r="18.352" fill="none" stroke="rgba(0,0,0,0.18)" stroke-width="2.664"/>
+    <circle cx="933" cy="446" r="29.6" fill="#f43f5e"/>
+    <circle cx="933" cy="446" r="18.352" fill="none" stroke="rgba(0,0,0,0.18)" stroke-width="2.664"/>
+    <circle cx="933" cy="372" r="29.6" fill="#fbbf24"/>
+    <circle cx="933" cy="372" r="18.352" fill="none" stroke="rgba(0,0,0,0.18)" stroke-width="2.664"/>
+    <circle cx="933" cy="298" r="29.6" fill="#f43f5e"/>
+    <circle cx="933" cy="298" r="18.352" fill="none" stroke="rgba(0,0,0,0.18)" stroke-width="2.664"/>
+    <circle cx="933" cy="224" r="29.6" fill="#0b1120"/>
+    <circle cx="933" cy="150" r="29.6" fill="#0b1120"/>
+    <circle cx="1007" cy="520" r="29.6" fill="#f43f5e"/>
+    <circle cx="1007" cy="520" r="18.352" fill="none" stroke="rgba(0,0,0,0.18)" stroke-width="2.664"/>
+    <circle cx="1007" cy="446" r="29.6" fill="#fbbf24"/>
+    <circle cx="1007" cy="446" r="18.352" fill="none" stroke="rgba(0,0,0,0.18)" stroke-width="2.664"/>
+    <circle cx="1007" cy="372" r="29.6" fill="#0b1120"/>
+    <circle cx="1007" cy="298" r="29.6" fill="#0b1120"/>
+    <circle cx="1007" cy="224" r="29.6" fill="#0b1120"/>
+    <circle cx="1007" cy="150" r="29.6" fill="#0b1120"/>
+    <circle cx="1081" cy="520" r="29.6" fill="#fbbf24"/>
+    <circle cx="1081" cy="520" r="18.352" fill="none" stroke="rgba(0,0,0,0.18)" stroke-width="2.664"/>
+    <circle cx="1081" cy="446" r="29.6" fill="#0b1120"/>
+    <circle cx="1081" cy="372" r="29.6" fill="#0b1120"/>
+    <circle cx="1081" cy="298" r="29.6" fill="#0b1120"/>
+    <circle cx="1081" cy="224" r="29.6" fill="#0b1120"/>
+    <circle cx="1081" cy="150" r="29.6" fill="#0b1120"/>
+    <circle cx="1155" cy="520" r="29.6" fill="#0b1120"/>
+    <circle cx="1155" cy="446" r="29.6" fill="#0b1120"/>
+    <circle cx="1155" cy="372" r="29.6" fill="#0b1120"/>
+    <circle cx="1155" cy="298" r="29.6" fill="#0b1120"/>
+    <circle cx="1155" cy="224" r="29.6" fill="#0b1120"/>
+    <circle cx="1155" cy="150" r="29.6" fill="#0b1120"/>
+
+  <!-- board face with punched holes -->
+  <g mask="url(#holes)">
+    <rect x="656" y="95" width="554" height="480" rx="28" fill="url(#boardGrad)"/>
+  </g>
+
+  <!-- top opening lip -->
+  <rect x="656" y="65" width="554" height="70" rx="24" fill="#4f46e5"/>
+  <g mask="url(#holes)"><rect x="656" y="95" width="554" height="480" rx="28" fill="url(#boardGrad)"/></g>
+  <rect x="674" y="75" width="518" height="8" rx="4" fill="rgba(0,0,0,0.22)"/>
+
+  <!-- ===== Left: title block (splash style) ===== -->
+  <g transform="translate(96, 232)">
+    <!-- dots -->
+    <circle cx="18" cy="0" r="18" fill="#f43f5e"/>
+    <circle cx="18" cy="0" r="13" fill="none" stroke="rgba(0,0,0,0.18)" stroke-width="3"/>
+    <circle cx="64" cy="0" r="18" fill="#fbbf24"/>
+    <circle cx="64" cy="0" r="13" fill="none" stroke="rgba(0,0,0,0.18)" stroke-width="3"/>
+    <circle cx="110" cy="0" r="18" fill="#f43f5e"/>
+    <circle cx="110" cy="0" r="13" fill="none" stroke="rgba(0,0,0,0.18)" stroke-width="3"/>
+    <circle cx="156" cy="0" r="18" fill="#fbbf24"/>
+    <circle cx="156" cy="0" r="13" fill="none" stroke="rgba(0,0,0,0.18)" stroke-width="3"/>
+
+    <text x="0" y="92" font-size="92" font-weight="800" letter-spacing="-3" fill="#f8fafc">Connect 4</text>
+    <text x="2" y="140" font-size="30" font-weight="500" letter-spacing="0.3" fill="#94a3b8">Crappy AI vs Human</text>
+  </g>
+</svg>

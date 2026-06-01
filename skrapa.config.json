@@ -2,5 +2,6 @@
     "input": "src",
     "output": "dist",
     "assets": "public",
+    "host": "iambrian.local",
     "port": 8675
 }

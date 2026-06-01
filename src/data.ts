@@ -12,6 +12,7 @@ export type ExperienceItem = {
 export type Project = {
     title: string;
     url: string;
+    thumbnail?: string;
     description: string;
     category: string;
     skills: string[];
@@ -122,7 +123,12 @@ const data: SiteData = {
             location: 'Norfolk, VA',
             startedOn: 1548997200000,
             finishedOn: 1561953600000,
-            skills: ['React Native', 'React', 'Cross-platform UI', 'Architecture'],
+            skills: [
+                'React Native',
+                'React',
+                'Cross-platform UI',
+                'Architecture',
+            ],
             description: [
                 'Unified multiple teams around a rebuilt internal React Native framework used across several mobile applications.',
                 'Designed high-level, reusable component patterns to support scalability across products and regions.',
@@ -236,8 +242,28 @@ const data: SiteData = {
 
     projects: [
         {
+            title: 'Skrapa',
+            url: 'https://iambrian.com/skrapa',
+            thumbnail: 'projects/skrapa.svg',
+            description:
+                'A zero-config static site generator that renders TypeScript JSX templates and client code into a single HTML file; no framework, no virtual DOM, no bundler. It builds this very site.',
+            category: 'Dev Tools',
+            skills: ['TypeScript', 'JSX', 'Node.js', 'CLI'],
+            sources: [
+                {
+                    title: 'Frontend',
+                    url: 'https://github.com/iambriansreed/skrapa',
+                },
+                {
+                    title: 'Npm',
+                    url: 'https://www.npmjs.com/package/skrapa',
+                },
+            ],
+        },
+        {
             title: 'Sordle',
             url: 'https://sordle.iambrian.com',
+            thumbnail: 'projects/sordle.svg',
             description:
                 'Enjoy unlimited Wordle games with this Wordle clone. Features a static backend and provides the definition of each word.',
             category: 'Games',
@@ -256,6 +282,7 @@ const data: SiteData = {
         {
             title: 'Connect 4',
             url: 'https://connect4.iambrian.com',
+            thumbnail: 'projects/connect4.svg',
             description:
                 'Challenge yourself to a game of Connect 4 against a basic AI, competitive enough to keep you entertained but still beatable.',
             category: 'Games',
@@ -268,8 +295,9 @@ const data: SiteData = {
             ],
         },
         {
-            title: 'Socket Chat',
+            title: 'Comms',
             url: 'https://chat.iambrian.com',
+            thumbnail: 'projects/comms.svg',
             description:
                 "A chat application supporting multiple private rooms, with data stored exclusively on clients' devices.",
             category: 'Apps',

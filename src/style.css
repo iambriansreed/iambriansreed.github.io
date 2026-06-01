@@ -11,7 +11,7 @@
 :root {
     --bg: #f9f7f4;
     --text: #1a1814;
-    --muted: #7a746e;
+    --muted: #6e675f;
     --border: #e6e0d6;
     --gap: 4.5rem;
     --radius: 6px;
@@ -19,6 +19,14 @@
     --skewX: skewX(-6deg);
     --skewX-counter: skewX(6deg);
     --skewX-dot: skewX(-20deg);
+    /* Parallelogram clip for solid shapes (toggles, badge, cookie bar). Each
+       consumer can override the corner offset via --clip-x. */
+    --clip-para: polygon(
+        var(--clip-x, 0.5rem) 0,
+        100% 0,
+        calc(100% - var(--clip-x, 0.5rem)) 100%,
+        0 100%
+    );
 
     /* Derived from --accent via relative color syntax */
     --accent-faded: oklch(from var(--accent) l c h / 0.3);
@@ -41,7 +49,7 @@
     &[data-theme='light'] {
         --bg: #f9f7f4;
         --text: #1a1814;
-        --muted: #7a746e;
+        --muted: #6e675f;
         --border: #e6e0d6;
         --accent-faded: oklch(from var(--accent) l c h / 0.3);
         --accent-subtle: oklch(from var(--accent) l c h / 0.12);
@@ -64,18 +72,6 @@
 ::selection {
     background: var(--accent-subtle);
     color: var(--text);
-}
-
-@keyframes btn-pop {
-    0% {
-        transform: scale(1);
-    }
-    35% {
-        transform: scale(0.82);
-    }
-    100% {
-        transform: scale(1);
-    }
 }
 
 @keyframes nudge {
@@ -149,7 +145,7 @@ html {
         system-ui,
         -apple-system,
         sans-serif;
-    font-size: 16px;
+    font-size: 18px;
     line-height: 1.65;
     color: var(--text);
     /* Slight vertical accent wash over the page (fixed to the viewport). */
@@ -211,27 +207,23 @@ a {
     gap: 0.5rem;
 }
 
-/* ---------- Accent toggle ---------- */
-.accent-toggle {
-    width: 2.5rem;
-    height: 2.5rem;
-    clip-path: polygon(0.4rem 0, 100% 0, calc(100% - 0.4rem) 100%, 0 100%);
-    border: none;
-    background: var(--accent);
-    color: #fff;
-    cursor: pointer;
+/* ---------- Floating control toggles ---------- */
+/* Shared parallelogram FAB; .accent-toggle / .theme-toggle add only colors. */
+.fa-btn {
     display: flex;
     align-items: center;
     justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    --clip-x: 0.4rem;
+    clip-path: var(--clip-para);
+    border: none;
+    cursor: pointer;
     z-index: 100;
     transition:
         background 0.15s,
-        color 0.15s;
-
-    &:hover {
-        background: var(--tag-bg);
-        color: var(--accent);
-    }
+        color 0.15s,
+        box-shadow 0.15s;
 
     .icon {
         width: 1.1rem;
@@ -239,34 +231,43 @@ a {
     }
 }
 
-/* ---------- Theme toggle ---------- */
+.accent-toggle {
+    background: var(--accent);
+    color: #fff;
+
+    /* Keep the accent background; just invert the icon to the bg color. */
+    &:hover {
+        color: var(--bg);
+    }
+
+    /* Triple-click slot-machine spin (see client.ts). */
+    &.spinning {
+        animation: accent-spin-pulse 0.28s ease-in-out infinite;
+    }
+}
+@keyframes accent-spin-pulse {
+    0%,
+    100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.14);
+    }
+}
+@media (prefers-reduced-motion: reduce) {
+    .accent-toggle.spinning {
+        animation: none;
+    }
+}
+
 .theme-toggle {
-    width: 2.5rem;
-    height: 2.5rem;
-    clip-path: polygon(0.4rem 0, 100% 0, calc(100% - 0.4rem) 100%, 0 100%);
-    border: none;
     background: var(--text);
     color: var(--bg);
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 100;
     box-shadow: inset 0 0 0 1px var(--bg);
-    transition:
-        background 0.15s,
-        border-color 0.15s,
-        box-shadow 0.15s;
 
     &:hover {
         background: var(--muted);
-        border-color: var(--muted);
         box-shadow: inset 0 0 0 2px var(--bg);
-    }
-
-    .icon {
-        width: 1.1rem;
-        height: 1.1rem;
     }
 
     /* Default: light mode shows moon, dark mode shows sun */
@@ -347,6 +348,37 @@ a {
     ::view-transition-new(root) {
         animation: none;
     }
+}
+
+/* Bare icon button: an unstyled control that shows only its icon. */
+.icon-btn {
+    display: inline-flex;
+    align-items: center;
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    color: var(--muted);
+    line-height: 0;
+    transition: color 0.15s;
+}
+.icon-btn:hover {
+    color: var(--text);
+}
+.icon-btn:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+    border-radius: var(--radius);
+    color: var(--text);
+}
+
+/* Parallelogram skew helpers: skew a container, counter-skew its contents back
+   upright. Pairs with the --skewX / --skewX-counter tokens. */
+.u-skew {
+    transform: var(--skewX);
+}
+.u-unskew {
+    transform: var(--skewX-counter);
 }
 
 /* ---------- Nav ---------- */
@@ -475,16 +507,7 @@ a {
     position: absolute;
     top: 1.25rem;
     right: 1.25rem;
-    display: flex;
-    background: none;
-    border: none;
-    cursor: pointer;
-    color: var(--muted);
     padding: 0.25rem;
-    line-height: 0;
-}
-.mobile-menu-close:hover {
-    color: var(--text);
 }
 .mobile-menu-close .icon {
     width: 1.4rem;
@@ -510,12 +533,20 @@ a {
 .section-head {
     margin-bottom: clamp(1.5rem, 4vw, 2.5rem);
 }
-.eyebrow {
-    display: block;
+/* Small uppercase caption labels share size/weight/transform; each rule below
+   keeps only its own letter-spacing, color, and spacing. */
+.eyebrow,
+.exp-label,
+.about-label,
+.project-cat,
+.quote-band-cite {
     font-size: 0.9rem;
     font-weight: 700;
-    letter-spacing: 0.22em;
     text-transform: uppercase;
+}
+.eyebrow {
+    display: block;
+    letter-spacing: 0.22em;
     color: var(--muted);
     margin-bottom: 0.6rem;
 }
@@ -568,10 +599,7 @@ a {
     display: block;
     margin-top: clamp(1.25rem, 3vw, 2rem);
     font-style: normal;
-    font-size: 0.9rem;
-    font-weight: 700;
     letter-spacing: 0.22em;
-    text-transform: uppercase;
     color: var(--muted);
 }
 
@@ -596,7 +624,7 @@ a {
     background: var(--accent-subtle);
     padding: 0.4rem 1rem;
     margin-bottom: 1.5rem;
-    clip-path: polygon(0.5rem 0, 100% 0, calc(100% - 0.5rem) 100%, 0 100%);
+    clip-path: var(--clip-para);
 }
 .hero-badge-dot {
     width: 0.5rem;
@@ -805,10 +833,7 @@ a {
     border-bottom: 1px solid var(--border);
 }
 .about-label {
-    font-size: 0.9rem;
-    font-weight: 700;
     letter-spacing: 0.14em;
-    text-transform: uppercase;
     color: var(--accent);
 }
 .about-value {
@@ -833,26 +858,11 @@ a {
     flex-wrap: wrap;
     gap: 0.6rem;
 }
-.skill-chip {
-    font-size: 0.95rem;
-    font-weight: 600;
-    padding: 0.5rem 1.1rem;
-    border: none;
-    --para-bg: var(--accent-subtle);
-    color: var(--text);
-    transition: color 0.15s;
-}
-.skill-chip:hover {
-    --para-bg: var(--accent);
-    color: #fff;
-}
 
 /* Shared parallelogram fill: a skewed ::before carries the background so the
    element's own text/icons stay upright. The -6deg slant matches the send
    button and the accent dots. Consumers set --para-bg; default is subtle. */
 .btn,
-.consent-btn,
-.skill-chip,
 .tag,
 .hero-rail a {
     position: relative;
@@ -861,8 +871,6 @@ a {
     background: transparent;
 }
 .btn::before,
-.consent-btn::before,
-.skill-chip::before,
 .tag::before,
 .hero-rail a::before {
     content: '';
@@ -874,6 +882,34 @@ a {
     transition: background 0.15s;
 }
 
+/* Themed focus ring: the visible shape is the skewed ::before, so the outline
+   lives there too and slants with the parallelogram. The accent-shadow glow
+   echoes the hover accent and stays visible against either fill. */
+@keyframes btn-focus-pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+}
+.btn:focus-visible,
+.hero-rail a:focus-visible {
+    outline: none;
+    animation: btn-focus-pulse 5s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+    .btn:focus-visible,
+    .hero-rail a:focus-visible {
+        animation: none;
+    }
+}
+.btn:focus-visible::before,
+.hero-rail a:focus-visible::before {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+    box-shadow: 0 0 0 5px var(--accent-subtle);
+}
+
+/* Button system: .btn base + style variant (.btn-primary) + size variant
+   (.btn-sm). The cookie consent buttons reuse .btn .btn-primary .btn-sm. */
 .btn {
     display: inline-flex;
     align-items: center;
@@ -883,6 +919,7 @@ a {
     font-size: 0.9rem;
     font-weight: 600;
     text-decoration: none;
+    cursor: pointer;
     --para-bg: var(--accent-subtle);
     color: var(--text);
     border: none;
@@ -905,9 +942,19 @@ a {
 
     &:hover {
         opacity: 0.85;
-        --para-bg: var(--accent);
         color: #fff;
     }
+}
+
+.btn-sm {
+    padding: 0.25rem 0.85rem;
+}
+
+/* skill-chip reuses .btn; only the font size and (non-clickable) cursor differ.
+   Declared after .btn so its size wins at equal specificity. */
+.skill-chip {
+    font-size: 0.95rem;
+    cursor: default;
 }
 
 /* ---------- Experience ---------- */
@@ -947,24 +994,22 @@ a {
     gap: 0.2rem;
 }
 .exp-label {
-    font-size: 0.9rem;
-    font-weight: 700;
     letter-spacing: 0.16em;
-    text-transform: uppercase;
     color: var(--muted);
 }
 .exp-value {
     font-size: 0.9rem;
     font-weight: 600;
+    color: var(--muted-dark);
 }
 
 /* Title is now the prominent line; company is the secondary accent line below. */
 .exp-role {
-    font-size: 1.25rem;
+    font-size: 1.05rem;
     font-weight: 800;
     text-transform: uppercase;
     letter-spacing: -0.01em;
-    line-height: 1.1;
+    line-height: 1.15;
 }
 
 .exp-company {
@@ -978,13 +1023,18 @@ a {
     margin-bottom: 1rem;
 }
 .exp-bullets li {
-    font-size: 0.9375rem;
+    font-size: 1.05rem;
     color: var(--muted);
-    line-height: 1.6;
+    line-height: 1.4;
     padding-left: 1.1rem;
     position: relative;
-    margin-bottom: 0.35rem;
+    margin-bottom: 0.6rem;
+
+    &:hover {
+        color: var(--text);
+    }
 }
+
 .exp-bullets li::before {
     content: '–';
     position: absolute;
@@ -1081,7 +1131,7 @@ a {
     inset-inline: 50vw;
     top: 6px;
     height: 2px;
-    background: var(--border);
+    background: var(--muted);
 }
 
 .exp-pinned .exp-dot {
@@ -1106,7 +1156,7 @@ a {
     /* Parallelogram marker matching the site's -6deg motif. */
     transform: var(--skewX);
     transition:
-        transform 0.2s,
+        transform 0.8s,
         background 0.2s,
         border-color 0.2s;
 }
@@ -1128,7 +1178,7 @@ a {
 .exp-dot.is-active .exp-dot-mark {
     background: var(--accent);
     border-color: var(--accent);
-    transform: var(--skewX) scale(1.4);
+    transform: var(--skewX) scale(1.8);
 }
 
 .exp-dot.is-active .exp-dot-year {
@@ -1168,30 +1218,32 @@ a {
     border-radius: var(--radius);
     overflow: hidden;
     background: var(--accent-subtle);
-    /* Parallelogram; the thumbnail skews with it, text is counter-skewed. */
-    transform: var(--skewX);
+    /* .u-skew parallelogram; thumb mark + body counter-skew (see markup). */
     transition: transform 0.15s;
 }
 .project-item:hover {
     transform: var(--skewX) translateY(-4px);
 }
-.project-body {
-    transform: var(--skewX-counter);
-}
-.project-thumb-mark {
-    transform: var(--skewX-counter);
-}
 .project-item[hidden] {
     display: none;
 }
-
+/* Card is skewed; thumb mark + body counter-skew their contents upright. */
 .project-thumb {
     display: flex;
     align-items: center;
     justify-content: center;
-    aspect-ratio: 16 / 10;
+    aspect-ratio: 16 / 8;
     text-decoration: none;
     background: oklch(from var(--accent) 0.55 0.14 calc(h + var(--shift, 0)));
+    overflow: hidden;
+}
+.project-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    /* No counter-skew: the image inherits the card's .u-skew (-6deg) so it
+       skews along with the parallelogram and fills the container edge to edge. */
 }
 .project-thumb-mark {
     font-size: 3.5rem;
@@ -1207,10 +1259,7 @@ a {
     padding: 1.25rem;
 }
 .project-cat {
-    font-size: 0.9rem;
-    font-weight: 700;
     letter-spacing: 0.16em;
-    text-transform: uppercase;
     color: var(--accent);
 }
 .project-title {
@@ -1232,15 +1281,21 @@ a {
 }
 .project-sources {
     display: flex;
-    gap: 1rem;
-    margin-top: 0.4rem;
+    gap: 1.25rem;
+    margin-top: 0.5rem;
 }
 .source-link {
     display: inline-flex;
     align-items: center;
-    gap: 0.3rem;
-    font-size: 0.9rem;
+    gap: 0.45rem;
+    font-size: 1.05rem;
+    font-weight: 600;
     color: var(--muted);
+}
+/* Source-link icons (GitHub / npm) ride a bit larger than the text. */
+.source-link .icon {
+    width: 1.25em;
+    height: 1.25em;
 }
 .source-link:hover {
     color: var(--accent);
@@ -1258,14 +1313,13 @@ a {
 .connect-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: clamp(1.5rem, 5vw, 3.5rem);
+    gap: clamp(0.75rem, 2.5vw, 1.75rem);
     align-items: stretch;
 }
 .connect-list {
     display: flex;
     flex-direction: column;
     gap: 0.75rem;
-    transform: var(--skewX);
 }
 /* Angled buttons matching the contact form: accent border, no fill, skewed;
    contents are counter-skewed upright. The buttons grow to fill the column so
@@ -1371,16 +1425,8 @@ a {
     letter-spacing: -0.01em;
 }
 .quiz-close {
-    background: none;
-    border: none;
-    cursor: pointer;
-    color: var(--muted);
     padding: 0.25rem;
-    line-height: 0;
 
-    &:hover {
-        color: var(--text);
-    }
     .icon {
         width: 1.25rem;
         height: 1.25rem;
@@ -1712,15 +1758,13 @@ a {
     padding: 0;
     overflow: hidden;
     color: var(--text);
-    /* Parallelogram to match the rest of the cards; contents counter-skewed. */
-    transform: var(--skewX);
-
+    /* .u-skew parallelogram (see markup); direct children counter-skew upright. */
     & > * {
         transform: var(--skewX-counter);
     }
 
     .msg-textarea {
-        resize: vertical;
+        resize: none;
         border: none;
         outline: none;
         padding: 1.1rem 1.25rem;
@@ -1731,6 +1775,7 @@ a {
         color: var(--text);
         min-height: 170px;
         transition: background 0.15s;
+        flex-grow: 1;
 
         &:focus {
             background: var(--tag-bg);
@@ -1877,12 +1922,12 @@ dialog:popover-open,
     inset: auto 1.25rem 1.25rem auto;
     margin: 0;
     height: 2.5rem;
-    width: 15rem;
+    width: 22rem;
     max-width: calc(100vw - 2.5rem);
     align-items: center;
     justify-content: space-between;
     gap: 0.625rem;
-    padding: 0 1.25rem 0 0.875rem;
+    padding: 0 1rem 0 0.875rem;
 
     /* Closed popover stays display:none (UA); flex only when open. */
     &:popover-open {
@@ -1899,44 +1944,20 @@ dialog:popover-open,
     -webkit-backdrop-filter: blur(14px) saturate(1.4);
     border: none;
     border-radius: 0;
-    clip-path: polygon(0.6rem 0, 100% 0, calc(100% - 0.6rem) 100%, 0 100%);
+    --clip-x: 0.6rem;
+    clip-path: var(--clip-para);
     white-space: nowrap;
     color: var(--text);
 
     .label {
         font-size: 0.9rem;
-        font-weight: 600;
+        font-weight: 800;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
         color: var(--accent);
     }
 
-    .consent-btn {
-        font-size: 0.9rem;
-        font-weight: 600;
-        padding: 0.25rem 0.85rem;
-        border: none;
-        --para-bg: var(--accent);
-        color: #fff;
-        cursor: pointer;
-        font-family: inherit;
-        transition: color 0.15s;
-
-        &:hover {
-            filter: brightness(1.08);
-        }
-
-        &.is-clicked {
-            animation: btn-pop 0.3s ease-out;
-        }
-    }
-
     .policy-btn {
-        display: flex;
-        align-items: center;
-        color: var(--muted);
-        background: none;
-        border: none;
-        cursor: pointer;
-        padding: 0;
         margin-right: 0.25rem;
         line-height: 1;
         gap: 0.35rem;
@@ -1953,6 +1974,11 @@ dialog:popover-open,
         :root:has(#cookie-policy:popover-open) & {
             color: var(--accent);
         }
+    }
+
+    .cookie-close .icon {
+        width: 1.05rem;
+        height: 1.05rem;
     }
 }
 

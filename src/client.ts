@@ -97,6 +97,18 @@ const REDUCE_MOTION = window.matchMedia(
     '(prefers-reduced-motion: reduce)',
 ).matches;
 
+const API_BASE = (() => {
+    const host = window.location.hostname;
+    if (
+        host === 'localhost' ||
+        host.startsWith('127.') ||
+        host.includes('.local')
+    ) {
+        return 'http://api.iambrian.local';
+    }
+    return 'https://api.iambrian.com';
+})();
+
 // ── Theme ─────────────────────────────────────────────────────────────────────
 
 themeBtn.addEventListener('click', () => {
@@ -116,7 +128,50 @@ themeBtn.addEventListener('click', () => {
     transition.finished.finally(() => delete html.dataset.themeSwitch);
 });
 
+// ── Accent ──────────────────────────────────────────────────────────────────────
+// Single click cycles to the next accent. Three quick clicks kick off a slot-
+// machine spin: accents flicker fast, ease out, and land on a random color.
+let accentClicks: number[] = [];
+let accentSpinning = false;
+
+function spinAccent() {
+    accentSpinning = true;
+    accentBtn.classList.add('spinning');
+    const len = ACCENTS.length;
+    const startIdx = ACCENTS.indexOf(state.accent);
+    const target = Math.floor(Math.random() * len);
+    // Two full loops, then advance to the random target (~16-23 flips).
+    const steps = len * 2 + ((target - startIdx + len) % len);
+    let step = 0;
+    const tick = () => {
+        step += 1;
+        setState({ accent: ACCENTS[(startIdx + step) % len] });
+        if (step >= steps) {
+            accentSpinning = false;
+            accentBtn.classList.remove('spinning');
+            return;
+        }
+        // Whips fast (~28ms) for most of the spin, then the steep ease-out
+        // (pow 4) draws the final flips out to ~530ms for a slow, teasing stop.
+        const delay = 28 + Math.pow(step / steps, 4) * 500;
+        window.setTimeout(tick, delay);
+    };
+    tick();
+}
+
 accentBtn.addEventListener('click', () => {
+    if (accentSpinning) return;
+
+    const now = Date.now();
+    accentClicks = accentClicks.filter((t) => now - t < 600);
+    accentClicks.push(now);
+
+    if (!REDUCE_MOTION && accentClicks.length >= 3) {
+        accentClicks = [];
+        spinAccent();
+        return;
+    }
+
     const accentIndex = ACCENTS.indexOf(state.accent);
     setState({ accent: ACCENTS[(accentIndex + 1) % ACCENTS.length] });
 });
@@ -227,23 +282,33 @@ function messageFormInit() {
         );
     }
 
-    function sendMessage() {
+    async function sendMessage() {
         msgTextarea.disabled = true;
         msgSend.disabled = true;
 
-        // Front-end flow only for now. To actually deliver, POST here and
-        // reveal success on ok / re-enable the field on error, e.g.:
-        //   await fetch('https://api.iambrian.com/contact', {
-        //       method: 'POST',
-        //       headers: { 'Content-Type': 'application/json' },
-        //       body: JSON.stringify({
-        //           email: getEmail(),
-        //           message: msgTextarea.value,
-        //           type: 'contact',
-        //       }),
-        //   });
-        msgSuccess.classList.add('is-visible');
-        setTimeout(resetForm, 2800);
+        try {
+            const resp = await fetch(`${API_BASE}/contact`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    email: getEmail(),
+                    message: msgTextarea.value,
+                    type: 'contact',
+                }),
+            });
+            const data = await resp.json().catch(() => ({}));
+            if (resp.ok && data.success !== false) {
+                msgSuccess.classList.add('is-visible');
+                setTimeout(resetForm, 2800);
+                return;
+            }
+            throw new Error('send failed');
+        } catch (err) {
+            console.error('sendMessage error', err);
+            alert('Unable to send message. Please try again later.');
+            msgTextarea.disabled = false;
+            msgSend.disabled = false;
+        }
     }
 
     function resetForm() {
@@ -310,6 +375,29 @@ messageFormInit();
             fab.style.top = '';
             fab.style.bottom = '';
         }
+    };
+    window.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', update);
+    window.addEventListener('load', update);
+    update();
+})();
+
+// ── Ride the cookie bar above the footer ─────────────────────────────────────────
+// The cookie bar rests at bottom: 1.25rem. As the footer scrolls up it rides up
+// with it (staying a hair above, never clashing) until it reaches 8.25rem from the
+// bottom, where it sticks.
+(() => {
+    const bar = qs('#cookie-bar');
+    const footer = qs('footer');
+    if (!bar || !footer) return;
+    const REST = 20; // 1.25rem resting offset
+    const STICK = 132; // 8.25rem — highest it docks, then sticks
+    const GAP = 12; // clearance kept above the footer
+    const update = () => {
+        const footerTop = footer.getBoundingClientRect().top;
+        const needed = window.innerHeight - footerTop + GAP;
+        const offset = Math.max(REST, Math.min(STICK, needed));
+        bar.style.bottom = offset > REST ? `${offset}px` : '';
     };
     window.addEventListener('scroll', update, { passive: true });
     window.addEventListener('resize', update);
@@ -504,12 +592,43 @@ messageFormInit();
         setState(hasFail() ? 'fail' : 'pass');
     });
 
-    passForm.addEventListener('submit', (e) => {
+    passForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         passForm.classList.add('submitted');
         if (!emailInput.checkValidity()) return;
-        // Front-end only — POST answers() + emailInput.value here to deliver.
-        setState('sent');
+
+        // collect quiz answers from quizForm
+        const fd = new FormData(quizForm);
+        const payload: Record<string, any> = {};
+        for (const [k, v] of fd.entries()) {
+            if (Object.prototype.hasOwnProperty.call(payload, k)) {
+                if (!Array.isArray(payload[k])) payload[k] = [payload[k]];
+                payload[k].push(v);
+            } else {
+                payload[k] = v;
+            }
+        }
+
+        try {
+            const resp = await fetch(`${API_BASE}/quiz`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    email: emailInput.value,
+                    message: JSON.stringify(payload),
+                    type: 'quiz',
+                }),
+            });
+            const data = await resp.json().catch(() => ({}));
+            if (resp.ok && data.success !== false) {
+                setState('sent');
+                return;
+            }
+            throw new Error('submit failed');
+        } catch (err) {
+            console.error('quiz submit error', err);
+            alert('Unable to submit quiz. Please try again later.');
+        }
     });
 })();
 

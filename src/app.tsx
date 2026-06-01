@@ -8,6 +8,15 @@ const sendIcon = `<svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="
 
 const arrowIcon = `<svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10"/></svg>`;
 
+const npmIcon = `<svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" aria-hidden="true"><path fill="currentColor" d="M0 64v384h576V64H0zm96 320H48V160h96v192h48V160h48v224H96zm192 0V160h192v160h-96v64h-96zm144-160h-48v96h48v-96z"/></svg>`;
+
+// Pick a source-link icon by host: GitHub, npm, or a generic external-link arrow.
+function sourceIcon(url: string): string {
+    if (url.includes('github.com')) return githubIcon;
+    if (url.includes('npmjs.com')) return npmIcon;
+    return arrowIcon;
+}
+
 function formatDate(timestamp: number): string {
     return new Date(timestamp).toLocaleDateString('en-US', {
         year: 'numeric',
@@ -139,7 +148,7 @@ export function App(): string {
             <dialog id="mobile-menu" popover="auto" class="mobile-menu">
                 <button
                     type="button"
-                    class="mobile-menu-close"
+                    class="icon-btn mobile-menu-close"
                     popovertarget="mobile-menu"
                     popovertargetaction="hide"
                     aria-label="Close navigation"
@@ -176,7 +185,8 @@ export function App(): string {
                     <div class="hero-grid">
                         <div class="hero-main">
                             <h1 class="hero-name" aria-label="Brian S. Reed">
-                                Brian S<span
+                                Brian S
+                                <span
                                     class="hero-name-dot"
                                     aria-hidden="true"
                                 ></span>{' '}
@@ -272,24 +282,6 @@ export function App(): string {
                     </div>
                 </section>
 
-                <aside class="quote-band">
-                    <blockquote class="quote-band-inner">
-                        <p class="quote-band-text">
-                            Everything is designed
-                            <span
-                                class="quote-band-dot"
-                                aria-hidden="true"
-                            ></span>{' '}
-                            Few things are designed well
-                            <span
-                                class="quote-band-dot"
-                                aria-hidden="true"
-                            ></span>
-                        </p>
-                        <cite class="quote-band-cite">— me</cite>
-                    </blockquote>
-                </aside>
-
                 <section id="skills" class="skills">
                     <div class="section-head">
                         <span class="eyebrow">Inventory</span>
@@ -297,7 +289,7 @@ export function App(): string {
                     </div>
                     <div class="skills-chips">
                         {TECH_STACK.map((s) => (
-                            <span class="skill-chip">{s}</span>
+                            <span class="btn skill-chip">{s}</span>
                         ))}
                     </div>
                 </section>
@@ -314,7 +306,7 @@ export function App(): string {
                     <div class="proj-grid">
                         {projects.map((project, i) => (
                             <article
-                                class="project-item"
+                                class="project-item u-skew"
                                 data-category={project.category}
                             >
                                 <a
@@ -325,11 +317,22 @@ export function App(): string {
                                     style={`--shift:${i * 55}`}
                                     aria-hidden="true"
                                 >
-                                    <span class="project-thumb-mark">
-                                        {project.title.charAt(0)}
-                                    </span>
+                                    {project.thumbnail ? (
+                                        <img
+                                            src={`/${project.thumbnail}`}
+                                            alt=""
+                                            loading="lazy"
+                                            decoding="async"
+                                            width="480"
+                                            height="300"
+                                        />
+                                    ) : (
+                                        <span class="project-thumb-mark u-unskew">
+                                            {project.title.charAt(0)}
+                                        </span>
+                                    )}
                                 </a>
-                                <div class="project-body">
+                                <div class="project-body u-unskew">
                                     <span class="project-cat">
                                         {project.category}
                                     </span>
@@ -358,11 +361,7 @@ export function App(): string {
                                                     target="_blank"
                                                     rel="noopener noreferrer"
                                                 >
-                                                    {source.url.includes(
-                                                        'github.com',
-                                                    )
-                                                        ? githubIcon
-                                                        : ''}
+                                                    {sourceIcon(source.url)}
                                                     {source.title} →
                                                 </a>
                                             ))}
@@ -453,7 +452,7 @@ export function App(): string {
                         <h2 class="section-title">Get In Touch</h2>
                     </div>
                     <div class="connect-grid">
-                        <ul class="connect-list">
+                        <ul class="connect-list u-skew">
                             <li class="connect-item">
                                 <span class="connect-num">01</span>
                                 <button type="button" data-open-quiz>
@@ -485,7 +484,7 @@ export function App(): string {
                         </ul>
                         <form
                             id="msg-form"
-                            class="msg-card"
+                            class="msg-card u-skew"
                             aria-label="Send a message"
                         >
                             <textarea
@@ -515,6 +514,24 @@ export function App(): string {
                         Based remotely · available worldwide.
                     </p>
                 </section>
+
+                <aside class="quote-band">
+                    <blockquote class="quote-band-inner">
+                        <p class="quote-band-text">
+                            Everything is designed
+                            <span
+                                class="quote-band-dot"
+                                aria-hidden="true"
+                            ></span>{' '}
+                            Few things are designed well
+                            <span
+                                class="quote-band-dot"
+                                aria-hidden="true"
+                            ></span>
+                        </p>
+                        <cite class="quote-band-cite">— me</cite>
+                    </blockquote>
+                </aside>
             </main>
 
             <footer>
@@ -557,12 +574,12 @@ export function App(): string {
                     bar.
                 </p>
             </dialog>
-            <dialog id="cookie-bar" popover="auto">
+            <dialog id="cookie-bar" popover="manual">
                 <span class="label">Cookies</span>
                 {COOKIE_STATES.map(({ label, accepted }) => (
                     <button
                         data-cookie={accepted}
-                        class={`consent-btn ${label.toLowerCase()}`}
+                        class={`btn btn-primary btn-sm consent-btn ${label.toLowerCase()}`}
                         aria-label={`${label} cookies`}
                     >
                         {label}
@@ -570,7 +587,7 @@ export function App(): string {
                 ))}
                 <button
                     popovertarget="cookie-policy"
-                    class="policy-btn"
+                    class="icon-btn policy-btn"
                     aria-label="Show Cookie Policy Popover"
                 >
                     <svg
@@ -589,6 +606,27 @@ export function App(): string {
                     </svg>
                     Policy
                 </button>
+                <button
+                    type="button"
+                    class="icon-btn cookie-close"
+                    popovertarget="cookie-bar"
+                    popovertargetaction="hide"
+                    aria-label="Dismiss cookie bar"
+                >
+                    <svg
+                        class="icon"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        xmlns="http://www.w3.org/2000/svg"
+                        aria-hidden="true"
+                    >
+                        <path d="M18 6 6 18M6 6l12 12" />
+                    </svg>
+                </button>
             </dialog>
 
             <dialog id="recruiter-quiz" class="quiz-modal" data-state="quiz">
@@ -599,7 +637,7 @@ export function App(): string {
                     </div>
                     <button
                         type="button"
-                        class="quiz-close"
+                        class="icon-btn quiz-close"
                         aria-label="Close"
                         data-close-quiz
                     >
