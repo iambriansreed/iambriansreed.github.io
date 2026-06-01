@@ -1,87 +1,109 @@
 <!doctype html>
 <html lang="en">
-    <head>
+    <head data-theme="dark" data-cookie-accepted="false">
         <meta charset="utf-8" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <meta name="viewport" content="width=device-width" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta
             name="description"
-            content="Brian S. Reed is a frontend focused full stack engineer with over 15 years designing and developing software for the internet using React, TypeScript, and Node."
+            content="Brian S. Reed is a Front-End Architect and Staff Engineer with 15+ years building scalable UI systems using React, TypeScript, and design systems."
         />
         <meta name="author" content="iambriansreed" />
         <meta
             name="keywords"
-            content="Brian S. Reed, Brian Reed, iambriansreed, iambrian, uz engineer, software engineer"
+            content="Brian S. Reed, Brian Reed, iambriansreed, iambrian, front-end architect, staff engineer, React, TypeScript"
         />
-        <meta name="version" content="1.0.0" />
-        <title>Brian S. Reed - UX Engineer</title>
+        <title>Brian S. Reed / Front-End Architect</title>
+
+        <link
+            rel="preload"
+            href="/fonts/Archivo.woff2"
+            as="font"
+            type="font/woff2"
+            crossorigin
+        />
+
+        <link
+            rel="apple-touch-icon"
+            sizes="57x57"
+            href="/icon/apple-touch-icon-57x57.png"
+        />
+        <link
+            rel="apple-touch-icon"
+            sizes="114x114"
+            href="/icon/apple-touch-icon-114x114.png"
+        />
+        <link
+            rel="apple-touch-icon"
+            sizes="72x72"
+            href="/icon/apple-touch-icon-72x72.png"
+        />
+        <link
+            rel="apple-touch-icon"
+            sizes="144x144"
+            href="/icon/apple-touch-icon-144x144.png"
+        />
+        <link
+            rel="apple-touch-icon"
+            sizes="60x60"
+            href="/icon/apple-touch-icon-60x60.png"
+        />
+        <link
+            rel="apple-touch-icon"
+            sizes="120x120"
+            href="/icon/apple-touch-icon-120x120.png"
+        />
+        <link
+            rel="apple-touch-icon"
+            sizes="76x76"
+            href="/icon/apple-touch-icon-76x76.png"
+        />
+        <link
+            rel="apple-touch-icon"
+            sizes="152x152"
+            href="/icon/apple-touch-icon-152x152.png"
+        />
+        <link
+            rel="apple-touch-icon"
+            sizes="180x180"
+            href="/icon/apple-touch-icon-180x180.png"
+        />
+        <link
+            rel="icon"
+            type="image/png"
+            href="/icon/favicon-192x192.png"
+            sizes="192x192"
+        />
+        <link
+            rel="icon"
+            type="image/png"
+            href="/icon/favicon-160x160.png"
+            sizes="160x160"
+        />
+        <link
+            rel="icon"
+            type="image/png"
+            href="/icon/favicon-96x96.png"
+            sizes="96x96"
+        />
+        <link
+            rel="icon"
+            type="image/png"
+            href="/icon/favicon-16x16.png"
+            sizes="16x16"
+        />
+        <link
+            rel="icon"
+            type="image/png"
+            href="/icon/favicon-32x32.png"
+            sizes="32x32"
+        />
+        <meta name="msapplication-TileColor" content="#f9f7f4" />
+        <meta
+            name="msapplication-TileImage"
+            content="/icon/mstile-144x144.png"
+        />
         <script src="https://js.hcaptcha.com/1/api.js" async defer></script>
-        <link rel="apple-touch-icon" sizes="57x57" href="/icon/apple-touch-icon-57x57.png" />
-        <link rel="apple-touch-icon" sizes="114x114" href="/icon/apple-touch-icon-114x114.png" />
-        <link rel="apple-touch-icon" sizes="72x72" href="/icon/apple-touch-icon-72x72.png" />
-        <link rel="apple-touch-icon" sizes="144x144" href="/icon/apple-touch-icon-144x144.png" />
-        <link rel="apple-touch-icon" sizes="60x60" href="/icon/apple-touch-icon-60x60.png" />
-        <link rel="apple-touch-icon" sizes="120x120" href="/icon/apple-touch-icon-120x120.png" />
-        <link rel="apple-touch-icon" sizes="76x76" href="/icon/apple-touch-icon-76x76.png" />
-        <link rel="apple-touch-icon" sizes="152x152" href="/icon/apple-touch-icon-152x152.png" />
-        <link rel="apple-touch-icon" sizes="180x180" href="/icon/apple-touch-icon-180x180.png" />
-        <link rel="icon" type="image/png" href="/icon/favicon-192x192.png" sizes="192x192" />
-        <link rel="icon" type="image/png" href="/icon/favicon-160x160.png" sizes="160x160" />
-        <link rel="icon" type="image/png" href="/icon/favicon-96x96.png" sizes="96x96" />
-        <link rel="icon" type="image/png" href="/icon/favicon-16x16.png" sizes="16x16" />
-        <link rel="icon" type="image/png" href="/icon/favicon-32x32.png" sizes="32x32" />
-        <meta name="msapplication-TileColor" content="#eeeeee" />
-        <meta name="msapplication-TileImage" content="/icon/mstile-144x144.png" />
-        <style>
-            body {
-                background-color: rgba(36, 36, 36, 1);
-                min-height: 100vh;
-            }
-            .loading {
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                width: 100vw;
-                height: 100vh;
-                background-color: var(--background);
-                color: var(--foreground);
-            }
-            .loader {
-                width: 100px;
-                height: 100px;
-                position: relative;
-            }
-            .loader .blob {
-                width: 5rem;
-                height: 5rem;
-                background: linear-gradient(135deg, #1263ab, #67afef);
-                border-radius: 50%;
-                position: absolute;
-                left: 50%;
-                top: 50%;
-                transform: translate(-50%, -50%);
-                box-shadow: 0 0 20px #0d497d;
-                animation: morph 2s linear infinite;
-            }
-            @keyframes morph {
-                0%,
-                to {
-                    border-radius: 50%;
-                    transform: translate(-50%, -50%) scale(1);
-                }
-                33% {
-                    border-radius: 30% 70% 70% 30%/30% 29% 71% 70%;
-                    transform: translate(-50%, -50%) rotate(90deg) scale(1.2);
-                }
-                66% {
-                    border-radius: 60% 40% 30% 70%/60% 30% 70% 40%;
-                    transform: translate(-50%, -50%) rotate(180deg) scale(0.8);
-                }
-            }
-        </style>
     </head>
-    <body>
-        <!-- app_html -->
-        <script type="module" src="/src/main.ts"></script>
-    </body>
+    <body></body>
 </html>

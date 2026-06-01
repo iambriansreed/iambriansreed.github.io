@@ -1,427 +1,824 @@
-import { Fragment } from 'react/jsx-runtime';
 import data from './data';
 
-export default function App() {
-    const { navigation, skillLevels, skills, projects, questions, svg } = data;
+const githubIcon = `<svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" aria-hidden="true"><path fill="currentColor" d="M316.8 72C178.1 72 72 177.3 72 316C72 426.9 141.8 521.8 241.5 555.2C254.3 557.5 258.8 549.6 258.8 543.1C258.8 536.9 258.5 502.7 258.5 481.7C258.5 481.7 188.5 496.7 173.8 451.9C173.8 451.9 162.4 422.8 146 415.3C146 415.3 123.1 399.6 147.6 399.9C147.6 399.9 172.5 401.9 186.2 425.7C208.1 464.3 244.8 453.2 259.1 446.6C261.4 430.6 267.9 419.5 275.1 412.9C219.2 406.7 162.8 398.6 162.8 302.4C162.8 274.9 170.4 261.1 186.4 243.5C183.8 237 175.3 210.2 189 175.6C209.9 169.1 258 202.6 258 202.6C278 197 299.5 194.1 320.8 194.1C342.1 194.1 363.6 197 383.6 202.6C383.6 202.6 431.7 169 452.6 175.6C466.3 210.3 457.8 237 455.2 243.5C471.2 261.2 481 275 481 302.4C481 398.9 422.1 406.6 366.2 412.9C375.4 420.8 383.2 435.8 383.2 459.3C383.2 493 382.9 534.7 382.9 542.9C382.9 549.4 387.5 557.3 400.2 555C500.2 521.8 568 426.9 568 316C568 177.3 455.5 72 316.8 72z"/></svg>`;
+
+const linkedinIcon = `<svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" aria-hidden="true"><path fill="currentColor" d="M100.3 448H7.4V148.9h92.9zM53.8 108.1C24.1 108.1 0 83.5 0 53.8a53.8 53.8 0 0 1 107.6 0c0 29.7-24.1 54.3-53.8 54.3zM447.9 448h-92.7V302.4c0-34.7-.7-79.2-48.3-79.2-48.3 0-55.7 37.7-55.7 76.7V448h-92.8V148.9h89.1v40.8h1.3c12.4-23.5 42.7-48.3 87.9-48.3 94 0 111.3 61.9 111.3 142.3V448z"/></svg>`;
+
+const sendIcon = `<svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" aria-hidden="true"><path fill="currentColor" d="M322.5 351.7L523.4 150.9L391 520.3L322.5 351.7zM489.4 117L288.6 317.8L120 249.3L489.4 117zM70.1 280.8L275.9 364.4L359.5 570.2C364.8 583.3 377.6 591.9 391.8 591.9C406.5 591.9 419.6 582.7 424.6 568.8L602.6 72C606.1 62.2 603.6 51.4 596.3 44C589 36.6 578.1 34.2 568.3 37.7L71.4 215.7C57.5 220.7 48.3 233.8 48.3 248.5C48.3 262.7 56.9 275.5 70 280.8z"/></svg>`;
+
+const arrowIcon = `<svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10"/></svg>`;
+
+function formatDate(timestamp: number): string {
+    return new Date(timestamp).toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'short',
+    });
+}
+
+const COOKIE_STATES = [
+    { accepted: false, label: 'Accept' },
+    { accepted: true, label: 'Decline' },
+];
+
+// Curated tech stack drawn from the skills evidenced across roles + projects.
+const TECH_STACK = [
+    'React',
+    'TypeScript',
+    'Accessibility',
+    'SASS',
+    'Design Systems',
+    'Component Libraries',
+    'Node.js',
+    'Figma',
+    'Angular',
+    'Tailwind',
+    'CI/CD',
+    'Vite',
+    'Socket.io',
+    'React Native',
+    'PHP',
+    'C#',
+    'SharePoint',
+];
+
+const NAV_LINKS = [
+    { label: 'About', href: '#about' },
+    { label: 'Skills', href: '#skills' },
+    { label: 'Projects', href: '#projects' },
+    { label: 'Experience', href: '#experience' },
+    { label: 'Connect', href: '#contact' },
+];
+
+const RESUME_URL = 'https://resume.iambrian.com';
+const LINKEDIN_URL = 'https://www.linkedin.com/in/iambriansreed/';
+const GITHUB_URL = 'https://github.com/iambriansreed';
+
+export function App(): string {
+    const { introduction, experience, projects, questions } = data;
+    const expItems = experience.filter((item) => !item.volunteer);
 
     return (
         <>
-            <div className="loading">
-                <div className="loader">
-                    <div className="blob"></div>
-                </div>
+            <div class="fab-group">
+                <button
+                    class="fa-btn accent-toggle"
+                    aria-label="Cycle accent color"
+                >
+                    <svg
+                        class="icon"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        xmlns="http://www.w3.org/2000/svg"
+                        aria-hidden="true"
+                    >
+                        <path d="m9.06 11.9 8.07-8.06a2.85 2.85 0 1 1 4.03 4.03l-8.06 8.08" />
+                        <path d="M7.07 14.94c-1.66 0-3 1.35-3 3.02 0 1.33-2.5 1.52-2 2.02 1 1 2.49 2.02 4 2.02 2.2 0 4-1.8 4-4.04a3.01 3.01 0 0 0-3-3.02z" />
+                    </svg>
+                </button>
+                <button
+                    class="fa-btn theme-toggle"
+                    aria-label="Toggle color theme"
+                >
+                    <svg
+                        class="icon icon-sun"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        xmlns="http://www.w3.org/2000/svg"
+                        aria-hidden="true"
+                    >
+                        <circle cx="12" cy="12" r="4" />
+                        <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" />
+                    </svg>
+                    <svg
+                        class="icon icon-moon"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        xmlns="http://www.w3.org/2000/svg"
+                        aria-hidden="true"
+                    >
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+                    </svg>
+                </button>
             </div>
-            <div className="sections" data-style="display: none">
-                <nav>
-                    <ol>
-                        {navigation.map((link) => (
-                            <li key={link.id} data-section={link.id}>
-                                <a href={`/${link.id}`}>{link.title}</a>
-                            </li>
-                        ))}
-                    </ol>
-                </nav>
-                <section id="welcome">
-                    <div data-anchor-id="welcome"></div>
-                    <div className="title">
-                        <svg
-                            className="i-am"
-                            viewBox="0 0 219 90"
-                            xmlns="http://www.w3.org/2000/svg"
-                        >
-                            <path
-                                fill="currentColor"
-                                fillRule="nonzero"
-                                d="M4 8c2.133 0 4-1.733 4-4 0-2.133-1.867-4-4-4-2.267 0-4 1.867-4 4 0 2.267 1.733 4 4 4Zm2 80V22H1v66h5Zm74.958 2c9.66 0 21.253-4.336 26.405-12.244V88.47H112V48.294C112 32.35 102.34 21 86.368 21c-6.956 0-15.586 2.168-22.928 6.377l1.932 3.954c6.183-3.699 13.654-5.74 20.352-5.74 15.843 0 21.639 11.607 21.639 22.703v3.316c-7.47-2.678-16.23-4.592-23.571-4.592C67.69 47.018 57 56.074 57 68.828 57 81.328 67.176 90 80.958 90Zm-.003-4C69.81 86 61 79.072 61 69.192 61 59.185 70.2 52 83.806 52c7.774 0 16.326 2.31 23.194 4.619v11.675C104.408 80.226 91.192 86 80.955 86Zm51.685 3V45.377c0-11.547 8.25-19.758 19.979-19.758 10.827 0 18.56 8.468 18.56 20.4V89h4.641V45.377c0-11.547 8.25-19.758 19.979-19.758 10.827 0 18.56 8.468 18.56 20.4V89H219V45.377C219 31.136 209.72 21 196.443 21c-10.57 0-18.947 5.132-22.814 13.343C170.149 26.133 162.802 21 153.263 21c-10.053 0-17.787 4.49-20.623 11.547V22.54H128V89h4.64Z"
-                            />
-                        </svg>
-                        <svg
-                            className="brian"
-                            viewBox="0 0 293 99"
-                            xmlns="http://www.w3.org/2000/svg"
-                        >
-                            <path
-                                fill="currentColor"
-                                fillRule="nonzero"
-                                d="M47.16 97c17.16 0 29.38-9.88 29.38-24.18 0-9.88-6.11-18.2-16.51-22.88 7.93-4.16 12.61-10.79 12.61-19.89 0-13-11.18-22.36-27.17-22.36H.23V97h46.93Zm-6.37-53.3H19.34V24.07h21.45c7.02 0 12.09 4.16 12.09 9.75 0 5.72-5.07 9.88-12.09 9.88Zm2.86 36.92H19.34V58.78h24.31c7.67 0 13.13 4.55 13.13 10.92s-5.46 10.92-13.13 10.92ZM102.861 97V64.89c0-12.61 8.97-20.67 23.01-20.67V28.23c-10.27 0-18.59 5.46-23.01 14.17V29.79h-18.98V97h18.98Zm38.281-76.44c5.59 0 10.27-4.68 10.27-10.4 0-5.33-4.68-10.14-10.27-10.14-5.85 0-10.4 4.81-10.4 10.14 0 5.72 4.55 10.4 10.4 10.4Zm9.36 76.44V29.79h-18.98V97h18.98Zm31.001 1.56c7.41 0 15.08-2.99 19.89-8.32V97h18.33V56.83c0-17.55-12.09-28.6-29.64-28.6-9.36 0-18.59 2.6-28.08 7.41l6.37 12.61c5.33-2.73 11.18-4.81 17.42-4.81 11.05 0 15.6 6.24 15.6 13.39v1.43c-5.72-2.34-11.83-3.51-17.29-3.51-15.47 0-27.82 9.1-27.82 22.36 0 12.87 10.92 21.45 25.22 21.45Zm4.29-13.13c-6.5 0-11.44-3.38-11.44-8.84s5.59-9.49 12.48-9.49c5.2 0 10.27.91 14.56 2.6v6.11c-1.43 6.24-8.32 9.62-15.6 9.62ZM247.344 97V57.22c0-7.28 6.24-13 14.17-13 7.54 0 12.74 5.72 12.74 14.04V97h18.2V54.23c0-15.34-10.27-26-24.83-26-8.71 0-16.25 3.9-20.28 9.88v-8.32h-18.98V97h18.98Z"
-                            />
-                        </svg>
-                    </div>
-                </section>
-                <section id="skills">
-                    <div data-anchor-id="skills"></div>
-                    <h2>Skills</h2>
-                    <main>
-                        <article>
-                            <p>
-                                Hi, I'm Brian, a self-taught Software Engineer
-                                passionate about solving problems with
-                                thoughtful engineering and user-centric design.
-                                With nearly 20 years of coding experience, I
-                                continue to learn and evolve.
-                            </p>
-                            <p>
-                                Recently, I've been focused on React,
-                                TypeScript, Node.js, GraphQL, SCSS, and Tailwind
-                                CSS, but I'm also enthusiastic about new roles
-                                that involve other technologies.
-                            </p>
-                        </article>
-                        <div className="legend">
-                            <div className="progress-bar">
-                                <span>{skillLevels[0].title}</span>
-                                <span>{skillLevels[3].title}</span>
-                                <div data-style="width: 50%"></div>
+
+            <nav class="site-nav">
+                <a class="nav-brand" href="#top">
+                    <span class="nav-brand-name">Brian • Reed</span>
+                    <span class="nav-brand-role">Front-End Architect</span>
+                </a>
+                <div class="nav-links">
+                    {NAV_LINKS.map((link) => (
+                        <a class="nav-link" href={link.href}>
+                            {link.label}
+                        </a>
+                    ))}
+                    <a class="btn btn-primary nav-cta" href="#contact">
+                        Let's Talk
+                    </a>
+                </div>
+                <button
+                    class="nav-toggle"
+                    popovertarget="mobile-menu"
+                    aria-label="Open navigation"
+                >
+                    <span></span>
+                    <span></span>
+                </button>
+            </nav>
+
+            <dialog id="mobile-menu" popover="auto" class="mobile-menu">
+                <button
+                    type="button"
+                    class="mobile-menu-close"
+                    popovertarget="mobile-menu"
+                    popovertargetaction="hide"
+                    aria-label="Close navigation"
+                >
+                    <svg
+                        class="icon"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        aria-hidden="true"
+                    >
+                        <path d="M18 6 6 18M6 6l12 12" />
+                    </svg>
+                </button>
+                {NAV_LINKS.map((link) => (
+                    <a class="nav-link" href={link.href}>
+                        {link.label}
+                    </a>
+                ))}
+                <a class="btn btn-primary nav-cta" href="#contact">
+                    Let's Talk
+                </a>
+            </dialog>
+
+            <main>
+                <section id="top" class="hero">
+                    <span class="hero-badge">
+                        <span class="hero-badge-dot"></span>
+                        Available for work
+                    </span>
+                    <div class="hero-grid">
+                        <div class="hero-main">
+                            <h1 class="hero-name" aria-label="Brian S. Reed">
+                                Brian S<span
+                                    class="hero-name-dot"
+                                    aria-hidden="true"
+                                ></span>{' '}
+                                Reed
+                            </h1>
+                            <div class="hero-role-row">
+                                <p class="hero-role">
+                                    <span class="hero-rule"></span>
+                                    <span class="hero-role-titles">
+                                        <span>Front-End Architect</span>
+                                        <span class="hero-role-sep">·</span>
+                                        <span>Staff Engineer</span>
+                                    </span>
+                                </p>
+                                <p class="hero-tagline">
+                                    Fifteen years turning complex product
+                                    requirements into fast, accessible,
+                                    beautifully engineered interfaces.
+                                </p>
+                            </div>
+                            <div class="hero-actions">
+                                <a class="btn btn-primary" href="#contact">
+                                    Collaborate
+                                </a>
+                                <a
+                                    class="btn"
+                                    href={RESUME_URL}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                >
+                                    Resume
+                                </a>
                             </div>
                         </div>
-                        <article>
-                            <p>
-                                Below is a list of skills with progress bars
-                                indicating my level of proficiency and the
-                                number of years I have actively used each
-                                technology.
-                            </p>
-                        </article>
-
-                        {skillLevels.map((skillLevel) => (
-                            <Fragment key={skillLevel.title}>
-                                <h3>{skillLevel.title}</h3>
-                                <ul>
-                                    {skills
-                                        .filter(
-                                            (s) =>
-                                                s.progress >
-                                                    skillLevel.range[0] &&
-                                                s.progress <=
-                                                    skillLevel.range[1],
-                                        )
-                                        .map((skill) => (
-                                            <li
-                                                key={skill.title}
-                                                data-years={skill.years}
-                                                data-title={skill.title}
-                                                data-progress={skill.progress}
-                                            >
-                                                <h4>
-                                                    <span className="title">
-                                                        {skill.title}
-                                                    </span>
-                                                    <span className="years">
-                                                        {skill.years}{' '}
-                                                        {skill.years === 1
-                                                            ? ' yr'
-                                                            : ' yrs'}
-                                                    </span>
-                                                </h4>
-                                                <div className="progress-bar">
-                                                    <div
-                                                        style={{
-                                                            width: `${skill.progress}%`,
-                                                        }}
-                                                    ></div>
-                                                </div>
-                                            </li>
-                                        ))}
-                                </ul>
-                            </Fragment>
-                        ))}
-                    </main>
+                        <div class="hero-rail">
+                            <a
+                                href={LINKEDIN_URL}
+                                aria-label="LinkedIn"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                {linkedinIcon}
+                            </a>
+                            <a
+                                href={GITHUB_URL}
+                                aria-label="GitHub"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                {githubIcon}
+                            </a>
+                            <a href="#contact" aria-label="Message me">
+                                {sendIcon}
+                            </a>
+                        </div>
+                    </div>
                 </section>
-                <section id="projects">
-                    <div data-anchor-id="projects"></div>
-                    <h2>Side Projects</h2>
-                    <main>
-                        <article className="intro">
-                            <p>
-                                I work on side projects to demonstrate my
-                                capabilities, create rudimentary AI from
-                                scratch, get more familiar with sockets, and
-                                play Wordle whenever I want.
+
+                <section id="about" class="about">
+                    <div class="about-grid">
+                        <div class="about-main">
+                            <div class="section-head">
+                                <span class="eyebrow">Biography</span>
+                                <h2 class="section-title">What I Do</h2>
+                            </div>
+                            <p class="about-statement">
+                                Building scalable UI systems with a focus on
+                                accessibility, performance, and developer
+                                experience.
                             </p>
-                        </article>
-                        {projects.map((project) => (
-                            <article key={project.title}>
-                                <h3>{project.title}</h3>
-                                <p>
+                            <p class="about-body">{introduction}</p>
+                            <div class="about-card">
+                                <div class="about-row">
+                                    <span class="about-label">Location</span>
+                                    <span class="about-value">Remote</span>
+                                </div>
+                                <div class="about-row">
+                                    <span class="about-label">Status</span>
+                                    <span class="about-value">
+                                        Open to senior front-end roles
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="hero-photo about-photo">
+                            <img
+                                src="/me.jpg"
+                                alt="Brian S. Reed"
+                                width="480"
+                                height="480"
+                            />
+                        </div>
+                    </div>
+                </section>
+
+                <aside class="quote-band">
+                    <blockquote class="quote-band-inner">
+                        <p class="quote-band-text">
+                            Everything is designed
+                            <span
+                                class="quote-band-dot"
+                                aria-hidden="true"
+                            ></span>{' '}
+                            Few things are designed well
+                            <span
+                                class="quote-band-dot"
+                                aria-hidden="true"
+                            ></span>
+                        </p>
+                        <cite class="quote-band-cite">— me</cite>
+                    </blockquote>
+                </aside>
+
+                <section id="skills" class="skills">
+                    <div class="section-head">
+                        <span class="eyebrow">Inventory</span>
+                        <h2 class="section-title">Tech Stack</h2>
+                    </div>
+                    <div class="skills-chips">
+                        {TECH_STACK.map((s) => (
+                            <span class="skill-chip">{s}</span>
+                        ))}
+                    </div>
+                </section>
+
+                <section id="projects" class="projects">
+                    <div class="section-head">
+                        <span class="eyebrow">Portfolio</span>
+                        <h2 class="section-title">Featured Works</h2>
+                        <p class="section-lead">
+                            Small, focused web apps; built front to back with
+                            TypeScript.
+                        </p>
+                    </div>
+                    <div class="proj-grid">
+                        {projects.map((project, i) => (
+                            <article
+                                class="project-item"
+                                data-category={project.category}
+                            >
+                                <a
+                                    class="project-thumb"
+                                    href={project.url}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    style={`--shift:${i * 55}`}
+                                    aria-hidden="true"
+                                >
+                                    <span class="project-thumb-mark">
+                                        {project.title.charAt(0)}
+                                    </span>
+                                </a>
+                                <div class="project-body">
+                                    <span class="project-cat">
+                                        {project.category}
+                                    </span>
                                     <a
                                         href={project.url}
+                                        class="project-title"
                                         target="_blank"
                                         rel="noopener noreferrer"
                                     >
-                                        {project.url}
+                                        {project.title} {arrowIcon}
                                     </a>
-                                </p>
-                                <p>{project.description}</p>
-                                <p>
-                                    <small>{project.skills.join(', ')}</small>
-                                </p>
-                                <footer>
-                                    <div className="sources">
-                                        {project.sources.map((source) => (
-                                            <Fragment key={source.url}>
-                                                <span> / </span>
-                                                <a
-                                                    target="_blank"
-                                                    href={source.url}
-                                                >
-                                                    <span
-                                                        dangerouslySetInnerHTML={{
-                                                            __html: svg.github,
-                                                        }}
-                                                    />
-                                                    {source.title}
-                                                </a>
-                                            </Fragment>
+                                    <p class="project-desc">
+                                        {project.description}
+                                    </p>
+                                    <div class="tags">
+                                        {project.skills.map((s) => (
+                                            <span class="tag">{s}</span>
                                         ))}
                                     </div>
-                                </footer>
+                                    {project.sources.length > 0 && (
+                                        <div class="project-sources">
+                                            {project.sources.map((source) => (
+                                                <a
+                                                    href={source.url}
+                                                    class="source-link"
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                >
+                                                    {source.url.includes(
+                                                        'github.com',
+                                                    )
+                                                        ? githubIcon
+                                                        : ''}
+                                                    {source.title} →
+                                                </a>
+                                            ))}
+                                        </div>
+                                    )}
+                                </div>
                             </article>
                         ))}
-                    </main>
+                    </div>
                 </section>
-                <section id="contact">
-                    <div data-anchor-id="contact"></div>
-                    <h2>Contact</h2>
-                    <main>
-                        <article>
-                            <p>
-                                Find me on{' '}
-                                <a
-                                    target="_blank"
-                                    href="https://www.linkedin.com/in/iambriansreed/"
+
+                <section id="experience">
+                    <div class="exp-sticky">
+                        <div class="section-head">
+                            <span class="eyebrow">Experience</span>
+                            <h2 class="section-title">Work &amp; Impact</h2>
+                        </div>
+                        <div class="exp-track">
+                            {expItems.map((item) => (
+                                <article class="exp-item">
+                                    <div class="exp-meta">
+                                        <div class="exp-meta-col">
+                                            <span class="exp-label">
+                                                Duration
+                                            </span>
+                                            <span class="exp-value">
+                                                {formatDate(item.startedOn)} –{' '}
+                                                {item.finishedOn
+                                                    ? formatDate(
+                                                          item.finishedOn,
+                                                      )
+                                                    : 'Present'}
+                                            </span>
+                                        </div>
+                                        <div class="exp-meta-col">
+                                            <span class="exp-label">
+                                                Location
+                                            </span>
+                                            <span class="exp-value">
+                                                {item.location}
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <h3 class="exp-role">{item.title}</h3>
+                                    <p class="exp-company">
+                                        {item.companyName}
+                                    </p>
+                                    <ul class="exp-bullets">
+                                        {item.description.map((d) => (
+                                            <li>{d}</li>
+                                        ))}
+                                    </ul>
+                                    <div class="exp-tools">
+                                        <div class="tags">
+                                            {item.skills.map((s) => (
+                                                <span class="tag">{s}</span>
+                                            ))}
+                                        </div>
+                                    </div>
+                                </article>
+                            ))}
+                        </div>
+                        <div class="exp-timeline">
+                            {expItems.map((item, i) => (
+                                <button
+                                    type="button"
+                                    class="exp-dot"
+                                    data-index={String(i)}
+                                    aria-label={`Jump to ${item.title}`}
                                 >
-                                    LinkedIn
-                                </a>{' '}
-                                or send me a message below.
-                                <br />
-                                Make sure to include your email address anywhere
-                                in the message.
-                            </p>
-                        </article>
-                        <form method="dialog" className="contact-form">
-                            <div className="success">
-                                <h3>
-                                    Thanks for contacting me. I'll get back to
-                                    you as soon as possible.
-                                </h3>
-                            </div>
-                            <fieldset>
-                                <textarea
-                                    name="message"
-                                    placeholder="I have been trying to reach you about your car's extended warranty."
-                                ></textarea>
-                                <p className="error-description">
-                                    <span className="active">
-                                        Not seeing an email address above.
+                                    <span class="exp-dot-mark"></span>
+                                    <span class="exp-dot-year">
+                                        {item.finishedOn
+                                            ? new Date(
+                                                  item.startedOn,
+                                              ).getFullYear()
+                                            : 'Present'}
                                     </span>
-                                    <span>
-                                        Please include an email address.
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+
+                <section id="contact" class="connect">
+                    <div class="section-head">
+                        <span class="eyebrow">Available for work</span>
+                        <h2 class="section-title">Get In Touch</h2>
+                    </div>
+                    <div class="connect-grid">
+                        <ul class="connect-list">
+                            <li class="connect-item">
+                                <span class="connect-num">01</span>
+                                <button type="button" data-open-quiz>
+                                    <span class="connect-label">
+                                        Recruiters
                                     </span>
-                                    <span>
-                                        Include an Email address in your message
-                                        please.
-                                    </span>
-                                </p>
-                            </fieldset>
-                            <footer>
-                                <p className="found-email">
-                                    Wow. <span></span> is a nice email address.
-                                </p>
-                                <p className="error missing-email">
-                                    Missing your email address.
+                                </button>
+                            </li>
+                            <li class="connect-item">
+                                <span class="connect-num">02</span>
+                                <a
+                                    href={LINKEDIN_URL}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                >
+                                    <span class="connect-label">LinkedIn</span>
+                                </a>
+                            </li>
+                            <li class="connect-item">
+                                <span class="connect-num">03</span>
+                                <a
+                                    href={GITHUB_URL}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                >
+                                    <span class="connect-label">GitHub</span>
+                                </a>
+                            </li>
+                        </ul>
+                        <form
+                            id="msg-form"
+                            class="msg-card"
+                            aria-label="Send a message"
+                        >
+                            <textarea
+                                class="msg-textarea"
+                                id="msg-textarea"
+                                placeholder="Write your message; drop your email in anywhere so I can reply."
+                            />
+                            <div class="msg-actions">
+                                <p class="msg-hint" id="msg-hint">
+                                    Include your email anywhere in your message.
                                 </p>
                                 <button
-                                    className="h-captcha"
-                                    data-sitekey="3fca5cba-c2e8-4960-bf5c-4f284b585036"
-                                    data-callback="onSubmitMessage"
-                                    type="button"
+                                    class="btn msg-send"
+                                    id="msg-send"
+                                    type="submit"
+                                    value="send"
                                 >
-                                    Send Message
+                                    {sendIcon}Send
                                 </button>
-                            </footer>
+                            </div>
+                            <div class="msg-success" id="msg-success">
+                                <p>Thanks! I'll get back to you soon.</p>
+                            </div>
                         </form>
-                    </main>
+                    </div>
+                    <p class="connect-meta">
+                        Based remotely · available worldwide.
+                    </p>
                 </section>
-                <section id="recruiters" data-state="intro">
-                    <div data-anchor-id="recruiters"></div>
-                    <h2>Recruiters</h2>
-                    <main>
-                        <article className="intro">
-                            <p>
-                                Hello there! If you think I might be a good fit
-                                for a position you are trying to fill please
-                                take the following quiz. I have some basic
-                                questions I'd like you to answer before we talk
-                                so we don't waste our time. If none of the
-                                answers are an exact match just pick the closest
-                                answer and explain it when we talk. Thanks!
-                            </p>
+            </main>
 
-                            <p>
-                                <button type="button" data-start-quiz>
-                                    Start Quiz
-                                </button>
-                            </p>
-                        </article>
+            <footer>
+                <div class="footer-brand">
+                    <span class="footer-name">Brian S. Reed</span>
+                    <span class="footer-role">
+                        Front-End Architect · Staff Engineer
+                    </span>
+                </div>
+                <div class="footer-links">
+                    <a href="#about">About</a>
+                    <a href="#experience">Work</a>
+                    <a href="#contact">Connect</a>
+                </div>
+                <div class="footer-end">
+                    <button
+                        class="cookie-settings"
+                        popovertarget="cookie-bar"
+                        aria-label="Cookies"
+                    >
+                        Cookies
+                    </button>
+                </div>
+            </footer>
 
-                        <form method="dialog" className="quiz">
-                            {questions.map((question) => (
+            <dialog id="cookie-policy" popover="auto">
+                <h3>Cookie Policy</h3>
+                <p>
+                    This site stores your preferences; color theme, accent
+                    color, and cookie consent; in your browser's local storage.
+                    No personal data is collected or sent anywhere.
+                </p>
+                <p>
+                    Nothing is shared with third parties, used for ads, or
+                    tracked across sessions.
+                </p>
+                <p>
+                    You can clear your preferences at any time through your
+                    browser settings or by toggling the button in the cookie
+                    bar.
+                </p>
+            </dialog>
+            <dialog id="cookie-bar" popover="auto">
+                <span class="label">Cookies</span>
+                {COOKIE_STATES.map(({ label, accepted }) => (
+                    <button
+                        data-cookie={accepted}
+                        class={`consent-btn ${label.toLowerCase()}`}
+                        aria-label={`${label} cookies`}
+                    >
+                        {label}
+                    </button>
+                ))}
+                <button
+                    popovertarget="cookie-policy"
+                    class="policy-btn"
+                    aria-label="Show Cookie Policy Popover"
+                >
+                    <svg
+                        class="icon"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        xmlns="http://www.w3.org/2000/svg"
+                        aria-hidden="true"
+                    >
+                        <circle cx="12" cy="12" r="10" />
+                        <path d="M12 16v-4M12 8h.01" />
+                    </svg>
+                    Policy
+                </button>
+            </dialog>
+
+            <dialog id="recruiter-quiz" class="quiz-modal" data-state="quiz">
+                <div class="quiz-head">
+                    <div>
+                        <span class="eyebrow">Recruiters</span>
+                        <h3 class="quiz-title">A quick fit check</h3>
+                    </div>
+                    <button
+                        type="button"
+                        class="quiz-close"
+                        aria-label="Close"
+                        data-close-quiz
+                    >
+                        <svg
+                            class="icon"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            aria-hidden="true"
+                        >
+                            <path d="M18 6 6 18M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+
+                <p class="quiz-intro">
+                    If you think I might be a good fit, answer a few quick
+                    questions first so we don't waste each other's time. No
+                    exact match? Pick the closest and we'll talk it through.
+                </p>
+
+                <form class="quiz" novalidate>
+                    {questions.map((question) => {
+                        const failText = question.answers.find(
+                            (a) => a.failReason,
+                        )?.failReason;
+
+                        // Compensation: a stylized salary input + a "not
+                        // available" poison option.
+                        if (question.id === 'compensation') {
+                            return (
                                 <fieldset
-                                    key={question.id}
-                                    id={`question-${question.id}`}
+                                    class="quiz-question"
                                     data-id={question.id}
                                     data-title={question.title}
-                                    data-question-name={question.id}
-                                    className={`question ${question.id === 'role' ? 'active' : ''}`}
+                                    data-type="amount"
                                 >
                                     <h4>{question.title}</h4>
-                                    <div className="options">
-                                        {question.answers.map(
-                                            (answer, index) => {
-                                                const labelId =
-                                                    question.id +
-                                                    (answer.failReason
-                                                        ? '-fail'
-                                                        : '-' + index);
-
-                                                return (
-                                                    <Fragment key={labelId}>
-                                                        <label
-                                                            htmlFor={labelId}
-                                                        >
-                                                            <input
-                                                                type="radio"
-                                                                name={
-                                                                    question.id
-                                                                }
-                                                                value={
-                                                                    answer.failReason
-                                                                        ? 'fail'
-                                                                        : answer.title
-                                                                }
-                                                                id={labelId}
-                                                                required
-                                                            />
-                                                            {answer.title}
-                                                        </label>
-
-                                                        {answer.failReason && (
-                                                            <p className="fail-reason">
-                                                                {
-                                                                    answer.failReason
-                                                                }
-                                                            </p>
-                                                        )}
-                                                    </Fragment>
-                                                );
-                                            },
-                                        )}
+                                    <div class="quiz-amount">
+                                        <span class="quiz-amount-prefix">
+                                            $
+                                        </span>
+                                        <input
+                                            type="number"
+                                            class="quiz-amount-input"
+                                            min="0"
+                                            step="1000"
+                                            inputmode="numeric"
+                                            placeholder="180,000"
+                                        />
+                                        <span class="quiz-amount-suffix">
+                                            / year
+                                        </span>
                                     </div>
-                                    <p className="error-description">
-                                        This is a required field.
-                                    </p>
-                                </fieldset>
-                            ))}
-                            <footer>
-                                <button type="submit" className="check-results">
-                                    Check Results
-                                </button>
-                            </footer>
-                        </form>
-
-                        <article className="quiz-fail">
-                            <h3>Oh no!</h3>
-                            <p>
-                                Thank you for taking the time to fill out the
-                                form but I don't think this opportunity is a
-                                good fit.
-                            </p>
-                            <p>
-                                If you think you made a mistake, scroll up and
-                                look for the{' '}
-                                <span data-style="color: tomato">
-                                    messages in red
-                                </span>
-                                .<br />
-                                If you still think this might work out, contact
-                                me on{' '}
-                                <a
-                                    target="_blank"
-                                    href="https://www.linkedin.com/in/iambriansreed/"
-                                >
-                                    LinkedIn
-                                </a>
-                                .
-                            </p>
-                        </article>
-
-                        <article className="quiz-pass">
-                            <h3>Awesome! This might be a good fit!</h3>
-                            <form method="dialog" className="send">
-                                <fieldset className="email">
-                                    <label htmlFor="send-email">
-                                        One last step. Add your email and send
-                                        me the results.
+                                    <label class="quiz-na">
+                                        <input type="checkbox" value="fail" />
+                                        Not available / not disclosed
                                     </label>
-                                    <input
-                                        type="email"
-                                        id="send-email"
-                                        placeholder="Email"
-                                        name="send-email"
-                                        required
-                                    />
-                                    <p className="error-description">
-                                        That email address doesn't seem right.
-                                    </p>
+                                    <p class="quiz-fail-reason">{failText}</p>
                                 </fieldset>
-                                <footer>
-                                    <button
-                                        type="submit"
-                                        className="h-captcha"
-                                        data-sitekey="3fca5cba-c2e8-4960-bf5c-4f284b585036"
-                                        data-callback="onSubmitQuiz"
-                                    >
-                                        Send Results
-                                    </button>
-                                </footer>
-                            </form>
-                        </article>
+                            );
+                        }
 
-                        <article className="quiz-sent">
-                            <h3>Thanks for sending the quiz results!</h3>
-                            <p>
-                                I will review the results and get back to you as
-                                soon as possible. If you have any questions in
-                                the meantime, feel free to reach out on{' '}
-                                <a
-                                    target="_blank"
-                                    href="https://www.linkedin.com/in/iambriansreed/"
+                        // Expertise: multi-select pills, with Java and Python
+                        // each a separate poison.
+                        if (question.id === 'expertise') {
+                            const skills = [
+                                'Java',
+                                'Python',
+                                'React',
+                                'React Native',
+                                'Angular',
+                                'Other',
+                            ];
+                            return (
+                                <fieldset
+                                    class="quiz-question"
+                                    data-id={question.id}
+                                    data-title={question.title}
+                                    data-type="multi"
                                 >
-                                    LinkedIn
-                                </a>
-                                .
-                            </p>
-                        </article>
-                    </main>
-                </section>
-            </div>
-            <p data-style="position: relative; top: -4rem; text-align: center; font-size: 0.75rem">
-                This site is protected by hCaptcha and its{' '}
-                <a href="https://www.hcaptcha.com/privacy">Privacy Policy</a>{' '}
-                and{' '}
-                <a href="https://www.hcaptcha.com/terms">Terms of Service</a>{' '}
-                apply.
-            </p>
-            <footer data-style="display: none">
-                <p>
-                    <a
-                        target="_blank"
-                        href="https://quotesondesign.com/brian-reed/"
-                    >
-                        Everything is designed. Few things are designed well.
-                    </a>
-                </p>
-            </footer>
+                                    <h4>{question.title}</h4>
+                                    <div class="quiz-pills">
+                                        {skills.map((skill) => {
+                                            const poison =
+                                                skill === 'Java' ||
+                                                skill === 'Python';
+                                            return (
+                                                <label class="quiz-pill">
+                                                    <input
+                                                        type="checkbox"
+                                                        value={
+                                                            poison
+                                                                ? 'fail'
+                                                                : skill
+                                                        }
+                                                    />
+                                                    {skill}
+                                                </label>
+                                            );
+                                        })}
+                                    </div>
+                                    <p class="quiz-fail-reason">{failText}</p>
+                                </fieldset>
+                            );
+                        }
+
+                        return (
+                            <fieldset
+                                class="quiz-question"
+                                data-id={question.id}
+                                data-title={question.title}
+                            >
+                                <h4>{question.title}</h4>
+                                <div class="quiz-options">
+                                    {question.answers.map((answer, index) => {
+                                        const labelId =
+                                            question.id +
+                                            (answer.failReason
+                                                ? '-fail'
+                                                : '-' + index);
+                                        return (
+                                            <>
+                                                <label for={labelId}>
+                                                    <input
+                                                        type="radio"
+                                                        name={question.id}
+                                                        value={
+                                                            answer.failReason
+                                                                ? 'fail'
+                                                                : answer.title
+                                                        }
+                                                        id={labelId}
+                                                        required
+                                                    />
+                                                    {answer.title}
+                                                </label>
+                                                {answer.failReason && (
+                                                    <p class="quiz-fail-reason">
+                                                        {answer.failReason}
+                                                    </p>
+                                                )}
+                                            </>
+                                        );
+                                    })}
+                                </div>
+                            </fieldset>
+                        );
+                    })}
+                    <footer class="quiz-foot">
+                        <p class="quiz-error">Please answer every question.</p>
+                        <button type="submit" class="btn btn-primary">
+                            Check results
+                        </button>
+                    </footer>
+                </form>
+
+                <div class="quiz-result quiz-fail">
+                    <h3>Probably not a fit.</h3>
+                    <p>
+                        Thanks for taking the time. Based on your answers (see
+                        the notes in red above), this one likely isn't a match.
+                    </p>
+                    <p>
+                        Think it's a mistake? Adjust the highlighted answers, or
+                        reach out on{' '}
+                        <a
+                            href={LINKEDIN_URL}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            LinkedIn
+                        </a>
+                        .
+                    </p>
+                </div>
+
+                <form class="quiz-result quiz-pass" novalidate>
+                    <h3>This could be a great fit!</h3>
+                    <p>
+                        Add your email and I'll be in touch; your quiz answers
+                        are sent along too.
+                    </p>
+                    <div class="quiz-email">
+                        <input
+                            type="email"
+                            id="quiz-email"
+                            placeholder="you@company.com"
+                            autocomplete="email"
+                            required
+                        />
+                        <button type="submit" class="btn btn-primary">
+                            Send results
+                        </button>
+                    </div>
+                    <p class="quiz-error">
+                        That email address doesn't look right.
+                    </p>
+                </form>
+
+                <div class="quiz-result quiz-sent">
+                    <h3>Sent; thank you!</h3>
+                    <p>
+                        I'll review your answers and get back to you soon. In
+                        the meantime, find me on{' '}
+                        <a
+                            href={LINKEDIN_URL}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            LinkedIn
+                        </a>
+                        .
+                    </p>
+                </div>
+            </dialog>
         </>
     );
 }
