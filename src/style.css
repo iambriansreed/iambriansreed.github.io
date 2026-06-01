@@ -1937,8 +1937,8 @@ dialog:popover-open,
        (clip-path clips the blurred region to the parallelogram). */
     background: linear-gradient(
         120deg,
-        color-mix(in srgb, var(--accent) 28%, transparent),
-        color-mix(in srgb, var(--accent) 10%, transparent)
+        color-mix(in srgb, var(--accent) 35%, rgba(0, 0, 0, 0.82)),
+        color-mix(in srgb, var(--accent) 18%, rgba(0, 0, 0, 0.82))
     );
     backdrop-filter: blur(14px) saturate(1.4);
     -webkit-backdrop-filter: blur(14px) saturate(1.4);
