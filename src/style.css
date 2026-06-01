@@ -16,6 +16,11 @@
     --gap: 4.5rem;
     --radius: 6px;
     --accent: #4a7fa5;
+    /* Shared focus ring, used by the global :focus-visible rule and every
+       component that needs a themed override (skewed buttons, clipped FABs). */
+    --focus-color: var(--accent);
+    --focus-width: 2px;
+    --focus-offset: 3px;
     --skewX: skewX(-6deg);
     --skewX-counter: skewX(6deg);
     --skewX-dot: skewX(-20deg);
@@ -196,6 +201,15 @@ a {
     }
 }
 
+/* ---------- Global focus ---------- */
+/* Every focusable element gets the same themed accent ring by default.
+   Components with non-rectangular shapes (skewed .btn, clipped .fa-btn)
+   override this below so the ring tracks their actual silhouette. */
+:focus-visible {
+    outline: var(--focus-width) solid var(--focus-color);
+    outline-offset: var(--focus-offset);
+}
+
 /* ---------- Floating controls group (bottom-left) ---------- */
 .fab-group {
     position: fixed;
@@ -224,6 +238,16 @@ a {
         background 0.15s,
         color 0.15s,
         box-shadow 0.15s;
+
+    /* clip-path clips a normal outline, so trace the parallelogram with stacked
+       drop-shadows that follow the clipped silhouette. */
+    &:focus-visible {
+        outline: none;
+        filter: drop-shadow(var(--focus-width) 0 0 var(--focus-color))
+            drop-shadow(calc(var(--focus-width) * -1) 0 0 var(--focus-color))
+            drop-shadow(0 var(--focus-width) 0 var(--focus-color))
+            drop-shadow(0 calc(var(--focus-width) * -1) 0 var(--focus-color));
+    }
 
     .icon {
         width: 1.1rem;
@@ -886,9 +910,15 @@ a {
    lives there too and slants with the parallelogram. The accent-shadow glow
    echoes the hover accent and stays visible against either fill. */
 @keyframes btn-focus-pulse {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.2); }
-    100% { transform: scale(1); }
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.2);
+    }
+    100% {
+        transform: scale(1);
+    }
 }
 .btn:focus-visible,
 .hero-rail a:focus-visible {
@@ -1291,12 +1321,14 @@ a {
     font-size: 1.05rem;
     font-weight: 600;
     color: var(--muted);
+    white-space: nowrap;
 }
 /* Source-link icons (GitHub / npm) ride a bit larger than the text. */
 .source-link .icon {
     width: 1.25em;
     height: 1.25em;
 }
+
 .source-link:hover {
     color: var(--accent);
 }
@@ -1342,6 +1374,21 @@ a {
 .connect-item:hover .connect-label {
     color: #fff;
 }
+/* The whole card is the visual button, so show focus on the card (not the
+   inner control, which would draw a cramped rectangle inside the border).
+   Echo the hover fill so a focused card reads as clearly active. */
+.connect-item:has(:focus-visible) {
+    outline: var(--focus-width) solid var(--focus-color);
+    outline-offset: var(--focus-offset);
+    background: var(--accent);
+}
+.connect-item:has(:focus-visible) .connect-label {
+    color: #fff;
+}
+.connect-item a:focus-visible,
+.connect-item button:focus-visible {
+    outline: none;
+}
 .connect-label {
     transition: color 0.15s;
 }
@@ -1374,6 +1421,26 @@ a {
     font-weight: 800;
     text-transform: uppercase;
     letter-spacing: -0.01em;
+}
+/* Right-aligned hint on each card: "Take the quiz" / social handle. Muted until
+   the card lights up on hover/focus, then matches the white label. */
+.connect-action {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--muted);
+    white-space: nowrap;
+    transition: color 0.15s;
+}
+.connect-action .icon {
+    width: 0.95em;
+    height: 0.95em;
+}
+.connect-item:hover .connect-action,
+.connect-item:has(:focus-visible) .connect-action {
+    color: #fff;
 }
 .connect-meta {
     margin-top: 2rem;

@@ -255,7 +255,7 @@ const data: SiteData = {
                     url: 'https://github.com/iambriansreed/skrapa',
                 },
                 {
-                    title: 'Npm',
+                    title: 'npm',
                     url: 'https://www.npmjs.com/package/skrapa',
                 },
             ],

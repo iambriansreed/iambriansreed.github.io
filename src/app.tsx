@@ -8,13 +8,13 @@ const sendIcon = `<svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="
 
 const arrowIcon = `<svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10"/></svg>`;
 
-const npmIcon = `<svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" aria-hidden="true"><path fill="currentColor" d="M0 64v384h576V64H0zm96 320H48V160h96v192h48V160h48v224H96zm192 0V160h192v160h-96v64h-96zm144-160h-48v96h48v-96z"/></svg>`;
+const npmIcon = `<svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" fill-rule="evenodd" d="M2 2h20v20H2V2zm3 3v14h4V9h6v10h4V5H5z"/></svg>`;
 
 // Pick a source-link icon by host: GitHub, npm, or a generic external-link arrow.
-function sourceIcon(url: string): string {
-    if (url.includes('github.com')) return githubIcon;
-    if (url.includes('npmjs.com')) return npmIcon;
-    return arrowIcon;
+function sourceIcon(url: string): { svg: string; class: string } | null {
+    if (url.includes('github.com')) return { svg: githubIcon, class: 'github' };
+    if (url.includes('npmjs.com')) return { svg: npmIcon, class: 'npm' };
+    return null;
 }
 
 function formatDate(timestamp: number): string {
@@ -354,17 +354,23 @@ export function App(): string {
                                     </div>
                                     {project.sources.length > 0 && (
                                         <div class="project-sources">
-                                            {project.sources.map((source) => (
-                                                <a
-                                                    href={source.url}
-                                                    class="source-link"
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
-                                                >
-                                                    {sourceIcon(source.url)}
-                                                    {source.title} →
-                                                </a>
-                                            ))}
+                                            {project.sources.map((source) => {
+                                                const icon = sourceIcon(
+                                                    source.url,
+                                                );
+                                                return (
+                                                    <a
+                                                        href={source.url}
+                                                        class={`source-link ${icon?.class}`}
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                    >
+                                                        {icon?.svg}
+                                                        {source.title}{' '}
+                                                        {arrowIcon}
+                                                    </a>
+                                                );
+                                            })}
                                         </div>
                                     )}
                                 </div>
@@ -459,6 +465,9 @@ export function App(): string {
                                     <span class="connect-label">
                                         Recruiters
                                     </span>
+                                    <span class="connect-action">
+                                        Take the quiz {arrowIcon}
+                                    </span>
                                 </button>
                             </li>
                             <li class="connect-item">
@@ -469,6 +478,9 @@ export function App(): string {
                                     rel="noopener noreferrer"
                                 >
                                     <span class="connect-label">LinkedIn</span>
+                                    <span class="connect-action">
+                                        /in/iambriansreed {arrowIcon}
+                                    </span>
                                 </a>
                             </li>
                             <li class="connect-item">
@@ -479,6 +491,9 @@ export function App(): string {
                                     rel="noopener noreferrer"
                                 >
                                     <span class="connect-label">GitHub</span>
+                                    <span class="connect-action">
+                                        @iambriansreed {arrowIcon}
+                                    </span>
                                 </a>
                             </li>
                         </ul>
