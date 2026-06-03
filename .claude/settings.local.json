@@ -4,7 +4,6 @@
       "WebFetch(domain:localhost)",
       "WebFetch(domain:local.local)",
       "WebSearch",
-      "Bash(npx playwright *)",
       "WebFetch(domain:francoruiz.dev)",
       "WebFetch(domain:jonathontoon.com)",
       "WebFetch(domain:www.ormanclark.com)",
