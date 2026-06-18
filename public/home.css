@@ -2169,3 +2169,21 @@ footer {
         }
     }
 }
+
+@media (max-width: 720px) {
+    /* Stack the footer into a single left-aligned column. The desktop layout
+       reserves a 10rem left gutter for the docked toggles and spreads its rows
+       with space-between, which collapses into a cramped sliver on narrow
+       screens. Drop the gutter and clear the controls that float over the
+       bottom of the viewport — the accent/theme toggles (bottom-left) and the
+       cookie bar (bottom-right). Both sit at bottom:1.25rem and are 2.5rem
+       tall, so reserve well past that (plus the device safe-area) as bottom
+       padding so footer content never sits behind them. */
+    footer {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1.25rem;
+        padding-left: clamp(1.25rem, 5vw, 3rem);
+        padding-bottom: calc(8rem + env(safe-area-inset-bottom, 0px));
+    }
+}

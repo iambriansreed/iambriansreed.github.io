@@ -644,6 +644,11 @@ messageFormInit();
     const dots = qsa('.exp-dot', section);
     if (!section || !track || REDUCE_MOTION) return;
 
+    // The pinned horizontal scrollytelling is a desktop affordance. On mobile
+    // we fall back to the plain vertical list (see measure()), which keeps the
+    // section header visible and lets each card size to its content.
+    const MOBILE = window.matchMedia('(max-width: 720px)');
+
     let overflow = 0;
     let activeDot = -1;
 
@@ -681,6 +686,14 @@ messageFormInit();
     };
 
     const measure = () => {
+        // Mobile: never pin. Drop the runway height + pinned class so the
+        // experience renders as a normal vertical list (header included).
+        if (MOBILE.matches) {
+            overflow = 0;
+            section.classList.remove('exp-pinned');
+            section.style.removeProperty('height');
+            return;
+        }
         section.classList.add('exp-pinned');
         overflow = track.scrollWidth - sticky.clientWidth;
         if (overflow <= 0) {
