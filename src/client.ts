@@ -339,70 +339,21 @@ function messageFormInit() {
 
 messageFormInit();
 
-// ── Mobile nav ──────────────────────────────────────────────────────────────────
-// Open/close is handled natively by the popover API (popovertarget); we just
-// dismiss the drawer once a destination is picked.
+// ── Header reveal ────────────────────────────────────────────────────────────────
+// The header sits hidden just above the viewport (top: -4rem). Drop it into view
+// only once the hero has fully scrolled out, so it never overlaps the landing.
 (() => {
-    const menu = qs<HTMLDialogElement>('#mobile-menu');
-    if (!menu) return;
-    qsa('a', menu).forEach((link) =>
-        link.addEventListener('click', () => menu.hidePopover?.()),
+    const header = qs('header');
+    const hero = qs('.hero');
+    if (!header || !hero) return;
+
+    const observer = new IntersectionObserver(
+        ([entry]) => {
+            header.classList.toggle('is-pinned', !entry.isIntersecting);
+        },
+        { threshold: 0 },
     );
-})();
-
-// ── Dock the floating toggles above the footer ───────────────────────────────────
-// Stay fixed while scrolling; once the footer would overlap, switch to absolute
-// so the toggles park just above it instead of floating over it.
-(() => {
-    const fab = qs('.fab-group');
-    const footer = qs('footer');
-    if (!fab || !footer) return;
-    const GAP = 20; // matches the 1.25rem fixed offset
-    const update = () => {
-        const fr = footer.getBoundingClientRect();
-        // Once the footer is on screen, land the toggles inside it (vertically
-        // centered) instead of floating over the page.
-        if (fr.top < window.innerHeight - GAP) {
-            fab.style.position = 'absolute';
-            fab.style.bottom = 'auto';
-            fab.style.top = `${
-                window.scrollY +
-                fr.top +
-                (footer.offsetHeight - fab.offsetHeight) / 2
-            }px`;
-        } else {
-            fab.style.position = '';
-            fab.style.top = '';
-            fab.style.bottom = '';
-        }
-    };
-    window.addEventListener('scroll', update, { passive: true });
-    window.addEventListener('resize', update);
-    window.addEventListener('load', update);
-    update();
-})();
-
-// ── Ride the cookie bar above the footer ─────────────────────────────────────────
-// The cookie bar rests at bottom: 1.25rem. As the footer scrolls up it rides up
-// with it (staying a hair above, never clashing) until it reaches 8.25rem from the
-// bottom, where it sticks.
-(() => {
-    const bar = qs('#cookie-bar');
-    const footer = qs('footer');
-    if (!bar || !footer) return;
-    const REST = 20; // 1.25rem resting offset
-    const STICK = 132; // 8.25rem — highest it docks, then sticks
-    const GAP = 12; // clearance kept above the footer
-    const update = () => {
-        const footerTop = footer.getBoundingClientRect().top;
-        const needed = window.innerHeight - footerTop + GAP;
-        const offset = Math.max(REST, Math.min(STICK, needed));
-        bar.style.bottom = offset > REST ? `${offset}px` : '';
-    };
-    window.addEventListener('scroll', update, { passive: true });
-    window.addEventListener('resize', update);
-    window.addEventListener('load', update);
-    update();
+    observer.observe(hero);
 })();
 
 // ── Fast in-page nav scrolling ──────────────────────────────────────────────────
