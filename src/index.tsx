@@ -117,7 +117,9 @@ export function Page(): Page {
                 <header>
                     <a class="nav-brand" href="#top">
                         <span class="nav-brand-name">Brian • Reed</span>
-                        <span class="nav-brand-role">Front-End Architect</span>
+                        <span class="nav-brand-role">
+                            Design Systems Engineer
+                        </span>
                     </a>
 
                     <a class="btn btn-primary nav-cta" href="#contact">
@@ -148,13 +150,16 @@ export function Page(): Page {
                                     <p class="hero-role">
                                         <span class="hero-rule"></span>
                                         <span class="hero-role-titles">
-                                            <span>Front-End Architect</span>
+                                            <span>Design Systems Engineer</span>
                                             <span class="hero-role-sep">·</span>
-                                            <span>Staff Engineer</span>
+                                            <span>
+                                                Senior Full-Stack
+                                                (Frontend-Focused)
+                                            </span>
                                         </span>
                                     </p>
                                     <p class="hero-tagline">
-                                        Fifteen years turning complex product
+                                        Eighteen years turning complex product
                                         requirements into fast, accessible,
                                         beautifully engineered interfaces.
                                     </p>
@@ -510,7 +515,7 @@ export function Page(): Page {
                                     aria-hidden="true"
                                 ></span>
                             </p>
-                            <cite class="quote-band-cite">— me</cite>
+                            <cite class="quote-band-cite">- me</cite>
                         </blockquote>
                     </aside>
                 </main>
@@ -519,7 +524,7 @@ export function Page(): Page {
                     <div class="footer-brand">
                         <span class="footer-name">Brian S. Reed</span>
                         <span class="footer-role">
-                            Front-End Architect · Staff Engineer
+                            Design Systems Engineer · Front-End Architect
                         </span>
                     </div>
                     <div class="footer-links">

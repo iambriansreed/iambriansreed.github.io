@@ -80,7 +80,7 @@ export function Page(): Page {
         ),
         body: (
             <>
-                {/* Full-page gate shown on load — CSS-only: the "View" label
+                {/* Full-page gate shown on load, CSS-only: the "View" label
                     toggles the hidden checkbox, which hides the gate. */}
                 <input type="checkbox" id="intro-dismiss" class="intro-toggle" />
                 <div

@@ -5,7 +5,7 @@
 // These used to live in two files that drifted apart. They are now merged: every
 // role is one ExperienceItem that carries what BOTH renderers need. Where the two
 // genuinely differ (job titles, bullet copy, a couple of company/location strings),
-// the résumé wording takes precedence — résumé titles now show on the site too.
+// the résumé wording takes precedence: résumé titles now show on the site too.
 
 // Site contact link (footer / nav style).
 export type ContactLink = {
@@ -127,10 +127,10 @@ const data: SiteData = {
     subtitle: 'Design Systems Engineer · Front-End Architect',
 
     introduction:
-        'Front-End Architect and Staff Engineer with 15+ years building scalable UI systems. Deep expertise in React, TypeScript, and design systems, with a strong focus on accessibility, performance, and developer experience.',
+        'Design Systems Engineer, Senior Full-Stack (Frontend-Focused), with 18+ years building scalable UI systems. Deep expertise in React, TypeScript, and design systems, with a strong focus on accessibility, performance, and developer experience.',
 
     summary:
-        'Front-End Architect and Staff-level engineer with 15+ years building scalable UI systems. Deep expertise in React, TypeScript, and design systems, with a strong focus on accessibility, performance, and developer experience. Known for translating ambiguous requirements into durable architecture, mentoring engineers across teams, and leveraging AI tooling (Claude Code, GitHub Copilot, Cursor) to accelerate delivery without sacrificing quality. U.S. Army veteran.',
+        'Design Systems Engineer, Senior Full-Stack (Frontend-Focused), with 18+ years building scalable UI systems. Deep expertise in React, TypeScript, and design systems, with a strong focus on accessibility, performance, and developer experience. Known for translating ambiguous requirements into durable architecture, mentoring engineers across teams, and leveraging AI tooling (Claude Code, GitHub Copilot, Cursor) to accelerate delivery without sacrificing quality. U.S. Army veteran.',
 
     contact: {
         location: 'Chesapeake, VA (Remote)',
@@ -221,7 +221,7 @@ const data: SiteData = {
             ],
             description: [
                 'Lead the design systems engineering group; setting technical direction, prioritization, and day-to-day mentorship while partnering with design leadership and product.',
-                'Own the architecture, engineering, and adoption of a scalable React component library of 90+ components used across multiple teams and platforms.',
+                'Own the architecture, engineering, and adoption of a scalable React and Angular design system of 90+ components each, used across multiple teams and platforms.',
                 'Built a custom Figma plugin for 2,000+ design tokens across 10 brand themes and a TypeScript/JSDoc-generated documentation site, creating a single source of truth between design and code.',
                 'Standardized component APIs, docs, and CI/CD integration to improve onboarding, consistency, and delivery velocity.',
             ],
@@ -266,8 +266,7 @@ const data: SiteData = {
             category: 'professional',
             title: 'Senior Software Engineer (Frontend Focused)',
             companyName: 'CoStar Group',
-            location: 'Hampton Roads, VA',
-            locationResume: 'Richmond, VA',
+            location: 'Richmond, VA',
             startedOn: 1561953600000,
             finishedOn: 1630468800000,
             dateRange: 'Jul 2019 – Sep 2021',
