@@ -1,0 +1,382 @@
+:root {
+    --ink: #17242b;
+    --ink-soft: #4a5a62;
+    --paper: #f5f1e8;
+    --card: #fffdf8;
+    --line: #ddd5c4;
+    --teal: #1f6f6b;
+    --teal-deep: #14504d;
+    /* Off-week tag text, and it sits on the tinted #f6e7df pill rather than the
+       card — so it runs darker than Heather's otherwise-identical hue. */
+    --rust: #9e492f;
+    --amber: #946510;
+    --today-bg: #1f6f6b;
+    --shadow:
+        0 1px 2px rgba(23, 36, 43, 0.06), 0 6px 20px rgba(23, 36, 43, 0.07);
+}
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    -webkit-tap-highlight-color: transparent;
+}
+html {
+    -webkit-text-size-adjust: 100%;
+}
+body {
+    font-family: 'DM Sans', system-ui, sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    line-height: 1.4;
+    padding: 0 0 env(safe-area-inset-bottom);
+    max-width: 560px;
+    margin: 0 auto;
+    min-height: 100vh;
+}
+header {
+    padding: 22px 20px 14px;
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background: linear-gradient(var(--paper) 78%, rgba(245, 241, 232, 0));
+}
+.brand {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 10px;
+}
+h1 {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 26px;
+    letter-spacing: -0.01em;
+    line-height: 1;
+}
+.weektag {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--teal-deep);
+    background: #e4ede8;
+    border: 1px solid #cfe0d8;
+    padding: 4px 9px;
+    border-radius: 999px;
+    white-space: nowrap;
+}
+.weektag.b {
+    color: var(--rust);
+    background: #f6e7df;
+    border-color: #eccdbf;
+}
+.datebar {
+    font-size: 13px;
+    color: var(--ink-soft);
+    margin-top: 5px;
+    font-weight: 500;
+}
+
+.filter {
+    padding: 4px 14px 12px;
+}
+.filter-scroll {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding: 6px 6px 8px;
+    scroll-snap-type: x proximity;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+.filter-scroll::-webkit-scrollbar {
+    display: none;
+}
+.chip {
+    flex: 0 0 auto;
+    scroll-snap-align: start;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 9px 15px;
+    border-radius: 999px;
+    border: 1.5px solid var(--line);
+    background: var(--card);
+    color: var(--ink-soft);
+    cursor: pointer;
+    transition: all 0.15s ease;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+}
+.chip .dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    /* --person is set per chip from the roster. */
+    background: var(--person);
+    opacity: 0.8;
+}
+.chip[aria-pressed='true'] {
+    color: #fff;
+    background: var(--person);
+    border-color: transparent;
+    box-shadow: var(--shadow);
+}
+.chip[aria-pressed='true'] .dot {
+    background: rgba(255, 255, 255, 0.9);
+    opacity: 1;
+}
+
+main {
+    padding: 0 14px 40px;
+}
+/* The page ships the whole two-week chart. Once the client runs it sets
+   data-view="pair" and only today's and tomorrow's cards stay on screen, in
+   the order it assigns — the cycle wraps, so tomorrow can sit earlier in the
+   document than today. */
+main[data-view='pair'] {
+    display: flex;
+    flex-direction: column;
+}
+main[data-view='pair'] .week {
+    display: contents;
+}
+main[data-view='pair'] .week-head,
+main[data-view='pair'] .day {
+    display: none;
+}
+main[data-view='pair'] .day[data-show] {
+    display: block;
+}
+.week-head {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 15px;
+    color: var(--ink-soft);
+    padding: 10px 4px 12px;
+}
+.week[data-current='true'] .week-head {
+    color: var(--teal-deep);
+}
+.dot-sep {
+    opacity: 0.4;
+}
+.day {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    margin-bottom: 16px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+}
+.day-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--line);
+}
+.day-head.today {
+    background: var(--today-bg);
+    border-bottom-color: var(--teal-deep);
+}
+.day-title {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+}
+.day-when {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 19px;
+}
+.day-date {
+    font-size: 12px;
+    font-weight: 500;
+    opacity: 0.7;
+}
+.day-head.today .day-when,
+.day-head.today .day-date {
+    color: #fff;
+}
+.day-head.today .day-date {
+    opacity: 0.82;
+}
+.count {
+    font-size: 12px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: #eee7d7;
+    color: var(--ink-soft);
+}
+.day-head.today .count {
+    background: rgba(255, 255, 255, 0.16);
+    color: #fff;
+}
+
+ul {
+    list-style: none;
+}
+li.task {
+    border-bottom: 1px solid #efe9db;
+}
+/* The row itself is the control. Stripping the button chrome keeps the visual
+   design while the element stays focusable and announceable. */
+.task-btn {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    width: 100%;
+    padding: 13px 18px;
+    border: 0;
+    background: none;
+    font: inherit;
+    color: inherit;
+    text-align: left;
+    cursor: pointer;
+    transition: background 0.12s ease;
+}
+.task-btn:focus-visible {
+    outline: 2px solid var(--teal-deep);
+    outline-offset: -2px;
+}
+/* Filtered out by the person chips. */
+li.task.is-hidden {
+    display: none;
+}
+li.task:last-child {
+    border-bottom: none;
+}
+.task-btn:active {
+    background: #f7f2e6;
+}
+.check {
+    flex: 0 0 auto;
+    width: 23px;
+    height: 23px;
+    border-radius: 7px;
+    border: 2px solid var(--line);
+    display: grid;
+    place-items: center;
+    transition: all 0.15s ease;
+}
+li.done .check {
+    background: var(--teal);
+    border-color: var(--teal);
+}
+.check svg {
+    width: 13px;
+    height: 13px;
+    stroke: #fff;
+    stroke-width: 3.5;
+    fill: none;
+    opacity: 0;
+    transition: opacity 0.15s;
+}
+li.done .check svg {
+    opacity: 1;
+}
+.task-body {
+    flex: 1;
+    min-width: 0;
+}
+/* A span so it can live inside the button; block so the names below it wrap
+   onto their own line the way the old <div> did. */
+.task-name {
+    display: block;
+    font-size: 15px;
+    font-weight: 500;
+    transition: color 0.15s;
+}
+li.done .task-name {
+    color: #756d5b;
+    text-decoration: line-through;
+}
+.task-who {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    margin-top: 2px;
+    color: var(--person);
+}
+/* Shared chores list every name; separate them without markup for the divider. */
+.task-who + .task-who::before {
+    content: '·';
+    color: var(--ink-soft);
+    opacity: 0.4;
+    /* The gap already spaces it from the next name; this spaces it from the
+       previous one, since adjacent spans have no whitespace between them. */
+    margin-left: 6px;
+}
+.task-who .dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: currentColor;
+}
+.badge-note {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--amber);
+    margin-left: 7px;
+}
+.empty {
+    padding: 26px 18px;
+    text-align: center;
+    color: var(--ink-soft);
+    font-size: 14px;
+}
+.empty strong {
+    color: var(--ink);
+    font-weight: 600;
+}
+footer {
+    text-align: center;
+    font-size: 11px;
+    color: #6d6655;
+    padding: 8px 20px 30px;
+    font-weight: 500;
+}
+
+#datepick {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 14px;
+    padding-top: 12px;
+    border-top: 1px dashed var(--line);
+}
+#datepick label {
+    font-weight: 600;
+    color: #6d6658;
+}
+#datepick input,
+#datepick button {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 5px 10px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: var(--card);
+    color: var(--ink-soft);
+}
+#datepick input {
+    font-weight: 400;
+    font-size: 13px;
+    padding: 5px 8px;
+}
+#datepick button {
+    cursor: pointer;
+}
+@media (prefers-reduced-motion: reduce) {
+    * {
+        transition: none !important;
+    }
+}

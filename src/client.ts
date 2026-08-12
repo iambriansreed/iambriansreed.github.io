@@ -1,5 +1,3 @@
-/// <reference path="../global.d.ts" />
-
 const qs = <T extends Element = HTMLElement>(
     s: string,
     parentNode?: ParentNode,
@@ -25,7 +23,6 @@ const themeBtn = qs<HTMLButtonElement>('.theme-toggle')!;
 const accentBtn = qs<HTMLButtonElement>('.accent-toggle')!;
 const cookieBar = qs<HTMLDialogElement>('#cookie-bar')!;
 const cookieConsentBtns = qsa<HTMLButtonElement>('.consent-btn', cookieBar)!;
-const cookiePolicyModal = qs<HTMLDialogElement>('#cookie-policy')!;
 
 // ── State ─────────────────────────────────────────────────────────────────────
 
@@ -550,11 +547,16 @@ messageFormInit();
 
         // collect quiz answers from quizForm
         const fd = new FormData(quizForm);
-        const payload: Record<string, any> = {};
+        const payload: Record<
+            string,
+            FormDataEntryValue | FormDataEntryValue[]
+        > = {};
         for (const [k, v] of fd.entries()) {
             if (Object.prototype.hasOwnProperty.call(payload, k)) {
-                if (!Array.isArray(payload[k])) payload[k] = [payload[k]];
-                payload[k].push(v);
+                const existing = payload[k];
+                payload[k] = Array.isArray(existing)
+                    ? [...existing, v]
+                    : [existing, v];
             } else {
                 payload[k] = v;
             }

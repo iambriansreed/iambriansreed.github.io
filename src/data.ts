@@ -21,8 +21,6 @@ export type ResumeLink = {
 
 export type SkillItem = {
     name: string;
-    // Years of experience, rendered as "(N yrs)" in muted text on the résumé.
-    years?: number;
     // Free-form parenthetical, e.g. "(Claude Code, GitHub Copilot, Cursor)".
     note?: string;
 };
@@ -61,6 +59,10 @@ export type ExperienceItem = {
     companyResume?: string;
     location: string;
     locationResume?: string;
+
+    // Public artifact for the role, shown as a bare domain on the entry's meta
+    // line. Bare so it survives PDF text extraction as a usable link.
+    link?: string;
 
     // Dates. Epochs drive the site (sortable + locale-formatted); dateRange is the
     // literal string the résumé prints so the page matches the PDF regardless of
@@ -127,10 +129,17 @@ const data: SiteData = {
     subtitle: 'Design Systems Engineer · Front-End Architect',
 
     introduction:
-        'Design Systems Engineer, Senior Full-Stack (Frontend-Focused), with 18+ years building scalable UI systems. Deep expertise in React, TypeScript, and design systems, with a strong focus on accessibility, performance, and developer experience.',
+        'Design Systems Engineer, Senior Full-Stack (Frontend-Focused), with 17+ years building scalable UI systems. Deep expertise in React, TypeScript, and design systems, with a strong focus on accessibility, performance, and developer experience.',
 
+    // All three spans derive from the epochs below and need a bump each year:
+    // "seventeen" from City of Virginia Beach (Jul 2009), "seven" from the
+    // architect title at Anthem (Feb 2019), "two" from BSPK at Anywhere (Oct
+    // 2024). Design systems counts BSPK only — the earlier shared-library work
+    // is deliberately described as component libraries, not design systems, so
+    // the bullets below agree with this sentence. The 17 also appears in
+    // `introduction` and in the two index.html meta descriptions.
     summary:
-        'Design Systems Engineer, Senior Full-Stack (Frontend-Focused), with 18+ years building scalable UI systems. Deep expertise in React, TypeScript, and design systems, with a strong focus on accessibility, performance, and developer experience. Known for translating ambiguous requirements into durable architecture, mentoring engineers across teams, and leveraging AI tooling (Claude Code, GitHub Copilot, Cursor) to accelerate delivery without sacrificing quality. U.S. Army veteran.',
+        "Seventeen years in software — full-stack early, seven in front-end architecture, the last two leading the engineering group behind BSPK, Anywhere Real Estate's design system and its first open-source project. Design-trained, so accessibility and performance are requirements rather than cleanup. U.S. Army veteran.",
 
     contact: {
         location: 'Chesapeake, VA (Remote)',
@@ -158,46 +167,49 @@ const data: SiteData = {
         { title: 'GitHub', href: 'https://github.com/iambriansreed' },
     ],
 
+    // Recruiters skim the first rows, so the framework keywords they filter on
+    // lead, then languages, then the specialty that the roles are actually for.
     skills: [
-        {
-            label: 'Languages',
-            items: [
-                { name: 'JavaScript', years: 15 },
-                { name: 'TypeScript', years: 8 },
-                { name: 'CSS/SCSS', years: 15 },
-                { name: 'GraphQL', years: 5 },
-                { name: 'Node.js' },
-            ],
-        },
         {
             label: 'Frameworks',
             items: [
-                { name: 'React', years: 9 },
-                { name: 'Angular', years: 6 },
-                { name: 'React Native', years: 2 },
+                { name: 'React' },
+                { name: 'Angular' },
+                { name: 'React Native' },
                 { name: 'Vite' },
                 { name: 'Tailwind CSS' },
             ],
         },
         {
-            label: 'Architecture',
+            label: 'Languages',
             items: [
-                { name: 'Design Systems', years: 8 },
-                { name: 'Component Libraries' },
-                { name: 'Accessibility / WCAG', years: 6 },
-                { name: 'Performance Optimization', years: 10 },
-                { name: 'CI/CD', years: 6 },
+                { name: 'TypeScript' },
+                { name: 'JavaScript' },
+                { name: 'CSS/SCSS' },
+                { name: 'GraphQL' },
+                { name: 'Node.js' },
+            ],
+        },
+        {
+            label: 'Systems',
+            items: [
+                { name: 'Design systems' },
+                { name: 'Component libraries' },
+                { name: 'Design tokens' },
+                { name: 'Accessibility (WCAG)' },
+                { name: 'Performance' },
             ],
         },
         {
             label: 'Practice',
             items: [
+                { name: 'Figma plugin development' },
+                { name: 'CI/CD and release automation' },
                 {
-                    name: 'AI-Assisted Development',
-                    note: 'Claude Code, GitHub Copilot, Cursor',
+                    name: 'AI-assisted development',
+                    note: 'Claude Code, Copilot, Cursor',
                 },
-                { name: 'Figma and Design Tokens' },
-                { name: 'Technical Leadership and Mentorship', years: 10 },
+                { name: 'Mentorship' },
             ],
         },
     ],
@@ -209,6 +221,10 @@ const data: SiteData = {
             companyName: 'Anywhere Real Estate Inc.',
             companyResume: 'Anywhere Real Estate',
             location: 'Remote',
+            // Off until the fork is live at bspk.iambrian.com — pointing at an
+            // employer-controlled domain risks a dead link on a résumé already
+            // in circulation. Set `link` to re-enable; the rendering is in place.
+            // link: 'bspk.iambrian.com',
             startedOn: 1728993600000,
             dateRange: 'Oct 2024 – Present',
             skills: [
@@ -221,16 +237,18 @@ const data: SiteData = {
             ],
             description: [
                 'Lead the design systems engineering group; setting technical direction, prioritization, and day-to-day mentorship while partnering with design leadership and product.',
-                'Own the architecture, engineering, and adoption of a scalable React and Angular design system of 90+ components each, used across multiple teams and platforms.',
-                'Built a custom Figma plugin for 2,000+ design tokens across 10 brand themes and a TypeScript/JSDoc-generated documentation site, creating a single source of truth between design and code.',
+                "Own BSPK, Anywhere Real Estate's design system and its first open-source project: a React library of 70+ components, an Angular library, and per-brand stylesheets for 9 brands.",
+                "Built the Figma plugin that syncs 2,000+ design tokens into those stylesheets, plus a documentation site built out of BSPK's own components, keeping design and code one source of truth.",
                 'Standardized component APIs, docs, and CI/CD integration to improve onboarding, consistency, and delivery velocity.',
             ],
+            // Figures here are the ones published on bspk.anywhere.re, so the
+            // résumé and the linked artifact agree. Update both together.
             bullets: [
-                'Lead the design systems engineering group: set technical direction and priorities, mentor engineers day to day, and partner with design leadership and product.',
-                'Own the architecture and adoption of a scalable React and Angular design system of 90+ components each, used across multiple product teams and platforms.',
-                'Built a custom Figma plugin that syncs 2,000+ design tokens across 10 brand themes between design and code, plus a TypeScript/JSDoc-generated documentation site as a single source of truth.',
-                'Standardized component APIs, documentation, and CI/CD release workflows, improving onboarding, consistency, and delivery velocity.',
-                'Established front-end standards for performance, accessibility (WCAG), and developer experience, accelerating delivery with AI tooling (Claude Code, GitHub Copilot, Cursor).',
+                "Own BSPK, Anywhere's design system and its first open-source project: 70+ React components, an Angular library, and Figma-generated themes for 9 brands.",
+                'Built the Figma plugin that syncs 2,000+ design tokens into per-brand stylesheets, keeping design and code one source of truth.',
+                "Built the documentation site out of BSPK's own components, so API and accessibility gaps surface on the team before they reach consumers.",
+                'Lead the design systems engineering group: technical direction, day-to-day mentorship, and partnership with design and product leadership.',
+                'Standardized component APIs, documentation, and CI/CD release workflows, and set the front-end bar for accessibility and performance.',
             ],
         },
         {
@@ -250,16 +268,15 @@ const data: SiteData = {
                 'Component Libraries',
             ],
             description: [
-                'Led development and evolution of a shared front-end design system and React component library supporting a cloud-based SaaS platform.',
+                'Led development and evolution of the shared React component library supporting a cloud-based SaaS platform.',
                 'Partnered closely with product managers and designers to translate requirements into clear technical specifications and well-scoped user stories.',
                 'Served as Certified Scrum Master, facilitating agile ceremonies and improving team delivery through clearer dependency tracking and process improvements.',
                 'Helped remove technical and organizational blockers, increasing team efficiency and predictability.',
             ],
             bullets: [
-                'Led development and evolution of a shared design system and React component library supporting a cloud-based enterprise SaaS platform.',
-                'Partnered with product managers and designers to translate business requirements into clear technical specifications and well-scoped user stories.',
-                'Served as Certified Scrum Master, improving delivery predictability through clearer dependency tracking and process improvements.',
-                'Reduced defects and rework through tighter acceptance criteria and stronger front-end testing strategies.',
+                'Led the shared React component library behind a cloud-based enterprise SaaS platform.',
+                'Partnered with product and design to turn business requirements into technical specifications and well-scoped stories.',
+                "Ran the team's process as Certified ScrumMaster, cutting defects and rework through tighter acceptance criteria and front-end testing.",
             ],
         },
         {
@@ -285,9 +302,8 @@ const data: SiteData = {
                 'Served as a technical point of contact for shared UI infrastructure, influencing architecture and reducing duplicated UI work.',
             ],
             bullets: [
-                'Core contributor to a large shared React UI library used across multiple business units; led its re-architecture for long-term maintainability.',
-                'Owned component API design and documentation patterns; defined standards for reusability, accessibility, and performance across desktop and mobile web.',
-                'Mentored engineers on front-end best practices, testing, and component design.',
+                'Rearchitected a large shared React UI library used across multiple business units for long-term maintainability.',
+                'Owned component API design and documentation patterns, setting standards for reusability, accessibility, and performance across desktop and mobile web.',
             ],
         },
         {
@@ -310,7 +326,7 @@ const data: SiteData = {
                 'Improved performance, maintainability, and consistency of mobile front-end implementations.',
             ],
             bullets: [
-                'Unified multiple teams around a shared React Native architecture; designed reusable cross-platform component patterns to improve scalability, performance, and consistency.',
+                'Unified several teams on one React Native architecture, with reusable cross-platform component patterns for scale and consistency.',
             ],
         },
         {
@@ -329,8 +345,7 @@ const data: SiteData = {
                 'Drove front-end modernization while balancing delivery with long-term maintainability.',
             ],
             bullets: [
-                'Set front-end quality standards through code reviews and shared best practices; mentored junior engineers and contributed to technical interviews.',
-                'Shaped front-end architecture decisions with product, UX, and business stakeholders while driving modernization of legacy code.',
+                'Set front-end quality standards through code review and shared practice; shaped architecture decisions with product and UX while modernizing legacy code.',
             ],
         },
         {
@@ -358,7 +373,7 @@ const data: SiteData = {
                 'Translated UX requirements into reusable components and incrementally modernized legacy ASP.NET WebForms applications.',
             ],
             bullets: [
-                'Built production React and Angular applications for finance and enterprise clients, with back-end services in Node.js, PHP, and ASP.NET Web API.',
+                'Built React and Angular apps for finance clients on Node.js, PHP, and ASP.NET.',
             ],
         },
         {
@@ -382,7 +397,7 @@ const data: SiteData = {
                 'Created visually consistent, brand-aligned websites and internal tools.',
             ],
             bullets: [
-                'Designed and built public-facing web applications, custom mapping tools (Google Maps, ESRI APIs), and SharePoint-based CMS components with a focus on accessible, user-friendly UI.',
+                'Built public-facing web apps and custom mapping tools (Google Maps, ESRI APIs).',
             ],
         },
         {
@@ -404,7 +419,7 @@ const data: SiteData = {
                 'Produced marketing collateral including brochures, booklets, signage, and trade show materials.',
                 'Supported brand presence through large-scale visual design work.',
             ],
-            detail: 'Alutiiq · Design-trained foundation: brand and print work plus a custom PHP/MySQL CMS',
+            detail: 'Alutiiq · Design-trained foundation: brand, print, and a custom PHP/MySQL CMS',
         },
         {
             category: 'military',
@@ -426,7 +441,7 @@ const data: SiteData = {
                 'Served as Ground Liaison Officer to the Air Operations Center, a role typically reserved for commissioned officers.',
             ],
             compactName: 'United States Army',
-            detail: 'Transportation Management Coordinator (88N), Fort Bragg, NC · Led logistics operations across multiple deployments; served as Ground Liaison Officer to the Air Operations Center, a role typically held by commissioned officers',
+            detail: 'Transportation Management Coordinator (88N), Fort Bragg, NC · Led logistics across multiple deployments; served as Ground Liaison Officer to the Air Operations Center, a role normally held by commissioned officers.',
         },
         {
             category: 'volunteer',
@@ -442,6 +457,10 @@ const data: SiteData = {
                 'Conducted patient assessments and administered treatments during transport.',
                 'Delivered compassionate patient care and support to individuals and families during emergencies.',
             ],
+            // Sits directly above the NREMT certification on the résumé, which
+            // otherwise appears with nothing behind it.
+            compactName: 'Emergency Medical Technician',
+            detail: 'Virginia Beach EMS · Patient assessment and emergency care in transport',
         },
     ],
 

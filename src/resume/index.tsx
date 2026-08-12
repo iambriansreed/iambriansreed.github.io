@@ -1,27 +1,65 @@
 import data from '../data';
 import type { SkillItem, ExperienceItem } from '../data';
 
-// "(N yrs)" / "(note)" suffix rendered in muted text after a skill name.
+// "(note)" suffix rendered in muted text after a skill name.
 function skillAside(skill: SkillItem): string | null {
-    if (skill.years) return `(${skill.years} yrs)`;
-    if (skill.note) return `(${skill.note})`;
-    return null;
+    return skill.note ? `(${skill.note})` : null;
 }
 
-function SectionLabel({ children }: PropsWithChildren): string {
-    return <p class="sec-label">{children}</p>;
+// Inline separator for contact / skills / meta runs. The surrounding spaces are
+// real text nodes on purpose: they are the only line-break opportunities in
+// these runs, since each item either is or contains a nowrap atom.
+function Dot() {
+    return (
+        <>
+            {' '}
+            <span class="dot">·</span>{' '}
+        </>
+    );
 }
 
-function JobEntry(job: ExperienceItem): string {
+// A section is the page grid: label in the left rail, content in the wide
+// column. Every section uses it, so the whole page hangs off two alignments.
+function Section({
+    label,
+    children,
+}: Skrapa.PropsWithChildren & { label: string }) {
+    return (
+        <section class="sec">
+            <h2 class="sec-label">{label}</h2>
+            <div class="sec-body">{children}</div>
+        </section>
+    );
+}
+
+// Role and dates share a line, and each entry is a self-contained block. That
+// ordering matters beyond looks: an untagged PDF is read geometrically, and a
+// separate date column gets hoisted away from the roles it belongs to.
+function EntryHead({ title, dates }: { title: string; dates: string }) {
+    return (
+        <div class="job-hd">
+            <h3 class="role">{title}</h3>
+            <span class="dates">{dates}</span>
+        </div>
+    );
+}
+
+function JobEntry(job: ExperienceItem) {
     return (
         <article class="job">
-            <div class="job-hd">
-                <span class="role">{job.title}</span>
-                <span class="dates">{job.dateRange}</span>
-            </div>
+            <EntryHead title={job.title} dates={job.dateRange} />
             <p class="job-meta">
-                {job.companyResume ?? job.companyName} <span class="dot">·</span>{' '}
+                {job.companyResume ?? job.companyName}
+                <Dot />
                 {job.locationResume ?? job.location}
+                {job.link && (
+                    <>
+                        <Dot />
+                        <a class="job-link" href={`https://${job.link}`}>
+                            {job.link}
+                        </a>
+                    </>
+                )}
             </p>
             <ul class="bullets">
                 {(job.bullets ?? []).map((b) => (
@@ -32,192 +70,184 @@ function JobEntry(job: ExperienceItem): string {
     );
 }
 
-// Early / military roles render as a single line. The bold lead is `compactName`
-// when set (military bolds the organization), otherwise the role title.
-function CompactRow(entry: ExperienceItem): string {
+// Early / military rows: one head line plus a single blurb, no bullets. The
+// bold lead is `compactName` when set (military bolds the organization).
+function CompactRow(entry: ExperienceItem) {
     return (
-        <p class="compact">
-            <strong>{entry.compactName ?? entry.title}</strong>{' '}
-            <span class="dot">·</span>{' '}
-            <span class="muted">{entry.detail}</span>
-            <span class="dates">{entry.dateRange}</span>
-        </p>
+        <article class="job compact">
+            <EntryHead
+                title={entry.compactName ?? entry.title}
+                dates={entry.dateRange}
+            />
+            <p class="job-meta">{entry.detail}</p>
+        </article>
     );
 }
 
-export function Page(): Page {
+export function Page(): Skrapa.Page {
     const { name, subtitle, contact, summary } = data;
 
     // The shared dataset holds every role in one array; the résumé only renders
-    // professional roles as full entries and early/military as compact one-liners.
+    // professional roles as full entries and early/military as compact rows.
     const jobs = data.experience.filter((j) => j.category === 'professional');
     const earlyExperience = data.experience.filter(
         (j) => j.category === 'early',
     );
     const military = data.experience.filter((j) => j.category === 'military');
+    const volunteer = data.experience.filter((j) => j.category === 'volunteer');
 
-    // Split experience across two letter pages at the marked break (CoStar),
-    // so the on-screen pages match the printed PDF pagination.
+    // Split experience across two letter pages at the marked break, so the
+    // on-screen pages match the printed PDF pagination.
     const splitIdx = jobs.findIndex((j) => j.pageBreakBefore);
     const page1Jobs = splitIdx > 0 ? jobs.slice(0, splitIdx) : jobs;
     const page2Jobs = splitIdx > 0 ? jobs.slice(splitIdx) : [];
 
     return {
-        head: (
-            <>
-                <link rel="preconnect" href="https://fonts.googleapis.com" />
-                <link
-                    rel="preconnect"
-                    href="https://fonts.gstatic.com"
-                    crossorigin
-                />
-                <link
-                    rel="stylesheet"
-                    href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&display=swap"
-                />
-                <link rel="stylesheet" href="/resume.css" />
-            </>
-        ),
         body: (
             <>
-                {/* Full-page gate shown on load, CSS-only: the "View" label
-                    toggles the hidden checkbox, which hides the gate. */}
-                <input type="checkbox" id="intro-dismiss" class="intro-toggle" />
-                <div
-                    class="intro-gate"
-                    role="dialog"
-                    aria-modal="true"
-                    aria-labelledby="intro-title"
-                >
-                    <div class="intro-card">
-                        <p class="intro-eyebrow">Résumé</p>
-                        <h2 id="intro-title" class="intro-title">
-                            {name}
-                        </h2>
-                        <p class="intro-text">
-                            Read the résumé here, or download a PDF copy.
-                        </p>
-                        <div class="intro-actions">
-                            <label
-                                for="intro-dismiss"
-                                class="intro-btn"
-                                role="button"
-                                tabindex="0"
-                            >
-                                View
-                            </label>
-                            <a
-                                class="intro-btn intro-btn-primary"
-                                href="/Brian_Reed_Resume.pdf"
-                                download
-                            >
-                                Download
-                            </a>
-                        </div>
+                {/* A native <dialog> opened with showModal(). The focus trap,
+                    Esc-to-close, and real inertness for the pages behind all
+                    come from the browser — none of the three is reachable from
+                    CSS, which is why the previous checkbox gate could not offer
+                    them. role=dialog and aria-modal are implicit here, so the
+                    markup no longer claims anything it cannot honour.
+
+                    If the script never runs the dialog simply stays closed and
+                    the résumé is immediately readable, which is the right way
+                    for a splash screen to fail. */}
+                <dialog class="intro-card" aria-labelledby="intro-title">
+                    <p class="intro-eyebrow">Résumé</p>
+                    <h2 id="intro-title" class="intro-title">
+                        {name}
+                    </h2>
+                    <p class="intro-text">
+                        Read the résumé here, or download a PDF copy.
+                    </p>
+                    <div class="intro-actions">
+                        {/* showModal() moves focus here on open, so the primary
+                            action is where the keyboard already is. */}
+                        <button
+                            type="button"
+                            class="intro-btn"
+                            data-intro-close
+                            autofocus
+                        >
+                            View
+                        </button>
+                        <a
+                            class="intro-btn intro-btn-primary"
+                            href="/Brian_Reed_Resume.pdf"
+                            download
+                            data-intro-close
+                        >
+                            Download
+                        </a>
                     </div>
-                </div>
+                </dialog>
+
+                {/* Deliberately here rather than at the end of <body>: a classic
+                    script blocks parsing, so the modal is up before the résumé
+                    pages below are parsed. No flash of ungated content. */}
+                <script src="./client.ts"></script>
 
                 <div class="pages">
                     <div class="page">
                         <header class="hd">
-                        <h1 class="name">{name}</h1>
-                        <p class="sub">{subtitle}</p>
-                        <p class="contact-line">
-                            <span>{contact.location}</span>
-                            <span class="dot">·</span>
-                            <a href={`mailto:${contact.email}`}>
-                                {contact.email}
-                            </a>
-                            <span class="dot">·</span>
-                            <span>{contact.phone}</span>
-                        </p>
-                        <p class="contact-line">
-                            {contact.links.map((link, i) => (
-                                <>
-                                    {i > 0 && <span class="dot">·</span>}
-                                    <a
-                                        href={link.href}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                    >
-                                        {link.label}
-                                    </a>
-                                </>
-                            ))}
-                        </p>
-                    </header>
-
-                    <section>
-                        <SectionLabel>Summary</SectionLabel>
-                        <p class="summary">{summary}</p>
-                    </section>
-
-                    <section>
-                        <SectionLabel>Skills</SectionLabel>
-                        <div class="skills-grid">
-                            {data.skills.map((group) => (
-                                <>
-                                    <div class="skills-label">
-                                        {group.label}
-                                    </div>
-                                    <div class="skills-values">
-                                        {group.items.map((skill, i) => {
-                                            const aside = skillAside(skill);
-                                            return (
-                                                <>
-                                                    {i > 0 && (
-                                                        <span class="dot">
-                                                            ·
-                                                        </span>
-                                                    )}
-                                                    <span class="skill">
-                                                        {skill.name}
-                                                        {aside && (
-                                                            <span class="muted">
-                                                                {' '}
-                                                                {aside}
-                                                            </span>
-                                                        )}
-                                                    </span>
-                                                </>
-                                            );
-                                        })}
-                                    </div>
-                                </>
-                            ))}
-                        </div>
-                    </section>
-
-                    <section>
-                        <SectionLabel>Experience</SectionLabel>
-                        {page1Jobs.map((job) => JobEntry(job))}
-                    </section>
-                </div>
-
-                <div class="page">
-                    <section>
-                        {page2Jobs.map((job) => JobEntry(job))}
-                        {earlyExperience.map((entry) => CompactRow(entry))}
-                    </section>
-
-                    <section>
-                        <SectionLabel>Military Service</SectionLabel>
-                        {military.map((entry) => CompactRow(entry))}
-                    </section>
-
-                    <section>
-                        <SectionLabel>Certifications</SectionLabel>
-                        {data.certifications.map((cert) => (
-                            <p class="cert">
-                                <span class="cert-main">
-                                    <strong>{cert.title}</strong>{' '}
-                                    <span class="dot">·</span>{' '}
-                                    <span class="muted">{cert.source}</span>
-                                </span>
-                                <span class="dates">{cert.year}</span>
+                            <h1 class="name">{name}</h1>
+                            <p class="sub">{subtitle}</p>
+                            <p class="contact-line">
+                                <span>{contact.location}</span>
+                                <Dot />
+                                <a href={`mailto:${contact.email}`}>
+                                    {contact.email}
+                                </a>
+                                <Dot />
+                                <span>{contact.phone}</span>
                             </p>
-                        ))}
-                    </section>
+                            <p class="contact-line">
+                                {contact.links.map((link, i) => (
+                                    <>
+                                        {i > 0 && <Dot />}
+                                        <a
+                                            href={link.href}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                        >
+                                            {link.label}
+                                        </a>
+                                    </>
+                                ))}
+                            </p>
+                        </header>
+
+                        <Section label="Summary">
+                            <p class="summary">{summary}</p>
+                        </Section>
+
+                        <Section label="Skills">
+                            <div class="skills-grid">
+                                {data.skills.map((group) => (
+                                    <>
+                                        <div class="skills-label">
+                                            {group.label}
+                                        </div>
+                                        <div class="skills-values">
+                                            {group.items.map((skill, i) => {
+                                                const aside = skillAside(skill);
+                                                return (
+                                                    <>
+                                                        {i > 0 && <Dot />}
+                                                        <span class="skill">
+                                                            {skill.name}
+                                                            {aside && (
+                                                                <span class="muted">
+                                                                    {' '}
+                                                                    {aside}
+                                                                </span>
+                                                            )}
+                                                        </span>
+                                                    </>
+                                                );
+                                            })}
+                                        </div>
+                                    </>
+                                ))}
+                            </div>
+                        </Section>
+
+                        <Section label="Experience">
+                            {page1Jobs.map((job) => JobEntry(job))}
+                        </Section>
+                    </div>
+
+                    <div class="page">
+                        <Section label="Experience continued">
+                            {page2Jobs.map((job) => JobEntry(job))}
+                            {earlyExperience.map((entry) => CompactRow(entry))}
+                        </Section>
+
+                        <Section label="Military Service">
+                            {military.map((entry) => CompactRow(entry))}
+                        </Section>
+
+                        {/* Placed between Military Service and Certifications
+                            so the EMT role lands next to the NREMT credential
+                            it accounts for. */}
+                        <Section label="Volunteer">
+                            {volunteer.map((entry) => CompactRow(entry))}
+                        </Section>
+
+                        <Section label="Certifications">
+                            {data.certifications.map((cert) => (
+                                <article class="job compact">
+                                    <EntryHead
+                                        title={cert.title}
+                                        dates={String(cert.year)}
+                                    />
+                                    <p class="job-meta">{cert.source}</p>
+                                </article>
+                            ))}
+                        </Section>
                     </div>
                 </div>
             </>
