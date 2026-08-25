@@ -11,7 +11,10 @@
         "forceConsistentCasingInFileNames": true,
         "outDir": "./.skrapa",
         "rootDir": "./",
-        "lib": ["DOM", "DOM.Iterable", "ES2020"]
+        "lib": ["DOM", "DOM.Iterable", "ES2020"],
+        // index.tsx renders in node and reads process.env; TS 6 no longer picks
+        // up @types/node without being told.
+        "types": ["node"]
     },
     "include": [
         "src/**/*.ts",

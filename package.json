@@ -8,7 +8,7 @@
     "scripts": {
         "build": "npx skrapa build",
         "lint": "eslint .",
-        "dev": "npx skrapa dev"
+        "dev": "API_HOST=local.api.iambrian.com npx skrapa dev"
     },
     "devDependencies": {
         "@eslint/js": "^9.39.4",

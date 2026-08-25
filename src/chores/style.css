@@ -217,39 +217,66 @@ main[data-view='pair'] .day[data-show] {
 ul {
     list-style: none;
 }
+/* The row holds three things now: the check that completes it, the body, and
+   the who-did-it button. The row is no longer itself a control — only the
+   check completes a chore. */
 li.task {
-    border-bottom: 1px solid #efe9db;
-}
-/* The row itself is the control. Stripping the button chrome keeps the visual
-   design while the element stays focusable and announceable. */
-.task-btn {
     display: flex;
     align-items: center;
     gap: 13px;
-    width: 100%;
     padding: 13px 18px;
-    border: 0;
-    background: none;
-    font: inherit;
-    color: inherit;
-    text-align: left;
-    cursor: pointer;
-    transition: background 0.12s ease;
+    border-bottom: 1px solid #efe9db;
 }
-.task-btn:focus-visible {
-    outline: 2px solid var(--teal-deep);
-    outline-offset: -2px;
-}
-/* Filtered out by the person chips. */
+/* Filtered out by the person chips. Overrides the flex above, so it has to
+   come after it. */
 li.task.is-hidden {
     display: none;
 }
 li.task:last-child {
     border-bottom: none;
 }
-.task-btn:active {
-    background: #f7f2e6;
+
+/* Both row buttons are stripped back to their icon and given a tap target far
+   bigger than they look: ::before is centred on the control and sized past the
+   44px an average thumb needs, so the two never collide and neither one grows
+   to match. Nothing paints, so the design is unchanged. */
+.task-check,
+.task-action {
+    position: relative;
+    flex: 0 0 auto;
+    display: grid;
+    place-items: center;
+    padding: 0;
+    border: 0;
+    background: none;
+    font: inherit;
+    color: inherit;
+    cursor: pointer;
 }
+.task-check::before,
+.task-action::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 46px;
+    height: 46px;
+    transform: translate(-50%, -50%);
+    border-radius: 12px;
+}
+/* The outline belongs on the visible box, not on the invisible tap target. */
+.task-check:focus-visible,
+.task-action:focus-visible {
+    outline: none;
+}
+.task-check:focus-visible .check {
+    outline: 2px solid var(--teal-deep);
+    outline-offset: 2px;
+}
+.task-check:active .check {
+    transform: scale(0.92);
+}
+
 .check {
     flex: 0 0 auto;
     width: 23px;
@@ -280,8 +307,7 @@ li.done .check svg {
     flex: 1;
     min-width: 0;
 }
-/* A span so it can live inside the button; block so the names below it wrap
-   onto their own line the way the old <div> did. */
+/* Block so the names below it wrap onto their own line. */
 .task-name {
     display: block;
     font-size: 15px;
@@ -316,6 +342,40 @@ li.done .task-name {
     border-radius: 50%;
     background: currentColor;
 }
+/* Muted until somebody is on record, then it takes the done colour — so the
+   icon reads at a glance as "nobody said who" vs "this is accounted for". */
+.task-action {
+    width: 24px;
+    height: 24px;
+    color: var(--ink-soft);
+    opacity: 0.5;
+    transition:
+        opacity 0.15s ease,
+        color 0.15s ease;
+}
+.task-action svg {
+    width: 18px;
+    height: 18px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+.task-action .icon-who-check {
+    display: none;
+}
+li.task.attributed .task-action {
+    color: var(--teal-deep);
+    opacity: 1;
+}
+li.task.attributed .task-action .icon-who-plus {
+    display: none;
+}
+li.task.attributed .task-action .icon-who-check {
+    display: block;
+}
+
 .badge-note {
     font-size: 10px;
     font-weight: 700;
@@ -375,6 +435,143 @@ footer {
 #datepick button {
     cursor: pointer;
 }
+/* Only ever created by client.ts when a check-off fails to save, so it starts
+   off-screen and is slid in by data-show rather than being toggled hidden. */
+.toast {
+    position: fixed;
+    left: 50%;
+    bottom: calc(18px + env(safe-area-inset-bottom));
+    z-index: 40;
+    max-width: min(calc(100vw - 32px), 380px);
+    padding: 10px 16px;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: var(--card);
+    box-shadow: var(--shadow);
+    color: var(--rust);
+    font-size: 13px;
+    font-weight: 600;
+    text-align: center;
+    transform: translate(-50%, calc(100% + 24px));
+    opacity: 0;
+    pointer-events: none;
+    transition:
+        transform 0.22s ease,
+        opacity 0.22s ease;
+}
+.toast[data-show] {
+    transform: translate(-50%, 0);
+    opacity: 1;
+}
+
+/* ---------- Who-did-it picker ---------- */
+.who {
+    width: min(calc(100vw - 32px), 340px);
+    /* The reset's `* { margin: 0 }` beats the UA's `dialog { margin: auto }`,
+       which is the only thing centring a modal dialog — without this it pins
+       to the top-left inset. */
+    margin: auto;
+    padding: 20px;
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    background: var(--card);
+    box-shadow: var(--shadow);
+    color: inherit;
+}
+.who::backdrop {
+    background: rgba(32, 28, 20, 0.45);
+}
+.who-title {
+    margin: 0;
+    font-size: 17px;
+    font-weight: 700;
+}
+.who-chore {
+    margin: 2px 0 0;
+    font-size: 13px;
+    color: var(--ink-soft);
+}
+/* Lighter than the chore name above it: it qualifies the ticks below rather
+   than naming what is being edited. */
+.who-hint {
+    margin: 6px 0 14px;
+    font-size: 12px;
+    line-height: 1.35;
+    color: var(--ink-soft);
+    opacity: 0.8;
+}
+.who-list {
+    margin: 0 0 18px;
+    padding: 0;
+    list-style: none;
+    /* Six people fit; a longer household scrolls rather than pushing the
+       Complete button off a short screen. */
+    max-height: min(46vh, 320px);
+    overflow-y: auto;
+}
+.who-option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    /* Tall enough to be a comfortable row target in its own right. */
+    padding: 10px 4px;
+    cursor: pointer;
+}
+.who-option input {
+    width: 20px;
+    height: 20px;
+    accent-color: var(--teal);
+    cursor: pointer;
+}
+.who-option .dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--person);
+}
+.who-name {
+    font-size: 15px;
+    font-weight: 600;
+}
+.who-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+.who-actions button {
+    padding: 10px 18px;
+    border-radius: 10px;
+    border: 1px solid var(--line);
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+}
+.who-cancel {
+    background: none;
+    color: var(--ink-soft);
+}
+.who-complete {
+    background: var(--teal);
+    border-color: var(--teal);
+    color: #fff;
+}
+
+/* ---------- Confetti ---------- */
+/* Ported from the Splendor board's game-over cannons. Bits are positioned
+   fixed and appended here, then removed when their animation finishes. */
+.confetti-layer {
+    position: fixed;
+    inset: 0;
+    z-index: 205;
+    pointer-events: none;
+    overflow: hidden;
+}
+.confetti-bit {
+    position: fixed;
+    border-radius: 2px;
+    will-change: transform, opacity;
+}
+
 @media (prefers-reduced-motion: reduce) {
     * {
         transition: none !important;

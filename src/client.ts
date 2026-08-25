@@ -94,17 +94,36 @@ const REDUCE_MOTION = window.matchMedia(
     '(prefers-reduced-motion: reduce)',
 ).matches;
 
-const API_BASE = (() => {
-    const host = window.location.hostname;
-    if (
-        host === 'localhost' ||
-        host.startsWith('127.') ||
-        host.includes('.local')
-    ) {
-        return 'http://api.iambrian.local';
-    }
-    return 'https://api.iambrian.com';
-})();
+// Set by an inline <script> the page renders just above this one (index.tsx),
+// so the environment is decided at build time rather than sniffed at runtime.
+const { API_ORIGIN } = window;
+
+// ── Submission bot filters ────────────────────────────────────────────────────
+
+// When this script ran, which is close enough to when the form became fillable.
+// Both forms report the gap at submit time and the API drops anything that
+// arrives faster than a person could have typed it.
+const LOADED_AT = Date.now();
+
+// Matches the @Max on the API's elapsedMs. The filter only ever tests the field
+// against a *lower* bound, so a tab left open past this has nothing to prove by
+// reporting the true figure — and sending it unclamped fails validation
+// outright, turning a real submission into "Unable to send message".
+const MAX_ELAPSED_MS = 30 * 24 * 60 * 60 * 1000;
+
+/**
+ * The honeypot value and time-on-page to send alongside a submission.
+ *
+ * Reads the field by id rather than through the form, so the quiz's answers —
+ * which are serialised straight out of its questions form — never pick it up.
+ */
+function botFilterFields(honeypotId: string) {
+    return {
+        website: document.querySelector<HTMLInputElement>(`#${honeypotId}`)
+            ?.value,
+        elapsedMs: Math.min(Date.now() - LOADED_AT, MAX_ELAPSED_MS),
+    };
+}
 
 // ── Theme ─────────────────────────────────────────────────────────────────────
 
@@ -284,13 +303,13 @@ function messageFormInit() {
         msgSend.disabled = true;
 
         try {
-            const resp = await fetch(`${API_BASE}/contact`, {
+            const resp = await fetch(`${API_ORIGIN}/contact`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     email: getEmail(),
                     message: msgTextarea.value,
-                    type: 'contact',
+                    ...botFilterFields('hp-contact'),
                 }),
             });
             const data = await resp.json().catch(() => ({}));
@@ -563,13 +582,13 @@ messageFormInit();
         }
 
         try {
-            const resp = await fetch(`${API_BASE}/quiz`, {
+            const resp = await fetch(`${API_ORIGIN}/quiz`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     email: emailInput.value,
                     message: JSON.stringify(payload),
-                    type: 'quiz',
+                    ...botFilterFields('hp-quiz'),
                 }),
             });
             const data = await resp.json().catch(() => ({}));

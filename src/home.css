@@ -2112,3 +2112,15 @@ footer {
         bottom: 4.85rem;
     }
 }
+
+/* Honeypot — see Honeypot() in index.tsx. Parked off-screen rather than hidden
+   with display:none or visibility:hidden, which the crawlers worth stopping
+   already know to skip. aria-hidden and tabindex=-1 on the markup keep it away
+   from screen readers and the tab order, so only a bot ever fills it. */
+.hp {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+}

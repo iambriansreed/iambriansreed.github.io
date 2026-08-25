@@ -1,7 +1,10 @@
 declare global {
     interface Window {
-        onSubmitMessage?: (token: string) => Promise<void>;
-        onSubmitQuiz?: (token: string) => Promise<void>;
+        /**
+         * Injected by an inline <script> each page shell renders; see index.tsx.
+         * @example https://local.api.iambrian.com
+         */
+        API_ORIGIN: string;
     }
 }
 
