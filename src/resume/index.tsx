@@ -137,7 +137,7 @@ export function Page(): Skrapa.Page {
                         <a
                             class="intro-btn intro-btn-primary"
                             href="/Brian_Reed_Resume.pdf"
-                            download
+                            download="Brian_Reed_Resume.pdf"
                             data-intro-close
                         >
                             Download

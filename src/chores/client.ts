@@ -9,22 +9,52 @@
  Wrapped in an IIFE because skrapa compiles each client.ts as a global script,
  so top-level names here would collide with the page module's own constants.
 */
+
+/* The /chores client, generated from the API's OpenAPI spec. Do not edit api.ts
+   by hand — run `npm run generate` in the api repo and it is rewritten in place.
+
+   A value import, unlike the shared-types package this replaced: skrapa resolves
+   this file's import graph into the page's standalone script, so the functions
+   are bundled along with the types. */
+import {
+    configure,
+    list,
+    upsert,
+    type ChoreStateResponse,
+    type UpsertChoreInput,
+} from './api';
+
 (() => {
     const qs = <T extends Element = HTMLElement>(
         s: string,
         parentNode?: ParentNode,
-    ) => (parentNode || document).querySelector<T>(s) as T;
+    ) => (parentNode || document).querySelector<T>(s);
     const qsa = <T extends Element = HTMLElement>(
         s: string,
         parentNode?: ParentNode,
     ) => Array.from((parentNode || document).querySelectorAll<T>(s)) as T[];
 
+    /* For the elements index.tsx always renders. A miss is a build bug, not a
+       runtime condition, so this throws naming the selector rather than letting
+       a TypeError surface somewhere unrelated later. Throwing here is also the
+       designed failure mode: the whole two-week chart is already in the DOM and
+       stays readable, since it is only collapsed to the two-day view at the end
+       of render(). */
+    const must = <T extends Element = HTMLElement>(
+        s: string,
+        parentNode?: ParentNode,
+    ): T => {
+        const el = (parentNode || document).querySelector<T>(s);
+        if (!el) throw new Error(`chores: no element matches ${s}`);
+        return el;
+    };
+
     const DAY_MS = 86400000;
     const CYCLE_LENGTH = 14;
 
-    const main = qs('#main');
-    const weekTag = qs('#weektag');
-    const dateBar = qs('#datebar');
+    const main = must('#main');
+    const weekTag = must('#weektag');
+    const dateBar = must('#datebar');
     const chips = qsa<HTMLButtonElement>('.chip');
     const cards = qsa('.day', main);
 
@@ -90,15 +120,10 @@
     const state = new Map<string, ChoreState>();
     const keyFor = (date: string, chore: string) => `${date}|${chore}`;
 
-    /* Injected by index.tsx in a <script> just above this one. */
+    /* Injected by index.tsx in a <script> just above this one. The generated
+       client defaults to production, so point it at whatever this build targets. */
     const { API_ORIGIN } = window;
-
-    type ChoreRow = {
-        choreName: string;
-        date: string;
-        people: string[];
-        checked: boolean;
-    };
+    configure({ baseUrl: API_ORIGIN });
 
     /* Who the chart has on the chore — the build-time roster, not who did it. */
     const peopleOf = (task: HTMLElement) =>
@@ -161,10 +186,10 @@
         card.dataset.show = '';
         card.style.order = String(order);
 
-        qs('.day-head', card).classList.toggle('today', isToday);
-        qs('.day-when', card).textContent =
+        must('.day-head', card).classList.toggle('today', isToday);
+        must('.day-when', card).textContent =
             `${isToday ? 'Today' : 'Tomorrow'} · ${fmt(date, { weekday: 'short' })}`;
-        qs('.day-date', card).textContent = fmt(date, {
+        must('.day-date', card).textContent = fmt(date, {
             weekday: 'long',
             month: 'long',
             day: 'numeric',
@@ -185,7 +210,7 @@
             paintTask(task);
         });
 
-        qs('.count', card).textContent =
+        must('.count', card).textContent =
             `${visible} ${visible === 1 ? 'task' : 'tasks'}`;
         setEmptyState(card, visible === 0);
     }
@@ -423,13 +448,10 @@
        on a write. Only here so a pull cannot hang forever. */
     const READ_TIMEOUT_MS = 8_000;
 
-    async function fetchDate(date: string): Promise<ChoreRow[]> {
-        const resp = await fetch(
-            `${API_ORIGIN}/chores?date=${encodeURIComponent(date)}`,
-            { signal: AbortSignal.timeout(READ_TIMEOUT_MS) },
-        );
-        if (!resp.ok) throw new Error(`GET /chores ${resp.status}`);
-        return (await resp.json()) as ChoreRow[];
+    /* The generated client throws on any non-2xx, so the status check the hand-
+       written fetch needed is gone; `init` is where the timeout goes. */
+    function fetchDate(date: string): Promise<ChoreStateResponse[]> {
+        return list({ date }, { signal: AbortSignal.timeout(READ_TIMEOUT_MS) });
     }
 
     /* Chores with a write in flight, keyed the same way as the state above, so a
@@ -483,6 +505,10 @@
                 if (!outrunsReply(key))
                     state.set(key, {
                         checked: row.checked,
+                        // The spec types `people` as required, but a row that
+                        // arrives without it would make `current?.people.length`
+                        // throw in paintTask — which refresh()'s catch swallows,
+                        // so the chart would just stop updating with no error.
                         people: row.people ?? [],
                     });
             }
@@ -494,14 +520,8 @@
         }
     }
 
-    async function postCheck(row: ChoreRow) {
-        const resp = await fetch(`${API_ORIGIN}/chores`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(row),
-            signal: AbortSignal.timeout(WRITE_TIMEOUT_MS),
-        });
-        if (!resp.ok) throw new Error(`POST /chores ${resp.status}`);
+    async function postCheck(row: UpsertChoreInput) {
+        await upsert(row, { signal: AbortSignal.timeout(WRITE_TIMEOUT_MS) });
     }
 
     /* One write per completion, carrying who did it — which only the picker
@@ -564,9 +584,9 @@
     );
 
     /* ---------- Who did it ---------- */
-    const whoDialog = qs<HTMLDialogElement>('#whodid');
-    const whoChore = qs('#who-chore');
-    const whoHint = qs('#who-hint');
+    const whoDialog = must<HTMLDialogElement>('#whodid');
+    const whoChore = must('#who-chore');
+    const whoHint = must('#who-hint');
     const whoBoxes = qsa<HTMLInputElement>('input[name="who"]', whoDialog);
     /* Which row the open picker is editing. Held rather than re-found on
        Complete: the filter or a refresh could re-render between the two. */
@@ -602,11 +622,11 @@
         whoDialog.showModal();
     }
 
-    qs('#who-cancel').addEventListener('click', () => whoDialog.close());
+    must('#who-cancel').addEventListener('click', () => whoDialog.close());
 
     /* Completes the chore as well as recording the names — the picker is a way
        to finish a chore, not a second step after finishing one. */
-    qs('#who-complete').addEventListener('click', () => {
+    must('#who-complete').addEventListener('click', () => {
         const task = whoTask;
         whoDialog.close();
         if (!task) return;

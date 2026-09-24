@@ -1,11 +1,32 @@
+/* The /contact and /quiz client, generated from the API's OpenAPI spec. Do not
+   edit api.ts by hand — run `npm run generate` in the api repo and it is
+   rewritten in place.
+
+   A value import, unlike the shared-types package this replaced: skrapa resolves
+   this file's import graph into the page's standalone script, so the functions
+   are bundled along with the types. */
+import {
+    configure,
+    contact,
+    quiz,
+    type ContactInput,
+    type QuizInput,
+} from './api';
+
 const qs = <T extends Element = HTMLElement>(
     s: string,
     parentNode?: ParentNode,
-) => (parentNode || document).querySelector<T>(s) as T;
+) => (parentNode || document).querySelector<T>(s);
 const qsa = <T extends Element = HTMLElement>(
     s: string,
     parentNode?: ParentNode,
 ) => Array.from((parentNode || document).querySelectorAll<T>(s)) as T[];
+
+const html = document.documentElement;
+const themeBtn = qs<HTMLButtonElement>('.theme-toggle')!;
+const accentBtn = qs<HTMLButtonElement>('.accent-toggle')!;
+const cookieBar = qs<HTMLDialogElement>('#cookie-bar')!;
+const cookieConsentBtns = qsa<HTMLButtonElement>('.consent-btn', cookieBar)!;
 
 const ACCENTS = [
     '#7a8a3a',
@@ -16,79 +37,76 @@ const ACCENTS = [
     '#b56070',
     '#7a5a9a',
     '#3a8a8a',
-];
-
-const html = document.documentElement;
-const themeBtn = qs<HTMLButtonElement>('.theme-toggle')!;
-const accentBtn = qs<HTMLButtonElement>('.accent-toggle')!;
-const cookieBar = qs<HTMLDialogElement>('#cookie-bar')!;
-const cookieConsentBtns = qsa<HTMLButtonElement>('.consent-btn', cookieBar)!;
+] as const;
 
 // ── State ─────────────────────────────────────────────────────────────────────
 
-type State = {
-    theme: 'dark' | 'light';
-    accent: (typeof ACCENTS)[number];
-    cookie: boolean;
-};
+/* One key per preference rather than a single JSON blob, and every change goes
+   through a setter that owns *both* the DOM and storage — they cannot drift.
 
-const DEFAULT_STATE: State = {
-    theme: 'dark',
-    accent: ACCENTS[0],
-    cookie: false,
-};
+   Writes are gated on consent: nothing is persisted until the cookie bar is
+   accepted, and declining clears what was already stored. The in-memory values
+   stay live either way, so the toggles still work for the session. */
 
-const state: State = { ...DEFAULT_STATE };
+// remove previous state
+localStorage.removeItem('state');
 
-function setState(
-    newState:
-        | Partial<typeof state>
-        | ((prevState: typeof state) => Partial<typeof state>),
-    forceUpdate = false,
-) {
-    const prevState = { ...state };
+let cookieAccepted = localStorage.getItem('cookie') === 'true';
+let theme: Theme = localStorage.getItem('theme') === 'light' ? 'light' : 'dark';
+const storedAccent = localStorage.getItem('accent') as Accent | null;
+let accent: Accent =
+    storedAccent && ACCENTS.includes(storedAccent) ? storedAccent : ACCENTS[0];
 
-    Object.assign(
-        state,
-        typeof newState === 'function' ? newState(state) : newState,
-    );
+function persist(key: string, value: string) {
+    if (cookieAccepted) localStorage.setItem(key, value);
+}
 
-    const hasChanged = (key: keyof State) =>
-        forceUpdate || (key in state && state[key] !== prevState[key]);
+function setTheme(next: Theme) {
+    theme = next;
+    html.dataset.theme = theme;
+    persist('theme', theme);
+}
 
-    if (hasChanged('theme')) html.dataset.theme = state.theme;
+function setAccent(next: Accent | '+1') {
+    if (next === '+1') {
+        const currentIndex = ACCENTS.indexOf(accent);
+        next = ACCENTS[(currentIndex + 1) % ACCENTS.length];
+    }
+    accent = next;
+    html.style.setProperty('--accent', accent);
+    persist('accent', accent);
+}
 
-    if (hasChanged('accent')) html.style.setProperty('--accent', state.accent);
+function setCookieAccepted(next: boolean) {
+    cookieAccepted = next;
+    html.dataset.cookieAccepted = String(next);
 
-    if (hasChanged('cookie')) {
-        const cookieBarOpen = cookieBar.matches(':popover-open');
+    // showPopover/hidePopover throw if the popover is already in that state,
+    // so the current state is checked rather than assumed.
+    const barOpen = cookieBar.matches(':popover-open');
+    if (next && barOpen) cookieBar.hidePopover();
+    if (!next && !barOpen) cookieBar.showPopover();
 
-        html.dataset.cookieAccepted = String(state.cookie);
-
-        if (state.cookie && cookieBarOpen) cookieBar.hidePopover();
-        if (!state.cookie && !cookieBarOpen) cookieBar.showPopover();
+    if (next) {
+        // Accepting is what makes the live preferences persistable, so they are
+        // flushed here rather than waiting for the next toggle.
+        localStorage.setItem('cookie', 'true');
+        localStorage.setItem('theme', theme);
+        localStorage.setItem('accent', accent);
+        return;
     }
 
-    if (state.cookie) {
-        localStorage.setItem('state', JSON.stringify(state));
-    } else {
-        localStorage.removeItem('state');
+    for (const key of ['cookie', 'theme', 'accent']) {
+        localStorage.removeItem(key);
     }
 }
 
-(function render() {
-    const savedState = localStorage.getItem('state');
-    const initialState = { ...DEFAULT_STATE };
-
-    if (savedState)
-        try {
-            Object.assign(initialState, JSON.parse(savedState));
-        } catch {
-            // Ignore JSON parse errors
-        }
-
-    setState(initialState, true);
-})();
+/* Paint the restored preferences before anything is interactive. index.html
+   ships data-theme="dark", so only a saved *light* theme changes anything here
+   — but accent and the cookie bar have no markup default and rely on this. */
+setTheme(theme);
+setAccent(accent);
+setCookieAccepted(cookieAccepted);
 
 const REDUCE_MOTION = window.matchMedia(
     '(prefers-reduced-motion: reduce)',
@@ -96,7 +114,9 @@ const REDUCE_MOTION = window.matchMedia(
 
 // Set by an inline <script> the page renders just above this one (index.tsx),
 // so the environment is decided at build time rather than sniffed at runtime.
+// The generated client defaults to production, so point it at this build's target.
 const { API_ORIGIN } = window;
+configure({ baseUrl: API_ORIGIN });
 
 // ── Submission bot filters ────────────────────────────────────────────────────
 
@@ -125,22 +145,28 @@ function botFilterFields(honeypotId: string) {
     };
 }
 
+/* `elapsedMs` is part of the published input types; the honeypot is deliberately
+   not, so that neither the API's spec nor the generated client names it. It still
+   rides along on the wire — the API validates it off the DTO before the handler
+   ever sees a ContactInput/QuizInput — which is why this intersection exists. */
+type BotFilterFields = ReturnType<typeof botFilterFields>;
+
 // ── Theme ─────────────────────────────────────────────────────────────────────
 
 themeBtn.addEventListener('click', () => {
-    const next = state.theme === 'dark' ? 'light' : 'dark';
+    // Read from the live value, not storage: with consent declined nothing is
+    // stored, and reading back an empty key would pin the toggle to one side.
+    const next: Theme = theme === 'dark' ? 'light' : 'dark';
 
     // No View Transitions support (or reduced motion) → switch instantly.
     if (REDUCE_MOTION || !document.startViewTransition) {
-        setState({ theme: next });
+        setTheme(next);
         return;
     }
 
     // Target theme drives the wipe direction (see ::view-transition in style.css).
     html.dataset.themeSwitch = next;
-    const transition = document.startViewTransition(() =>
-        setState({ theme: next }),
-    );
+    const transition = document.startViewTransition(() => setTheme(next));
     transition.finished.finally(() => delete html.dataset.themeSwitch);
 });
 
@@ -154,14 +180,14 @@ function spinAccent() {
     accentSpinning = true;
     accentBtn.classList.add('spinning');
     const len = ACCENTS.length;
-    const startIdx = ACCENTS.indexOf(state.accent);
+    const startIdx = ACCENTS.indexOf(accent);
     const target = Math.floor(Math.random() * len);
     // Two full loops, then advance to the random target (~16-23 flips).
     const steps = len * 2 + ((target - startIdx + len) % len);
     let step = 0;
     const tick = () => {
         step += 1;
-        setState({ accent: ACCENTS[(startIdx + step) % len] });
+        setAccent('+1');
         if (step >= steps) {
             accentSpinning = false;
             accentBtn.classList.remove('spinning');
@@ -188,15 +214,14 @@ accentBtn.addEventListener('click', () => {
         return;
     }
 
-    const accentIndex = ACCENTS.indexOf(state.accent);
-    setState({ accent: ACCENTS[(accentIndex + 1) % ACCENTS.length] });
+    setAccent('+1');
 });
 
 // ── Cookie bar ────────────────────────────────────────────────────────────────
 
 cookieConsentBtns.forEach((btn) => {
     btn.addEventListener('click', () => {
-        setState((prevState) => ({ cookie: !prevState.cookie }));
+        setCookieAccepted(!cookieAccepted);
     });
 });
 
@@ -204,11 +229,12 @@ cookieConsentBtns.forEach((btn) => {
 
 function messageFormInit() {
     const msgForm = qs<HTMLFormElement>('#msg-form');
-    if (!msgForm) return;
     const msgTextarea = qs<HTMLTextAreaElement>('#msg-textarea');
     const msgSend = qs<HTMLButtonElement>('#msg-send');
     const msgHint = qs('#msg-hint');
     const msgSuccess = qs('#msg-success');
+
+    if (!msgForm || !msgTextarea || !msgSend || !msgHint || !msgSuccess) return;
 
     const HINT_NO_EMAIL = "Don't forget your email!";
     // Single textarea: pull the first email-looking token out of the message.
@@ -226,7 +252,7 @@ function messageFormInit() {
     const fontWeights = [400, 500, 600, 700, 800];
     const nudgeDegrees = [4, 8, 14, 20, 28];
 
-    function setHint(text: string) {
+    const setHint = (text: string) => {
         if (!msgHint) return;
         if (text !== HINT_NO_EMAIL && msgHint.style.fontWeight) {
             msgHint.style.fontWeight = '';
@@ -234,9 +260,9 @@ function messageFormInit() {
             msgState.nudgeCount = 0;
         }
         msgHint.textContent = text;
-    }
+    };
 
-    function computeHint() {
+    const computeHint = () => {
         const msg = msgTextarea.value;
         const email = getEmail();
 
@@ -263,7 +289,7 @@ function messageFormInit() {
             return;
         }
         setHint("Don't forget to include your email so I can reply.");
-    }
+    };
 
     msgTextarea.addEventListener('input', () => {
         // Auto-grow with the content.
@@ -282,7 +308,7 @@ function messageFormInit() {
         }
     });
 
-    function nudgeHint() {
+    const nudgeHint = () => {
         msgState.nudgeCount = Math.min(
             msgState.nudgeCount + 1,
             fontWeights.length - 1,
@@ -296,24 +322,30 @@ function messageFormInit() {
         requestAnimationFrame(() =>
             requestAnimationFrame(() => msgHint.classList.add('nudge')),
         );
-    }
+    };
 
-    async function sendMessage() {
+    const sendMessage = async () => {
         msgTextarea.disabled = true;
         msgSend.disabled = true;
 
+        const payload: ContactInput & BotFilterFields = {
+            email: getEmail(),
+            message: msgTextarea.value,
+            ...botFilterFields('hp-contact'),
+        };
+
         try {
-            const resp = await fetch(`${API_ORIGIN}/contact`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    email: getEmail(),
-                    message: msgTextarea.value,
-                    ...botFilterFields('hp-contact'),
-                }),
-            });
-            const data = await resp.json().catch(() => ({}));
-            if (resp.ok && data.success !== false) {
+            /* Throws on any non-2xx, so a failed submission lands in the catch
+               below rather than having to be read back out of the body. The
+               API answers 200 { success: true } even for a submission its bot
+               filters dropped, which is deliberate — see the honeypot note.
+
+               Reaching here therefore means delivered, so only an explicit
+               { success: false } counts as a failure: an empty 2xx body parses
+               to null, and treating that as a failure would tell someone their
+               message had not sent when it had. */
+            const data = await contact(payload);
+            if (data?.success !== false) {
                 msgSuccess.classList.add('is-visible');
                 setTimeout(resetForm, 2800);
                 return;
@@ -325,9 +357,9 @@ function messageFormInit() {
             msgTextarea.disabled = false;
             msgSend.disabled = false;
         }
-    }
+    };
 
-    function resetForm() {
+    const resetForm = () => {
         msgForm.reset();
         msgTextarea.disabled = false;
         msgSend.disabled = false;
@@ -338,7 +370,7 @@ function messageFormInit() {
         msgHint.style.fontWeight = '';
         msgHint.classList.remove('nudge');
         computeHint();
-    }
+    };
 
     // Only send once the message contains an email; otherwise nudge the hint.
     msgForm.addEventListener('submit', (e) => {
@@ -422,8 +454,13 @@ messageFormInit();
 })();
 
 // ── Directional section nudge ───────────────────────────────────────────────────
-// When scrolling settles near a section boundary, nudge to the NEXT section in
-// the direction the user was scrolling (never backward to the closest one).
+// Once scrolling settles near a section boundary, glide the rest of the way —
+// but only to the next boundary in the direction of travel, never the closest
+// one, so it can't undo the scroll you just made. `zone` keeps it from firing on
+// a deliberate stop mid-section.
+//
+// `snapping` latches because the smooth scroll dispatches its own scroll events;
+// without it each one schedules another settle and the page walks itself down.
 (() => {
     if (REDUCE_MOTION) return;
 
@@ -494,6 +531,8 @@ messageFormInit();
     const quizForm = qs<HTMLFormElement>('form.quiz', dialog);
     const passForm = qs<HTMLFormElement>('form.quiz-pass', dialog);
     const emailInput = qs<HTMLInputElement>('#quiz-email', dialog);
+
+    if (!quizForm || !passForm || !emailInput) return;
 
     const setState = (s: string) => {
         dialog.dataset.state = s;
@@ -581,18 +620,17 @@ messageFormInit();
             }
         }
 
+        const submission: QuizInput & BotFilterFields = {
+            email: emailInput.value,
+            message: JSON.stringify(payload),
+            ...botFilterFields('hp-quiz'),
+        };
+
         try {
-            const resp = await fetch(`${API_ORIGIN}/quiz`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    email: emailInput.value,
-                    message: JSON.stringify(payload),
-                    ...botFilterFields('hp-quiz'),
-                }),
-            });
-            const data = await resp.json().catch(() => ({}));
-            if (resp.ok && data.success !== false) {
+            // Same as sendMessage: a 2xx is a delivered submission, so only an
+            // explicit { success: false } is treated as a failure.
+            const data = await quiz(submission);
+            if (data?.success !== false) {
                 setState('sent');
                 return;
             }
@@ -611,10 +649,13 @@ messageFormInit();
 // motion is reduced or the cards already fit without overflow.
 (() => {
     const section = qs('#experience');
+    if (!section) return;
+
     const sticky = qs('.exp-sticky', section);
     const track = qs('.exp-track', section);
     const dots = qsa('.exp-dot', section);
-    if (!section || !track || REDUCE_MOTION) return;
+
+    if (!sticky || !section || !track || REDUCE_MOTION) return;
 
     // The pinned horizontal scrollytelling is a desktop affordance. On mobile
     // we fall back to the plain vertical list (see measure()), which keeps the

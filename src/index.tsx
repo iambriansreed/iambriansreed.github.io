@@ -61,7 +61,6 @@ const TECH_STACK = [
     'SharePoint',
 ];
 
-const RESUME_URL = 'https://iambrian.com/resume';
 const LINKEDIN_URL = 'https://www.linkedin.com/in/iambriansreed/';
 const GITHUB_URL = 'https://github.com/iambriansreed';
 
@@ -212,7 +211,7 @@ export function Page(): Skrapa.Page {
                                         </a>
                                         <a
                                             class="btn"
-                                            href={RESUME_URL}
+                                            href="/resume"
                                             target="_blank"
                                             rel="noopener noreferrer"
                                         >
@@ -590,7 +589,7 @@ export function Page(): Skrapa.Page {
                             <a href="#experience">Work</a>
                             <a href="#contact">Connect</a>
                             <button
-                                href="#cookies"
+                                data-href="#cookies"
                                 popovertarget="cookie-bar"
                                 aria-label="Cookies"
                             >

@@ -1,4 +1,10 @@
 {
+    "skrapa": {
+        "output": "../dist",
+        "assets": "../public",
+        "port": 8675,
+        "origin": "https://local.iambrian.com"
+    },
     "compilerOptions": {
         "target": "ES2020",
         "module": "commonjs",
@@ -16,12 +22,6 @@
         // up @types/node without being told.
         "types": ["node"]
     },
-    "include": [
-        "src/**/*.ts",
-        "src/**/*.tsx",
-        "skrapa.d.ts",
-        "global.d.ts",
-        "skrapa.config.ts"
-    ],
+    "include": ["**/*.ts", "**/*.tsx", "skrapa.d.ts", "global.d.ts"],
     "exclude": ["node_modules", "dist", ".skrapa"]
 }

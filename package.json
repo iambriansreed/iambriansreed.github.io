@@ -6,16 +6,18 @@
         "node": "24.x"
     },
     "scripts": {
-        "build": "npx skrapa build",
+        "build": "cd src && npx skrapa build",
         "lint": "eslint .",
-        "dev": "API_HOST=local.api.iambrian.com npx skrapa dev"
+        "dev": "cd src && API_HOST=local.api.iambrian.com npx skrapa dev"
     },
     "devDependencies": {
         "@eslint/js": "^9.39.4",
-        "@types/node": "^24.12.2",
+        "@types/node": "^24.13.6",
         "eslint": "^9.39.4",
+        "eslint-plugin-jsx-a11y": "^6.10.2",
         "globals": "^17.4.0",
         "prettier": "^3.8.1",
+        "skrapa": "0.8.0",
         "typescript": "~6.0.2",
         "typescript-eslint": "^8.58.0"
     }

@@ -100,15 +100,7 @@ function PersonChip({ person }: { person: Person | null }) {
 
 function Task({ name, note, names }: Task) {
     return (
-        // data-people is space-separated so the filter can match it with [~=].
-        // data-chore is the name the API stores check-offs under, so it has to
-        // be the chore's own name rather than its position in the day's list —
-        // adding a chore above another must not move the other one's history.
         <li class="task" data-chore={name} data-people={names.join(' ')}>
-            {/* The only control that completes a chore. A real button so it is
-                reachable by keyboard and announces itself; role=checkbox
-                because it toggles. Its tap target is widened well past the
-                visible box by .task-check::before — see style.css. */}
             <button
                 class="task-check"
                 type="button"

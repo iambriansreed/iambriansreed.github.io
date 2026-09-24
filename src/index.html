@@ -1,6 +1,6 @@
 <!doctype html>
-<html lang="en">
-    <head data-theme="dark" data-cookie-accepted="false">
+<html lang="en" data-theme="dark" data-cookie-accepted="false">
+    <head>
         <meta charset="utf-8" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -21,7 +21,6 @@
             type="font/woff2"
             crossorigin
         />
-
         <link
             rel="apple-touch-icon"
             sizes="57x57"
@@ -103,6 +102,15 @@
             name="msapplication-TileImage"
             content="/icon/mstile-144x144.png"
         />
+        <script>
+            document.documentElement.dataset.theme =
+                localStorage.getItem('theme') === 'light' ? 'light' : 'dark';
+
+            document.documentElement.style.setProperty(
+                '--accent',
+                localStorage.getItem('accent') || '#7a8a3a',
+            );
+        </script>
     </head>
     <body></body>
 </html>
