@@ -8,9 +8,6 @@
 
     <rect width="1200" height="600" fill="url(#bg)" />
 
-    <!-- progress-style green perimeter -->
-    <rect x="22" y="22" width="1156" height="556" rx="26" fill="none" stroke="#2ea043" stroke-width="6" />
-
     <!-- wordmark -->
     <text
         x="600"

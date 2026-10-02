@@ -498,6 +498,28 @@ const data: SiteData = {
             ],
         },
         {
+            title: 'Menu OTP',
+            url: 'https://otp.iambrian.com',
+            // Two alternates sit beside this one in public/projects:
+            // menu-otp-alt-code.svg (the six-digit display) and
+            // menu-otp-alt-mark.svg (the app icon + wordmark).
+            thumbnail: 'projects/menu-otp.svg',
+            description:
+                'A native macOS menu bar app for two-factor codes: click an account, its current six-digit code is on the clipboard. Accounts are AES-256 encrypted with the key in the login Keychain, and no secret ever leaves the Mac.',
+            category: 'Apps',
+            skills: ['Swift 6', 'AppKit', 'macOS', 'Cryptography'],
+            sources: [
+                {
+                    title: 'Source',
+                    url: 'https://github.com/iambriansreed/menu-otp',
+                },
+                {
+                    title: 'Download',
+                    url: 'https://github.com/iambriansreed/menu-otp/releases/latest',
+                },
+            ],
+        },
+        {
             title: 'Sordle',
             url: 'https://sordle.iambrian.com',
             thumbnail: 'projects/sordle.svg',
