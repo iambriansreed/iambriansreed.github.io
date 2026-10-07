@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 690" role="img" aria-label="The BSPK token pipeline: Figma variables are exported by a custom plugin to tokens-export.json, pasted into the repo, and turned by a Node build into ten brand stylesheets with light and dark modes. A build check fails on any unknown variable, and the same stylesheets are consumed unchanged by the React and Angular libraries." color="#e8e8ea" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">
+  <title>BSPK token pipeline</title>
+  <defs>
+    <marker id="bspk-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="currentColor"/>
+    </marker>
+    <marker id="bspk-arrow-accent" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#a5a0fb"/>
+    </marker>
+  </defs>
+
+  <g stroke="currentColor" fill="none" stroke-width="1.4" stroke-opacity="0.45">
+    <rect x="120" y="30"  width="340" height="64" rx="9"/>
+    <rect x="120" y="136" width="340" height="64" rx="9"/>
+    <rect x="120" y="242" width="340" height="64" rx="9"/>
+    <rect x="120" y="348" width="340" height="82" rx="9"/>
+    <rect x="60"  y="590" width="220" height="62" rx="9"/>
+    <rect x="300" y="590" width="220" height="62" rx="9"/>
+  </g>
+  <rect x="120" y="470" width="340" height="64" rx="9" fill="none" stroke="#a5a0fb" stroke-width="1.6" stroke-dasharray="6 4"/>
+
+  <g fill="currentColor" text-anchor="middle">
+    <text x="290" y="59"  font-size="16" font-weight="600">Figma variables</text>
+    <text x="290" y="80"  font-size="12.5" fill-opacity="0.68">10 brands, light and dark</text>
+
+    <text x="290" y="165" font-size="16" font-weight="600">tokens-export.json</text>
+    <text x="290" y="186" font-size="12.5" fill-opacity="0.68">variables, text and effect styles</text>
+
+    <text x="290" y="271" font-size="16" font-weight="600">build.ts</text>
+    <text x="290" y="292" font-size="12.5" fill-opacity="0.68">custom Node build</text>
+
+    <text x="290" y="378" font-size="16" font-weight="600">&lt;brand&gt;.css × 10</text>
+    <text x="290" y="399" font-size="12.5" fill-opacity="0.68">CSS custom properties and typed TS tokens</text>
+    <text x="290" y="418" font-size="12.5" fill-opacity="0.68">Figma token names kept as comments</text>
+
+    <text x="170" y="619" font-size="16" font-weight="600">@bspk/ui</text>
+    <text x="170" y="639" font-size="12.5" fill-opacity="0.68">React</text>
+
+    <text x="410" y="619" font-size="16" font-weight="600">bspk-ui-ngx</text>
+    <text x="410" y="639" font-size="12.5" fill-opacity="0.68">Angular</text>
+  </g>
+
+  <g text-anchor="middle" fill="#a5a0fb">
+    <text x="290" y="499" font-size="16" font-weight="600">check-css-vars.ts</text>
+    <text x="290" y="520" font-size="12.5">fails the build on an unknown variable</text>
+  </g>
+
+  <g stroke="currentColor" stroke-width="1.6" marker-end="url(#bspk-arrow)">
+    <line x1="290" y1="94"  x2="290" y2="130"/>
+    <line x1="290" y1="200" x2="290" y2="236"/>
+    <line x1="290" y1="306" x2="290" y2="342"/>
+  </g>
+  <g stroke="#a5a0fb" stroke-width="1.6" marker-end="url(#bspk-arrow-accent)">
+    <line x1="290" y1="430" x2="290" y2="464"/>
+  </g>
+  <g stroke="currentColor" stroke-width="1.6" marker-end="url(#bspk-arrow)" fill="none" stroke-linejoin="round">
+    <path d="M 290 534 L 290 562 L 170 562 L 170 584"/>
+    <path d="M 290 534 L 290 562 L 410 562 L 410 584"/>
+  </g>
+
+  <g fill="currentColor" font-size="12.5" fill-opacity="0.78">
+    <text x="480" y="117">exported by the BSPK Export Tokens plugin</text>
+    <text x="480" y="223">pasted into the repo</text>
+    <text x="480" y="329">npm run build</text>
+    <text x="480" y="453">checked before release</text>
+    <text x="480" y="566">the same stylesheets, unchanged</text>
+  </g>
+</svg>
