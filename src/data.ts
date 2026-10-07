@@ -90,11 +90,14 @@ export type ExperienceItem = {
 export type Project = {
     title: string;
     url: string;
+    internal?: boolean;
     thumbnail?: string;
+    // Spans two grid columns on screens wide enough for more than one.
+    wide?: boolean;
     description: string;
     category: string;
     skills: string[];
-    sources: { title: string; url: string }[];
+    sources: { title: string; url: string; internal?: boolean }[];
 };
 
 export type QuizQuestion = {
@@ -478,6 +481,45 @@ const data: SiteData = {
     ],
 
     projects: [
+        {
+            title: 'BSPK',
+            // The write-up at src/bspk. The docs sites and GitHub links are the
+            // forks under iambrian.com and iambriansreed, not the Anywhere
+            // originals, so nothing here depends on an employer domain.
+            url: '/bspk/',
+            internal: true,
+            // The share image for /bspk is public/bspk-figures/bspk-banner-*.png,
+            // not a card thumbnail.
+            thumbnail: 'projects/bspk.svg',
+            wide: true,
+            description:
+                "Anywhere Real Estate's design system, built from zero for all of its brands. React and Angular libraries share one set of stylesheets, and it became the company's first open-source project.",
+            category: 'Design Systems',
+            skills: ['React', 'Angular', 'TypeScript', 'Accessibility'],
+            sources: [
+                {
+                    title: 'Case study',
+                    url: '/bspk/',
+                    internal: true,
+                },
+                {
+                    title: 'Live docs',
+                    url: 'https://bspk.iambrian.com',
+                },
+                {
+                    title: 'Angular docs',
+                    url: 'https://ngx.bspk.iambrian.com',
+                },
+                {
+                    title: 'React code',
+                    url: 'https://github.com/iambriansreed/bspk-ui',
+                },
+                {
+                    title: 'Angular code',
+                    url: 'https://github.com/iambriansreed/bspk-ui-ngx',
+                },
+            ],
+        },
         {
             title: 'Skrapa',
             url: 'https://iambrian.com/skrapa',

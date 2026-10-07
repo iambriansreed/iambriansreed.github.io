@@ -1,0 +1,95 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="800" viewBox="0 0 1600 800" role="img" aria-label="BSPK, a design system: the same components in light and dark themes, split down the middle">
+  <defs>
+    <clipPath id="light"><polygon points="0,0 880,0 720,800 0,800"/></clipPath>
+    <clipPath id="dark"><polygon points="880,0 1600,0 1600,800 720,800"/></clipPath>
+  </defs>
+  <g clip-path="url(#light)">
+    <rect width="1600" height="800" fill="#ffffff"/>
+    <g font-family="Inter, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">
+    <text x="800" y="232" text-anchor="middle" font-size="172" font-weight="800" letter-spacing="-7" fill="#141414">BSPK</text>
+    <text x="800" y="296" text-anchor="middle" font-size="40" font-weight="500" fill="#5c5c5c">Ten brands. Light and dark.</text>
+
+    <text x="330" y="376" font-size="22" font-weight="600" fill="#141414">Email</text>
+    <rect x="331" y="390" width="420" height="58" rx="8" fill="none" stroke="#767676" stroke-width="2"/>
+    <text x="353" y="428" font-size="24" fill="#141414">jane@example.com</text>
+
+    <rect x="800" y="390" width="440" height="58" rx="10" fill="#e4e4e4"/>
+    <rect x="806" y="396" width="140" height="46" rx="8" fill="#ffffff"/>
+    <text x="876" y="427" text-anchor="middle" font-size="24" font-weight="600" fill="#141414">Posts</text>
+    <text x="1016" y="427" text-anchor="middle" font-size="24" font-weight="500" fill="#5c5c5c">Media</text>
+    <text x="1156" y="427" text-anchor="middle" font-size="24" font-weight="500" fill="#5c5c5c">Pages</text>
+
+    <rect x="330" y="494" width="176" height="58" rx="10" fill="#1756ff"/>
+    <text x="418" y="531" text-anchor="middle" font-size="24" font-weight="600" fill="#ffffff">Submit</text>
+    <rect x="527" y="495" width="174" height="56" rx="10" fill="none" stroke="#767676" stroke-width="2"/>
+    <text x="614" y="531" text-anchor="middle" font-size="24" font-weight="600" fill="#141414">Cancel</text>
+
+    <rect x="800" y="505" width="68" height="36" rx="18" fill="#1756ff"/>
+    <circle cx="850" cy="523" r="14" fill="#ffffff"/>
+    <text x="886" y="531" font-size="24" font-weight="500" fill="#141414">Alerts</text>
+
+    <rect x="1010" y="509" width="28" height="28" rx="6" fill="#1756ff"/>
+    <path d="M1017 523l5 5 10-11" fill="none" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="1052" y="531" font-size="24" font-weight="500" fill="#141414">Remember me</text>
+
+    <text x="330" y="610" font-size="22" font-weight="600" fill="#141414">Uploading files...</text>
+    <rect x="330" y="628" width="372" height="10" rx="5" fill="#e4e4e4"/>
+    <rect x="330" y="628" width="232" height="10" rx="5" fill="#1756ff"/>
+
+    <circle cx="814" cy="604" r="13" fill="none" stroke="#767676" stroke-width="2"/>
+    <text x="840" y="612" font-size="24" font-weight="500" fill="#141414">Email</text>
+    <circle cx="1000" cy="604" r="13" fill="none" stroke="#1756ff" stroke-width="2"/>
+    <circle cx="1000" cy="604" r="7" fill="#1756ff"/>
+    <text x="1026" y="612" font-size="24" font-weight="500" fill="#141414">Phone</text>
+
+    <rect x="801" y="646" width="438" height="48" rx="8" fill="none" stroke="#767676" stroke-width="2"/>
+    <text x="823" y="679" font-size="22" fill="#5c5c5c">Search...</text>
+    <text x="1218" y="679" text-anchor="end" font-size="22" fill="#5c5c5c">12 Results</text>
+  </g>
+  </g>
+  <g clip-path="url(#dark)">
+    <rect width="1600" height="800" fill="#1f1f1f"/>
+    <g font-family="Inter, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">
+    <text x="800" y="232" text-anchor="middle" font-size="172" font-weight="800" letter-spacing="-7" fill="#f2f2f2">BSPK</text>
+    <text x="800" y="296" text-anchor="middle" font-size="40" font-weight="500" fill="#a3a3a3">Ten brands. Light and dark.</text>
+
+    <text x="330" y="376" font-size="22" font-weight="600" fill="#f2f2f2">Email</text>
+    <rect x="331" y="390" width="420" height="58" rx="8" fill="none" stroke="#8a8a8a" stroke-width="2"/>
+    <text x="353" y="428" font-size="24" fill="#f2f2f2">jane@example.com</text>
+
+    <rect x="800" y="390" width="440" height="58" rx="10" fill="#363636"/>
+    <rect x="806" y="396" width="140" height="46" rx="8" fill="#1f1f1f"/>
+    <text x="876" y="427" text-anchor="middle" font-size="24" font-weight="600" fill="#f2f2f2">Posts</text>
+    <text x="1016" y="427" text-anchor="middle" font-size="24" font-weight="500" fill="#a3a3a3">Media</text>
+    <text x="1156" y="427" text-anchor="middle" font-size="24" font-weight="500" fill="#a3a3a3">Pages</text>
+
+    <rect x="330" y="494" width="176" height="58" rx="10" fill="#749aff"/>
+    <text x="418" y="531" text-anchor="middle" font-size="24" font-weight="600" fill="#141414">Submit</text>
+    <rect x="527" y="495" width="174" height="56" rx="10" fill="none" stroke="#8a8a8a" stroke-width="2"/>
+    <text x="614" y="531" text-anchor="middle" font-size="24" font-weight="600" fill="#f2f2f2">Cancel</text>
+
+    <rect x="800" y="505" width="68" height="36" rx="18" fill="#749aff"/>
+    <circle cx="850" cy="523" r="14" fill="#ffffff"/>
+    <text x="886" y="531" font-size="24" font-weight="500" fill="#f2f2f2">Alerts</text>
+
+    <rect x="1010" y="509" width="28" height="28" rx="6" fill="#749aff"/>
+    <path d="M1017 523l5 5 10-11" fill="none" stroke="#141414" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="1052" y="531" font-size="24" font-weight="500" fill="#f2f2f2">Remember me</text>
+
+    <text x="330" y="610" font-size="22" font-weight="600" fill="#f2f2f2">Uploading files...</text>
+    <rect x="330" y="628" width="372" height="10" rx="5" fill="#363636"/>
+    <rect x="330" y="628" width="232" height="10" rx="5" fill="#749aff"/>
+
+    <circle cx="814" cy="604" r="13" fill="none" stroke="#8a8a8a" stroke-width="2"/>
+    <text x="840" y="612" font-size="24" font-weight="500" fill="#f2f2f2">Email</text>
+    <circle cx="1000" cy="604" r="13" fill="none" stroke="#749aff" stroke-width="2"/>
+    <circle cx="1000" cy="604" r="7" fill="#749aff"/>
+    <text x="1026" y="612" font-size="24" font-weight="500" fill="#f2f2f2">Phone</text>
+
+    <rect x="801" y="646" width="438" height="48" rx="8" fill="none" stroke="#8a8a8a" stroke-width="2"/>
+    <text x="823" y="679" font-size="22" fill="#a3a3a3">Search...</text>
+    <text x="1218" y="679" text-anchor="end" font-size="22" fill="#a3a3a3">12 Results</text>
+  </g>
+  </g>
+  <line x1="880" y1="0" x2="720" y2="800" stroke="#749aff" stroke-width="4"/>
+</svg>

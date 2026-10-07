@@ -1236,6 +1236,54 @@ header {
     color: var(--accent);
 }
 
+/* A wide card (Project.wide) takes two grid columns. Gated on width because
+   the grid is a single column below 721px, where spanning two would add an
+   implicit column. The body splits in two so the card stays close to the
+   height of its single-column neighbours instead of towering over them. */
+@media (min-width: 721px) {
+    .project-item.is-wide {
+        grid-column: span 2;
+    }
+    /* Twice the width at the usual 16 / 8 would make the thumbnail twice as
+       tall too. Trim it; object-fit: cover only loses blank margin. */
+    .is-wide .project-thumb {
+        aspect-ratio: 16 / 7;
+    }
+    .is-wide .project-body {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+        grid-template-areas:
+            'cat tags'
+            'title tags'
+            'desc sources';
+        align-content: start;
+        column-gap: 2rem;
+    }
+    .is-wide .project-cat {
+        grid-area: cat;
+    }
+    .is-wide .project-title {
+        grid-area: title;
+        justify-self: start;
+    }
+    .is-wide .project-desc {
+        grid-area: desc;
+    }
+    .is-wide .tags {
+        grid-area: tags;
+        align-self: start;
+    }
+    .is-wide .project-sources {
+        grid-area: sources;
+        align-self: start;
+        margin-top: 0;
+    }
+    /* The first source link sits on its own row; the rest pair up beneath. */
+    .is-wide .project-sources > :first-child {
+        flex-basis: 100%;
+    }
+}
+
 /* Drop the parallelogram skew on project cards at mobile widths; the thumb
    image rides the card transform, so clearing it leaves everything upright. */
 @media (max-width: 720px) {

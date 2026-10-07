@@ -21,6 +21,10 @@ const npmIcon = raw(
     `<svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" fill-rule="evenodd" d="M2 2h20v20H2V2zm3 3v14h4V9h6v10h4V5H5z"/></svg>`,
 );
 
+function cx(...classes: unknown[]): string {
+    return classes.filter(Boolean).join(' ').replace(/\s+/g, ' ').trim();
+}
+
 // Pick a source-link icon by host: GitHub, npm, or a generic external-link arrow.
 function sourceIcon(url: string): { svg: JSX.Element; class: string } | null {
     if (url.includes('github.com')) return { svg: githubIcon, class: 'github' };
@@ -310,14 +314,25 @@ export function Page(): Skrapa.Page {
                             <div class="proj-grid">
                                 {projects.map((project, i) => (
                                     <article
-                                        class="project-item u-skew"
+                                        class={cx(
+                                            `project-item u-skew`,
+                                            project.wide && 'is-wide',
+                                        )}
                                         data-category={project.category}
                                     >
                                         <a
                                             class="project-thumb"
                                             href={project.url}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
+                                            target={
+                                                !project.internal
+                                                    ? '_blank'
+                                                    : undefined
+                                            }
+                                            rel={
+                                                !project.internal
+                                                    ? 'noopener noreferrer'
+                                                    : undefined
+                                            }
                                             style={`--shift:${i * 55}`}
                                             aria-hidden="true"
                                         >
@@ -343,8 +358,16 @@ export function Page(): Skrapa.Page {
                                             <a
                                                 href={project.url}
                                                 class="project-title"
-                                                target="_blank"
-                                                rel="noopener noreferrer"
+                                                target={
+                                                    !project.internal
+                                                        ? '_blank'
+                                                        : undefined
+                                                }
+                                                rel={
+                                                    !project.internal
+                                                        ? 'noopener noreferrer'
+                                                        : undefined
+                                                }
                                             >
                                                 {project.title} {arrowIcon}
                                             </a>
@@ -369,9 +392,20 @@ export function Page(): Skrapa.Page {
                                                                     href={
                                                                         source.url
                                                                     }
-                                                                    class={`source-link ${icon?.class}`}
-                                                                    target="_blank"
-                                                                    rel="noopener noreferrer"
+                                                                    class={cx(
+                                                                        'source-link',
+                                                                        icon?.class,
+                                                                    )}
+                                                                    target={
+                                                                        !source.internal
+                                                                            ? '_blank'
+                                                                            : undefined
+                                                                    }
+                                                                    rel={
+                                                                        !source.internal
+                                                                            ? 'noopener noreferrer'
+                                                                            : undefined
+                                                                    }
                                                                 >
                                                                     {icon?.svg}
                                                                     {
@@ -621,7 +655,10 @@ export function Page(): Skrapa.Page {
                         {COOKIE_STATES.map(({ label, accepted }) => (
                             <button
                                 data-cookie={accepted}
-                                class={`btn btn-primary btn-sm consent-btn ${label.toLowerCase()}`}
+                                class={cx(
+                                    `btn btn-primary btn-sm consent-btn`,
+                                    label.toLowerCase(),
+                                )}
                                 aria-label={`${label} cookies`}
                             >
                                 {label}
