@@ -405,8 +405,8 @@ messageFormInit();
 })();
 
 // ── Fast in-page nav scrolling ──────────────────────────────────────────────────
-// Anchor links use a fixed-duration animation regardless of distance, so jumping
-// past the tall pinned Experience runway zips through it instead of crawling.
+// Anchor links use a fixed-duration animation regardless of distance, so a long
+// jump takes no longer than a short one.
 (() => {
     const NAV_OFFSET = 80; // matches scroll-padding-top (5rem)
     const DURATION = 600;
@@ -640,114 +640,4 @@ messageFormInit();
             alert('Unable to submit quiz. Please try again later.');
         }
     });
-})();
-
-// ── Experience: pinned horizontal scrollytelling ────────────────────────────────
-// Pin the Experience section while the page scrolls and translate the card track
-// left in step with scroll progress. JS owns the section height (the scroll
-// runway) and the --exp-x offset. Falls back to the normal vertical list when
-// motion is reduced or the cards already fit without overflow.
-(() => {
-    const section = qs('#experience');
-    if (!section) return;
-
-    const sticky = qs('.exp-sticky', section);
-    const track = qs('.exp-track', section);
-    const dots = qsa('.exp-dot', section);
-
-    if (!sticky || !section || !track || REDUCE_MOTION) return;
-
-    // The pinned horizontal scrollytelling is a desktop affordance. On mobile
-    // we fall back to the plain vertical list (see measure()), which keeps the
-    // section header visible and lets each card size to its content.
-    const MOBILE = window.matchMedia('(max-width: 720px)');
-
-    let overflow = 0;
-    let activeDot = -1;
-
-    const clamp = (n: number, lo: number, hi: number) =>
-        Math.min(hi, Math.max(lo, n));
-
-    // Document scroll position at which a given timeline index is centered.
-    const scrollForIndex = (i: number) => {
-        const frac = dots.length > 1 ? i / (dots.length - 1) : 0;
-        return (
-            window.scrollY +
-            section.getBoundingClientRect().top +
-            frac * overflow
-        );
-    };
-
-    const render = () => {
-        if (overflow <= 0) return;
-        const progress = clamp(
-            -section.getBoundingClientRect().top / overflow,
-            0,
-            1,
-        );
-
-        sticky.style.setProperty('--exp-x', `${-(progress * overflow)}px`);
-
-        const next = dots.length
-            ? Math.round(progress * (dots.length - 1))
-            : -1;
-        if (next !== activeDot) {
-            dots[activeDot]?.classList.remove('is-active');
-            dots[next]?.classList.add('is-active');
-            activeDot = next;
-        }
-    };
-
-    const measure = () => {
-        // Mobile: never pin. Drop the runway height + pinned class so the
-        // experience renders as a normal vertical list (header included).
-        if (MOBILE.matches) {
-            overflow = 0;
-            section.classList.remove('exp-pinned');
-            section.style.removeProperty('height');
-            return;
-        }
-        section.classList.add('exp-pinned');
-        overflow = track.scrollWidth - sticky.clientWidth;
-        if (overflow <= 0) {
-            section.classList.remove('exp-pinned');
-            section.style.removeProperty('height');
-            return;
-        }
-        section.style.height = `${window.innerHeight + overflow}px`;
-        render();
-    };
-
-    dots.forEach((dot, i) =>
-        dot.addEventListener('click', () => {
-            window.scrollTo({ top: scrollForIndex(i), behavior: 'smooth' });
-        }),
-    );
-
-    // Let a horizontal swipe / shift-wheel move through the cards while pinned:
-    // translate horizontal delta into the page scroll that drives the animation,
-    // and swallow it so the trackpad doesn't trigger back/forward navigation.
-    // behavior:'instant' bypasses the global smooth scroll so it stays 1:1.
-    window.addEventListener(
-        'wheel',
-        (e) => {
-            if (overflow <= 0 || Math.abs(e.deltaX) <= Math.abs(e.deltaY)) {
-                return;
-            }
-            const rect = section.getBoundingClientRect();
-            const pinned = rect.top <= 0 && rect.bottom > window.innerHeight;
-            if (!pinned) return;
-            window.scrollBy({
-                top: e.deltaX,
-                behavior: 'instant' as ScrollBehavior,
-            });
-            e.preventDefault();
-        },
-        { passive: false },
-    );
-
-    window.addEventListener('scroll', render, { passive: true });
-    window.addEventListener('resize', measure);
-    window.addEventListener('load', measure);
-    measure();
 })();

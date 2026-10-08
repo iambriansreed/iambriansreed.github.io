@@ -425,85 +425,68 @@ export function Page(): Skrapa.Page {
                         </section>
 
                         <section id="experience">
-                            <div class="exp-sticky">
-                                <div class="section-head">
-                                    <span class="eyebrow">Experience</span>
-                                    <h2 class="section-title">
-                                        Work &amp; Impact
-                                    </h2>
-                                </div>
-                                <div class="exp-track">
-                                    {expItems.map((item) => (
-                                        <article class="exp-item">
-                                            <div class="exp-meta">
-                                                <div class="exp-meta-col">
-                                                    <span class="exp-label">
-                                                        Duration
-                                                    </span>
-                                                    <span class="exp-value">
-                                                        {formatDate(
-                                                            item.startedOn,
-                                                        )}{' '}
-                                                        –{' '}
-                                                        {item.finishedOn
-                                                            ? formatDate(
-                                                                  item.finishedOn,
-                                                              )
-                                                            : 'Present'}
-                                                    </span>
-                                                </div>
-                                                <div class="exp-meta-col">
-                                                    <span class="exp-label">
-                                                        Location
-                                                    </span>
-                                                    <span class="exp-value">
-                                                        {item.location}
-                                                    </span>
-                                                </div>
+                            <div class="section-head">
+                                <span class="eyebrow">Experience</span>
+                                <h2 class="section-title">Work &amp; Impact</h2>
+                            </div>
+                            <div class="exp-grid">
+                                {expItems.slice(0, 3).map((item) => (
+                                    <article class="exp-item">
+                                        <div class="exp-meta">
+                                            <div class="exp-meta-col">
+                                                <span class="exp-label">
+                                                    Duration
+                                                </span>
+                                                <span class="exp-value">
+                                                    {formatDate(item.startedOn)}{' '}
+                                                    –{' '}
+                                                    {item.finishedOn
+                                                        ? formatDate(
+                                                              item.finishedOn,
+                                                          )
+                                                        : 'Present'}
+                                                </span>
                                             </div>
-                                            <h3 class="exp-role">
-                                                {item.title}
-                                            </h3>
-                                            <p class="exp-company">
-                                                {item.companyName}
-                                            </p>
-                                            <ul class="exp-bullets">
-                                                {item.description.map((d) => (
+                                            <div class="exp-meta-col">
+                                                <span class="exp-label">
+                                                    Location
+                                                </span>
+                                                <span class="exp-value">
+                                                    {item.location}
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <h3 class="exp-role">{item.title}</h3>
+                                        <p class="exp-company">
+                                            {item.companyName}
+                                        </p>
+                                        <ul class="exp-bullets">
+                                            {item.description
+                                                .slice(0, 3)
+                                                .map((d) => (
                                                     <li>{d}</li>
                                                 ))}
-                                            </ul>
-                                            <div class="exp-tools">
-                                                <div class="tags">
-                                                    {item.skills.map((s) => (
-                                                        <span class="tag">
-                                                            {s}
-                                                        </span>
-                                                    ))}
-                                                </div>
+                                        </ul>
+                                        <div class="exp-tools">
+                                            <div class="tags">
+                                                {item.skills.map((s) => (
+                                                    <span class="tag">{s}</span>
+                                                ))}
                                             </div>
-                                        </article>
-                                    ))}
-                                </div>
-                                <div class="exp-timeline">
-                                    {expItems.map((item, i) => (
-                                        <button
-                                            type="button"
-                                            class="exp-dot"
-                                            data-index={String(i)}
-                                            aria-label={`Jump to ${item.title}`}
-                                        >
-                                            <span class="exp-dot-mark"></span>
-                                            <span class="exp-dot-year">
-                                                {item.finishedOn
-                                                    ? new Date(
-                                                          item.startedOn,
-                                                      ).getFullYear()
-                                                    : 'Present'}
-                                            </span>
-                                        </button>
-                                    ))}
-                                </div>
+                                        </div>
+                                    </article>
+                                ))}
                             </div>
+                            <p class="exp-more">
+                                <a
+                                    class="exp-more-link"
+                                    href="/resume"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                >
+                                    Full history on the résumé {arrowIcon}
+                                </a>
+                            </p>
                         </section>
 
                         <section id="contact" class="connect">
