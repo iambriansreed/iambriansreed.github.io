@@ -359,7 +359,9 @@ messageFormInit();
 
 // ── Header reveal ────────────────────────────────────────────────────────────────
 // The header sits hidden just above the viewport (top: -4rem). Drop it into view
-// only once the hero has fully scrolled out, so it never overlaps the landing.
+// once the hero is about half scrolled out: the rootMargin trims the top 45% of
+// the viewport, so the hero stops intersecting when its bottom edge rises past
+// that line.
 (() => {
     const header = qs('header');
     const hero = qs('.hero');
@@ -369,7 +371,7 @@ messageFormInit();
         ([entry]) => {
             header.classList.toggle('is-pinned', !entry.isIntersecting);
         },
-        { threshold: 0 },
+        { rootMargin: '-45% 0px 0px 0px' },
     );
     observer.observe(hero);
 })();

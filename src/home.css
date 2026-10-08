@@ -113,31 +113,6 @@
     }
 }
 
-@media (prefers-reduced-motion: reduce) {
-    .fa-btn .icon {
-        transform: none !important;
-        animation: none !important;
-    }
-}
-
-@keyframes subtitle-shimmer {
-    from {
-        background-position: center 0%;
-    }
-    to {
-        background-position: center 100%;
-    }
-}
-
-@keyframes hero-shimmer {
-    0% {
-        background-position: 100% center;
-    }
-    100% {
-        background-position: -100% center;
-    }
-}
-
 /* ---------- Reset ---------- */
 *,
 *::before,
@@ -232,7 +207,7 @@ a {
 
 /* ---------- Global focus ---------- */
 /* Every focusable element gets the same themed accent ring by default.
-   Components with non-rectangular shapes (skewed .btn, clipped .fa-btn)
+   Components with non-rectangular shapes (skewed .btn and .fa-btn)
    override this below so the ring tracks their actual silhouette. */
 :focus-visible {
     outline: var(--focus-width) solid var(--focus-color);
@@ -756,6 +731,9 @@ header {
 .hero-photo img {
     display: block;
     width: 100%;
+    /* The width/height attributes only reserve space; auto lets aspect-ratio
+       set the rendered height. */
+    height: auto;
     aspect-ratio: 1 / 1;
     object-fit: cover;
     clip-path: polygon(10% 0, 100% 0, 90% 100%, 0 100%);
@@ -912,10 +890,12 @@ header {
     transition: color 0.15s;
 
     @media (hover: hover) and (pointer: fine) {
-        /* Not on .skill-chip: it borrows .btn's shape but is not clickable. */
+        /* A step up, short of the primary fill, so a hovered secondary button
+           never looks like the primary one. Not on .skill-chip: it borrows
+           .btn's shape but is not clickable. */
         &:hover:where(:not(.skill-chip)) {
-            --para-bg: var(--accent-fill);
-            color: #fff;
+            --para-bg: var(--accent-faded);
+            color: var(--text);
         }
     }
 
