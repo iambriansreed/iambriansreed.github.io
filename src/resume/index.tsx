@@ -105,52 +105,20 @@ export function Page(): Skrapa.Page {
     return {
         body: (
             <>
-                {/* A native <dialog> opened with showModal(). The focus trap,
-                    Esc-to-close, and real inertness for the pages behind all
-                    come from the browser — none of the three is reachable from
-                    CSS, which is why the previous checkbox gate could not offer
-                    them. role=dialog and aria-modal are implicit here, so the
-                    markup no longer claims anything it cannot honour.
-
-                    If the script never runs the dialog simply stays closed and
-                    the résumé is immediately readable, which is the right way
-                    for a splash screen to fail. */}
-                <dialog class="intro-card" aria-labelledby="intro-title">
-                    <p class="intro-eyebrow">Résumé</p>
-                    <h2 id="intro-title" class="intro-title">
-                        {name}
-                    </h2>
-                    <p class="intro-text">
-                        Read the résumé here, or download a PDF copy.
-                    </p>
-                    <div class="intro-actions">
-                        {/* showModal() moves focus here on open, so the primary
-                            action is where the keyboard already is. */}
-                        <button
-                            type="button"
-                            class="intro-btn"
-                            data-intro-close
-                            autofocus
-                        >
-                            View
-                        </button>
+                <div class="pages">
+                    {/* Visible at once, no gate: a link home and the PDF. */}
+                    <div class="resume-toolbar">
+                        <a class="resume-toolbar-back" href="/">
+                            ← iambrian.com
+                        </a>
                         <a
-                            class="intro-btn intro-btn-primary"
+                            class="resume-toolbar-download"
                             href="/Brian_Reed_Resume.pdf"
                             download="Brian_Reed_Resume.pdf"
-                            data-intro-close
                         >
-                            Download
+                            Download PDF
                         </a>
                     </div>
-                </dialog>
-
-                {/* Deliberately here rather than at the end of <body>: a classic
-                    script blocks parsing, so the modal is up before the résumé
-                    pages below are parsed. No flash of ungated content. */}
-                <script src="./client.ts"></script>
-
-                <div class="pages">
                     <div class="page">
                         <header class="hd">
                             <h1 class="name">{name}</h1>

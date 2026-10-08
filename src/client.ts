@@ -25,8 +25,6 @@ const qsa = <T extends Element = HTMLElement>(
 const html = document.documentElement;
 const themeBtn = qs<HTMLButtonElement>('.theme-toggle')!;
 const accentBtn = qs<HTMLButtonElement>('.accent-toggle')!;
-const cookieBar = qs<HTMLDialogElement>('#cookie-bar')!;
-const cookieConsentBtns = qsa<HTMLButtonElement>('.consent-btn', cookieBar)!;
 
 const ACCENTS = [
     '#7a8a3a',
@@ -44,21 +42,20 @@ const ACCENTS = [
 /* One key per preference rather than a single JSON blob, and every change goes
    through a setter that owns *both* the DOM and storage — they cannot drift.
 
-   Writes are gated on consent: nothing is persisted until the cookie bar is
-   accepted, and declining clears what was already stored. The in-memory values
-   stay live either way, so the toggles still work for the session. */
+   Theme and accent are functional preferences kept in localStorage, which needs
+   no consent, so they are always persisted. */
 
-// remove previous state
+// remove previous state ('cookie' held the consent choice the old cookie bar asked for)
 localStorage.removeItem('state');
+localStorage.removeItem('cookie');
 
-let cookieAccepted = localStorage.getItem('cookie') === 'true';
 let theme: Theme = localStorage.getItem('theme') === 'light' ? 'light' : 'dark';
 const storedAccent = localStorage.getItem('accent') as Accent | null;
 let accent: Accent =
     storedAccent && ACCENTS.includes(storedAccent) ? storedAccent : ACCENTS[0];
 
 function persist(key: string, value: string) {
-    if (cookieAccepted) localStorage.setItem(key, value);
+    localStorage.setItem(key, value);
 }
 
 function setTheme(next: Theme) {
@@ -77,36 +74,11 @@ function setAccent(next: Accent | '+1') {
     persist('accent', accent);
 }
 
-function setCookieAccepted(next: boolean) {
-    cookieAccepted = next;
-    html.dataset.cookieAccepted = String(next);
-
-    // showPopover/hidePopover throw if the popover is already in that state,
-    // so the current state is checked rather than assumed.
-    const barOpen = cookieBar.matches(':popover-open');
-    if (next && barOpen) cookieBar.hidePopover();
-    if (!next && !barOpen) cookieBar.showPopover();
-
-    if (next) {
-        // Accepting is what makes the live preferences persistable, so they are
-        // flushed here rather than waiting for the next toggle.
-        localStorage.setItem('cookie', 'true');
-        localStorage.setItem('theme', theme);
-        localStorage.setItem('accent', accent);
-        return;
-    }
-
-    for (const key of ['cookie', 'theme', 'accent']) {
-        localStorage.removeItem(key);
-    }
-}
-
 /* Paint the restored preferences before anything is interactive. index.html
    ships data-theme="dark", so only a saved *light* theme changes anything here
-   — but accent and the cookie bar have no markup default and rely on this. */
+   — but accent has no markup default and relies on this. */
 setTheme(theme);
 setAccent(accent);
-setCookieAccepted(cookieAccepted);
 
 const REDUCE_MOTION = window.matchMedia(
     '(prefers-reduced-motion: reduce)',
@@ -154,8 +126,7 @@ type BotFilterFields = ReturnType<typeof botFilterFields>;
 // ── Theme ─────────────────────────────────────────────────────────────────────
 
 themeBtn.addEventListener('click', () => {
-    // Read from the live value, not storage: with consent declined nothing is
-    // stored, and reading back an empty key would pin the toggle to one side.
+    // Read from the live value, the one setTheme keeps in step with the DOM.
     const next: Theme = theme === 'dark' ? 'light' : 'dark';
 
     // No View Transitions support (or reduced motion) → switch instantly.
@@ -215,14 +186,6 @@ accentBtn.addEventListener('click', () => {
     }
 
     setAccent('+1');
-});
-
-// ── Cookie bar ────────────────────────────────────────────────────────────────
-
-cookieConsentBtns.forEach((btn) => {
-    btn.addEventListener('click', () => {
-        setCookieAccepted(!cookieAccepted);
-    });
 });
 
 // ── Message form (inline in #contact) ───────────────────────────────────────────

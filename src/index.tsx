@@ -39,11 +39,6 @@ function formatDate(timestamp: number): string {
     });
 }
 
-const COOKIE_STATES = [
-    { accepted: false, label: 'Accept' },
-    { accepted: true, label: 'Decline' },
-];
-
 // Curated tech stack drawn from the skills evidenced across roles + projects.
 const TECH_STACK = [
     'React',
@@ -611,91 +606,9 @@ export function Page(): Skrapa.Page {
                             <a href="#about">About</a>
                             <a href="#experience">Work</a>
                             <a href="#contact">Connect</a>
-                            <button
-                                data-href="#cookies"
-                                popovertarget="cookie-bar"
-                                aria-label="Cookies"
-                            >
-                                <CookieIcon />
-                            </button>
                         </div>
                     </footer>
 
-                    <dialog id="cookie-policy" popover="auto">
-                        <h3>Cookie Policy</h3>
-                        <p>
-                            This site stores your preferences; color theme,
-                            accent color, and cookie consent; in your browser's
-                            local storage. No personal data is collected or sent
-                            anywhere.
-                        </p>
-                        <p>
-                            Nothing is shared with third parties, used for ads,
-                            or tracked across sessions.
-                        </p>
-                        <p>
-                            You can clear your preferences at any time through
-                            your browser settings or by toggling the button in
-                            the cookie bar.
-                        </p>
-                    </dialog>
-                    <dialog id="cookie-bar" popover="manual">
-                        <span class="label">Cookies</span>
-                        {COOKIE_STATES.map(({ label, accepted }) => (
-                            <button
-                                data-cookie={accepted}
-                                class={cx(
-                                    `btn btn-primary btn-sm consent-btn`,
-                                    label.toLowerCase(),
-                                )}
-                                aria-label={`${label} cookies`}
-                            >
-                                {label}
-                            </button>
-                        ))}
-                        <button
-                            popovertarget="cookie-policy"
-                            class="icon-btn policy-btn"
-                            aria-label="Show Cookie Policy Popover"
-                        >
-                            <svg
-                                class="icon"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                stroke-width="2"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                xmlns="http://www.w3.org/2000/svg"
-                                aria-hidden="true"
-                            >
-                                <circle cx="12" cy="12" r="10" />
-                                <path d="M12 16v-4M12 8h.01" />
-                            </svg>
-                            Policy
-                        </button>
-                        <button
-                            type="button"
-                            class="icon-btn cookie-close"
-                            popovertarget="cookie-bar"
-                            popovertargetaction="hide"
-                            aria-label="Dismiss cookie bar"
-                        >
-                            <svg
-                                class="icon"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                stroke-width="2"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                xmlns="http://www.w3.org/2000/svg"
-                                aria-hidden="true"
-                            >
-                                <path d="M18 6 6 18M6 6l12 12" />
-                            </svg>
-                        </button>
-                    </dialog>
 
                     <dialog
                         id="recruiter-quiz"
@@ -971,15 +884,4 @@ export function Page(): Skrapa.Page {
             </>
         ),
     };
-}
-
-function CookieIcon() {
-    return (
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
-            <path
-                fill="currentColor"
-                d="M321.5 91.6C320.7 86.2 316.6 81.8 311.2 81C289.1 77.9 266.6 81.9 246.8 92.4L172.8 131.9C153.1 142.4 137.2 158.9 127.4 179L90.7 254.6C80.9 274.7 77.7 297.5 81.6 319.5L96.1 402.3C100 424.4 110.7 444.6 126.8 460.2L187.1 518.6C203.2 534.2 223.7 544.2 245.8 547.3L328.8 559C350.9 562.1 373.4 558.1 393.2 547.6L467.2 508.1C486.9 497.6 502.8 481.1 512.6 460.9L549.3 385.4C559.1 365.3 562.3 342.5 558.4 320.5C557.5 315.2 553.1 311.2 547.8 310.4C496.3 302.2 455 263.3 443.3 213C441.5 205.4 435.3 199.6 427.6 198.4C373 189.7 329.9 146.4 321.4 91.6zM272 208C289.7 208 304 222.3 304 240C304 257.7 289.7 272 272 272C254.3 272 240 257.7 240 240C240 222.3 254.3 208 272 208zM208 400C208 382.3 222.3 368 240 368C257.7 368 272 382.3 272 400C272 417.7 257.7 432 240 432C222.3 432 208 417.7 208 400zM432 336C449.7 336 464 350.3 464 368C464 385.7 449.7 400 432 400C414.3 400 400 385.7 400 368C400 350.3 414.3 336 432 336z"
-            />
-        </svg>
-    );
 }

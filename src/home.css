@@ -24,7 +24,7 @@
     --skewX: skewX(-6deg);
     --skewX-counter: skewX(6deg);
     --skewX-dot: skewX(-20deg);
-    /* Parallelogram clip for solid shapes (toggles, badge, cookie bar). Each
+    /* Parallelogram clip for solid shapes (the hero badge). Each
        consumer can override the corner offset via --clip-x. */
     --clip-para: polygon(
         var(--clip-x, 0.5rem) 0,
@@ -885,8 +885,7 @@ header {
     box-shadow: 0 0 0 5px var(--accent-subtle);
 }
 
-/* Button system: .btn base + style variant (.btn-primary) + size variant
-   (.btn-sm). The cookie consent buttons reuse .btn .btn-primary .btn-sm. */
+/* Button system: .btn base + style variant (.btn-primary). */
 .btn {
     display: inline-flex;
     align-items: center;
@@ -921,10 +920,6 @@ header {
         --para-bg: color-mix(in srgb, var(--accent-fill) 85%, black);
         color: #fff;
     }
-}
-
-.btn-sm {
-    padding: 0.25rem 0.85rem;
 }
 
 /* skill-chip reuses .btn; only the font size and (non-clickable) cursor differ.
@@ -1800,13 +1795,12 @@ header {
     }
 }
 
-/* ---------- Dialog / popover open/close animation ---------- */
-/* #msg-modal is a modal <dialog> — open state is [open], it renders ::backdrop.
-   #cookie-bar / #cookie-policy are popovers — open state is :popover-open.
-   Both animate via @starting-style + allow-discrete so the display:none toggle
-   transitions instead of cutting instantly. The closed transform comes from
-   --dialog-enter so each element keeps its own direction (and reduced-motion
-   can neutralise it in one place). */
+/* ---------- Dialog open/close animation ---------- */
+/* #recruiter-quiz is a modal <dialog>: open state is [open], it renders
+   ::backdrop. It animates via @starting-style + allow-discrete so the
+   display:none toggle transitions instead of cutting instantly. The closed
+   transform comes from --dialog-enter (reduced-motion neutralises it in one
+   place). */
 dialog {
     opacity: 0;
     transform: var(--dialog-enter, translateY(20px));
@@ -1817,26 +1811,17 @@ dialog {
         display 0.3s allow-discrete;
 }
 
-#cookie-bar {
-    --dialog-enter: translateX(calc(100% + 1.5rem));
-}
-#cookie-policy {
-    --dialog-enter: translateY(100%);
-}
 #recruiter-quiz {
     --dialog-enter: translateY(20px);
 }
 
-/* Open state. :popover-open for the cookie popovers; [open] for the quiz, which
-   is a true modal opened via showModal(). */
-dialog:popover-open,
+/* Open state: the quiz is a true modal opened via showModal(). */
 #recruiter-quiz[open] {
     opacity: 1;
     transform: none;
 }
 
 @starting-style {
-    dialog:popover-open,
     #recruiter-quiz[open] {
         opacity: 0;
         transform: var(--dialog-enter, translateY(20px));
@@ -1867,123 +1852,8 @@ dialog:popover-open,
     }
 
     @starting-style {
-        dialog:popover-open,
         #recruiter-quiz[open] {
             transform: none;
-        }
-    }
-}
-
-/* ---------- Cookie consent ---------- */
-/* #cookie-bar and #cookie-policy are popovers: when open they're promoted to
-   the top layer, so they position themselves (the container no longer clips
-   them) and animate via the dialog block above (@starting-style). */
-
-/* ---------- Cookie bar (popover) ---------- */
-
-#cookie-bar {
-    position: fixed;
-    inset: auto 1.25rem 1.25rem auto;
-    margin: 0;
-    height: 2.5rem;
-    width: 22rem;
-    max-width: calc(100vw - 2.5rem);
-    align-items: center;
-    justify-content: space-between;
-    gap: 0.625rem;
-    padding: 0 1rem 0 0.875rem;
-
-    /* Closed popover stays display:none (UA); flex only when open. */
-    &:popover-open {
-        display: flex;
-    }
-    /* Frosted accent glass: translucent tinted gradient over a backdrop blur
-       (clip-path clips the blurred region to the parallelogram). */
-    background: linear-gradient(
-        120deg,
-        color-mix(in srgb, var(--accent) 35%, rgba(0, 0, 0, 0.82)),
-        color-mix(in srgb, var(--accent) 18%, rgba(0, 0, 0, 0.82))
-    );
-    backdrop-filter: blur(14px) saturate(1.4);
-    -webkit-backdrop-filter: blur(14px) saturate(1.4);
-    border: none;
-    border-radius: 0;
-    --clip-x: 0.6rem;
-    clip-path: var(--clip-para);
-    white-space: nowrap;
-    color: var(--text);
-
-    .label {
-        font-size: 0.9rem;
-        font-weight: 800;
-        letter-spacing: 0.14em;
-        text-transform: uppercase;
-        color: var(--accent);
-    }
-
-    .policy-btn {
-        margin-right: 0.25rem;
-        line-height: 1;
-        gap: 0.35rem;
-
-        .icon {
-            width: 1rem;
-            height: 1rem;
-        }
-
-        &:hover {
-            color: var(--accent);
-        }
-
-        :root:has(#cookie-policy:popover-open) & {
-            color: var(--accent);
-        }
-    }
-
-    .cookie-close .icon {
-        width: 1.05rem;
-        height: 1.05rem;
-    }
-}
-
-[data-cookie-accepted='true'] [data-cookie='false'] {
-    display: none;
-}
-
-[data-cookie-accepted='false'] [data-cookie='true'] {
-    display: none;
-}
-
-/* ---------- Cookie policy (popover) ---------- */
-#cookie-policy {
-    position: fixed;
-    inset: auto 1.25rem 4rem auto;
-    margin: 0;
-    width: 15rem;
-    max-width: calc(100vw - 2.5rem);
-    padding: 1rem 1.125rem;
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: 1.25rem;
-    box-shadow:
-        0 6px 20px rgba(0, 0, 0, 0.1),
-        0 1px 4px rgba(0, 0, 0, 0.06);
-
-    h3 {
-        font-size: 0.9rem;
-        font-weight: 700;
-        color: var(--accent);
-        margin-bottom: 0.5rem;
-    }
-
-    p {
-        font-size: 0.9rem;
-        color: var(--muted);
-        line-height: 1.6;
-        margin-bottom: 0.5rem;
-
-        &:last-of-type {
-            margin-bottom: 0;
         }
     }
 }
@@ -2040,13 +1910,6 @@ footer {
             &:hover {
                 color: var(--accent-text);
             }
-
-            &[popovertarget='cookie-bar'] {
-                svg {
-                    width: 1.25rem;
-                    height: 1.25rem;
-                }
-            }
         }
     }
 }
@@ -2056,20 +1919,15 @@ footer {
        reserves a 10rem left gutter for the docked toggles and spreads its rows
        with space-between, which collapses into a cramped sliver on narrow
        screens. Drop the gutter and clear the controls that float over the
-       bottom of the viewport — the accent/theme toggles (bottom-left) and the
-       cookie bar (bottom-right). Both sit at bottom:1.25rem and are 2.5rem
-       tall, so reserve well past that (plus the device safe-area) as bottom
-       padding so footer content never sits behind them. */
+       bottom of the viewport: the accent/theme toggles (bottom-left) sit at
+       bottom:1.25rem and are 2.5rem tall, so reserve past that (plus the device
+       safe-area) as bottom padding so footer content never sits behind them. */
     footer {
         flex-direction: column;
         align-items: flex-start;
         gap: 1.25rem;
         padding-left: clamp(1.25rem, 5vw, 3rem);
-        padding-bottom: calc(8rem + env(safe-area-inset-bottom, 0px));
-    }
-
-    #cookie-bar {
-        bottom: 4.85rem;
+        padding-bottom: calc(5rem + env(safe-area-inset-bottom, 0px));
     }
 }
 

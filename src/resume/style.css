@@ -279,116 +279,39 @@ a:hover {
     margin-bottom: var(--s3);
 }
 
-/* ---------- Intro card (modal shown on load) ----------
-   A native <dialog> opened with showModal() (see client.ts). The dialog *is*
-   the card — the browser puts it in the top layer and centres it, so there is
-   no wrapper overlay to position and no z-index to manage. The dim and blur
-   move to ::backdrop, which the UA paints behind the top layer.
-
-   Closed is the default state: a <dialog> without `open` is display:none, so
-   nothing here needs to hide it if the script does not run. */
-.intro-card {
-    /* Undo the UA's default dialog box, then rebuild it as the card. */
-    margin: auto;
-    border: 0;
-    padding: 34px 36px 32px;
-    width: calc(100% - 48px);
-    max-width: 400px;
-    background: #fff;
-    border-radius: 12px;
-    text-align: center;
-    color: var(--body);
-    box-shadow: 0 24px 70px rgba(0, 0, 0, 0.4);
-    animation: intro-fade 0.25s ease-out;
-}
-
-/* showModal() makes the pages behind inert, but inert does not stop scrolling —
-   without this you can wheel past content you cannot click. Degrades to the
-   old behaviour (scrollable) wherever :has() is unsupported. */
-html:has(dialog.intro-card[open]) {
-    overflow: hidden;
-}
-
-.intro-card::backdrop {
-    background: rgba(15, 13, 10, 0.62);
-    -webkit-backdrop-filter: blur(5px);
-    backdrop-filter: blur(5px);
-    animation: intro-fade 0.25s ease-out;
-}
-
-@keyframes intro-fade {
-    from {
-        opacity: 0;
-    }
-    to {
-        opacity: 1;
-    }
-}
-
-.intro-eyebrow {
-    font-size: 11px;
-    letter-spacing: 1.6px;
-    text-transform: uppercase;
-    color: var(--faint);
-    margin-bottom: 8px;
-}
-
-.intro-title {
-    font-family: var(--display);
-    font-weight: 700;
-    font-size: 26px;
-    letter-spacing: -0.4px;
-    color: var(--ink);
-}
-
-.intro-text {
-    font-size: 13px;
-    line-height: 1.55;
-    color: var(--muted);
-    margin-top: 8px;
-}
-
-.intro-actions {
+/* ---------- Toolbar ----------
+   Sticks to the top of the viewport above the sheets, at the sheet width. */
+.resume-toolbar {
+    position: sticky;
+    top: 0;
+    z-index: 10;
     display: flex;
-    gap: 12px;
-    justify-content: center;
-    margin-top: 24px;
-}
-
-.intro-btn {
-    flex: 1;
-    display: inline-flex;
     align-items: center;
-    justify-content: center;
-    padding: 11px 18px;
-    border-radius: 8px;
-    border: 1px solid var(--ink);
+    justify-content: space-between;
+    gap: 1rem;
+    width: var(--page-w);
+    max-width: 100%;
+    padding: 12px 16px;
+    background: color-mix(in srgb, #e7e5e1 88%, transparent);
+    backdrop-filter: blur(8px);
     font-family: var(--sans);
     font-size: 13px;
-    font-weight: 500;
-    color: var(--ink);
-    background: #fff;
-    cursor: pointer;
-    user-select: none;
-    transition:
-        background 0.15s ease,
-        color 0.15s ease;
 }
-.intro-btn:hover {
-    background: #f1efea;
-    text-decoration: none;
+.resume-toolbar-back {
+    color: var(--muted);
 }
-
-.intro-btn-primary {
+.resume-toolbar-download {
+    padding: 8px 16px;
+    border-radius: 8px;
     background: var(--ink);
     color: #fff;
+    font-weight: 500;
 }
-.intro-btn-primary:hover {
+.resume-toolbar-download:hover {
     background: #2a2a2a;
-    color: #fff;
+    text-decoration: none;
 }
-
-.intro-btn:focus-visible {
+.resume-toolbar a:focus-visible {
     outline: 2px solid var(--ink);
     outline-offset: 2px;
 }
@@ -459,10 +382,7 @@ html:has(dialog.intro-card[open]) {
         orphans: 2;
         widows: 2;
     }
-    /* Printing with the modal still open would otherwise put the card on
-       page one; the backdrop needs clearing too, since the top layer prints. */
-    .intro-card,
-    .intro-card::backdrop {
+    .resume-toolbar {
         display: none !important;
     }
     .pages {
