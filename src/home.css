@@ -39,6 +39,13 @@
     --accent-shadow: oklch(from var(--accent) calc(l * 0.45) c h / 0.7);
     --tag-bg: oklch(from var(--accent) 93% calc(c * 0.25) h);
     --tag-text: oklch(from var(--accent) 28% calc(c * 0.7) h);
+    /* Accent as text and as a fill behind white text: lightness is clamped so
+       every one of the eight accents passes WCAG AA, the same way --tag-text
+       does for chips. Raw --accent stays for dots, rules and borders. */
+    --accent-text: oklch(from var(--accent) 42% c h);
+    --accent-fill: oklch(from var(--accent) 50% c h);
+    --border-strong: color-mix(in srgb, var(--text) 50%, var(--bg));
+    --danger: #b93a2f;
 
     @media (prefers-color-scheme: dark) {
         --bg: #111009;
@@ -49,6 +56,8 @@
         --accent-subtle: oklch(from var(--accent) l c h / 0.2);
         --tag-bg: oklch(from var(--accent) 14% calc(c * 0.4) h);
         --tag-text: oklch(from var(--accent) 72% c h);
+        --accent-text: oklch(from var(--accent) 76% calc(c * 0.9) h);
+        --danger: #ef6b60;
     }
 
     &[data-theme='light'] {
@@ -60,6 +69,8 @@
         --accent-subtle: oklch(from var(--accent) l c h / 0.12);
         --tag-bg: oklch(from var(--accent) 93% calc(c * 0.25) h);
         --tag-text: oklch(from var(--accent) 28% calc(c * 0.7) h);
+        --accent-text: oklch(from var(--accent) 42% c h);
+        --danger: #b93a2f;
     }
 
     &[data-theme='dark'] {
@@ -71,6 +82,8 @@
         --accent-subtle: oklch(from var(--accent) l c h / 0.2);
         --tag-bg: oklch(from var(--accent) 14% calc(c * 0.4) h);
         --tag-text: oklch(from var(--accent) 72% c h);
+        --accent-text: oklch(from var(--accent) 76% calc(c * 0.9) h);
+        --danger: #ef6b60;
     }
 }
 
@@ -196,7 +209,7 @@ a {
     transition: color 0.15s;
 
     &:not(.btn):hover {
-        color: var(--accent);
+        color: var(--accent-text);
         opacity: 1;
     }
 }
@@ -256,7 +269,7 @@ a {
 }
 
 .accent-toggle {
-    background: var(--accent);
+    background: var(--accent-fill);
     color: #fff;
 
     /* Keep the accent background; just invert the icon to the bg color. */
@@ -663,7 +676,7 @@ header {
 }
 .hero-rail a:hover {
     color: #fff;
-    --para-bg: var(--accent);
+    --para-bg: var(--accent-fill);
 }
 .hero-rail .icon {
     width: 1.1rem;
@@ -774,13 +787,13 @@ header {
 }
 .about-label {
     letter-spacing: 0.14em;
-    color: var(--accent);
+    color: var(--accent-text);
 }
 .about-value {
     font-size: 1.1rem;
     font-weight: 600;
     text-align: right;
-    color: var(--accent);
+    color: var(--accent-text);
 }
 @media (max-width: 720px) {
     .about-grid {
@@ -872,7 +885,7 @@ header {
     transition: color 0.15s;
 
     &:hover {
-        --para-bg: var(--accent);
+        --para-bg: var(--accent-fill);
         color: #fff;
     }
 
@@ -883,11 +896,11 @@ header {
 }
 
 .btn-primary {
-    --para-bg: var(--accent);
+    --para-bg: var(--accent-fill);
     color: #fff;
 
     &:hover {
-        opacity: 0.85;
+        --para-bg: color-mix(in srgb, var(--accent-fill) 85%, black);
         color: #fff;
     }
 }
@@ -961,7 +974,7 @@ header {
 .exp-company {
     font-size: 0.95rem;
     font-weight: 600;
-    color: var(--accent);
+    color: var(--accent-text);
     margin-bottom: 0.9rem;
 }
 
@@ -1128,7 +1141,7 @@ header {
 }
 
 .exp-dot.is-active .exp-dot-year {
-    color: var(--accent);
+    color: var(--accent-text);
     font-weight: 700;
     transform: scale(1.1);
 }
@@ -1208,7 +1221,7 @@ header {
 }
 .project-cat {
     letter-spacing: 0.16em;
-    color: var(--accent);
+    color: var(--accent-text);
 }
 .project-title {
     display: inline-flex;
@@ -1249,7 +1262,7 @@ header {
 }
 
 .source-link:hover {
-    color: var(--accent);
+    color: var(--accent-text);
 }
 
 /* A wide card (Project.wide) takes two grid columns. Gated on width because
@@ -1356,7 +1369,7 @@ header {
 }
 /* Light up with a diagonal accent sweep, matching the angled form block. */
 .connect-item:hover {
-    background: var(--accent);
+    background: var(--accent-fill);
 }
 .connect-item:hover .connect-label {
     color: #fff;
@@ -1367,7 +1380,7 @@ header {
 .connect-item:has(:focus-visible) {
     outline: var(--focus-width) solid var(--focus-color);
     outline-offset: var(--focus-offset);
-    background: var(--accent);
+    background: var(--accent-fill);
 }
 .connect-item:has(:focus-visible) .connect-label {
     color: #fff;
@@ -1435,7 +1448,7 @@ header {
     color: var(--muted);
 }
 .connect-meta a {
-    color: var(--accent);
+    color: var(--accent-text);
     text-decoration: none;
 }
 @media (max-width: 720px) {
@@ -1521,7 +1534,7 @@ header {
     margin-bottom: 0.75rem;
 }
 .quiz-question.unanswered h4 {
-    color: #e2483d;
+    color: var(--danger);
 }
 
 /* Compensation: stylized salary input + "not available" poison. */
@@ -1530,7 +1543,7 @@ header {
     align-items: center;
     gap: 0.5rem;
     padding: 0.65rem 0.95rem;
-    border: 1px solid var(--border);
+    border: 1.5px solid var(--border-strong);
     border-radius: var(--radius);
     transition: border-color 0.15s;
 }
@@ -1575,7 +1588,7 @@ header {
     cursor: pointer;
 }
 .quiz-na:has(:checked) {
-    color: #e2483d;
+    color: var(--danger);
 }
 .quiz-na:has(:checked) + .quiz-fail-reason {
     display: block;
@@ -1620,13 +1633,13 @@ header {
 .quiz-pill:has(:checked) {
     border-color: var(--accent);
     background: var(--accent-subtle);
-    color: var(--accent);
+    color: var(--accent-text);
     font-weight: 600;
 }
 .quiz-pill:has(input[value='fail']:checked) {
-    border-color: #e2483d;
-    background: oklch(from #e2483d l c h / 0.12);
-    color: #e2483d;
+    border-color: var(--danger);
+    background: oklch(from var(--danger) l c h / 0.12);
+    color: var(--danger);
 }
 .quiz-pills:has(input[value='fail']:checked) + .quiz-fail-reason {
     display: block;
@@ -1657,8 +1670,8 @@ header {
     background: var(--accent-subtle);
 }
 .quiz-options label:has(:checked)[for$='fail'] {
-    border-color: #e2483d;
-    background: oklch(from #e2483d l c h / 0.12);
+    border-color: var(--danger);
+    background: oklch(from var(--danger) l c h / 0.12);
 }
 /* Custom-styled but still-native radios & checkboxes (keeps label/aria). */
 .quiz-options input[type='radio'],
@@ -1671,7 +1684,7 @@ header {
     margin: 0;
     display: grid;
     place-content: center;
-    border: 1.5px solid var(--border);
+    border: 1.5px solid var(--border-strong);
     background: var(--bg);
     cursor: pointer;
     transition:
@@ -1710,8 +1723,8 @@ header {
     transition: transform 0.12s ease;
 }
 .quiz-na input[type='checkbox']:checked {
-    border-color: #e2483d;
-    background: #e2483d;
+    border-color: var(--danger);
+    background: var(--danger);
 }
 .quiz-na input[type='checkbox']:checked::before {
     transform: rotate(45deg) scale(1);
@@ -1723,7 +1736,7 @@ header {
 }
 .quiz-fail-reason {
     display: none;
-    color: #e2483d;
+    color: var(--danger);
     font-size: 0.9rem;
     line-height: 1.5;
     padding: 0.1rem 0.25rem 0.25rem;
@@ -1739,7 +1752,7 @@ header {
 }
 .quiz-error {
     display: none;
-    color: #e2483d;
+    color: var(--danger);
     font-size: 0.9rem;
     font-weight: 600;
 }
@@ -1765,7 +1778,7 @@ header {
     margin-bottom: 0.75rem;
 }
 .quiz-result a {
-    color: var(--accent);
+    color: var(--accent-text);
 }
 .quiz-email {
     display: flex;
@@ -1776,7 +1789,7 @@ header {
     flex: 1;
     min-width: 0;
     padding: 0.6rem 0.85rem;
-    border: 1px solid var(--border);
+    border: 1.5px solid var(--border-strong);
     border-radius: var(--radius);
     background: var(--bg);
     color: var(--text);
@@ -1895,7 +1908,7 @@ header {
         justify-content: center;
         border-radius: var(--radius);
         font-size: 0.9375rem;
-        color: var(--accent);
+        color: var(--accent-text);
         font-weight: 600;
 
         &.is-visible {
@@ -2142,7 +2155,7 @@ footer {
             transition: color 0.15s;
 
             &:hover {
-                color: var(--accent);
+                color: var(--accent-text);
             }
 
             &[popovertarget='cookie-bar'] {
