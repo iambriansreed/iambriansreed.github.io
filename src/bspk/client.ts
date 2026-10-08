@@ -36,9 +36,9 @@
             ? storedAccent
             : ACCENTS[0];
 
+    // Functional preferences; no consent needed (see the home page client).
     function persist(key: string, value: string) {
-        if (localStorage.getItem('cookie') === 'true')
-            localStorage.setItem(key, value);
+        localStorage.setItem(key, value);
     }
 
     // The banner and figures carry both theme variants as data-light and
