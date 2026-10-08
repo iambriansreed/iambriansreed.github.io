@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="robots" content="noindex" />
+        <meta name="color-scheme" content="dark light" />
+        <title>Page not found / Brian S. Reed</title>
+        <link
+            rel="preload"
+            href="/fonts/Archivo.woff2"
+            as="font"
+            type="font/woff2"
+            crossorigin
+        />
+        <link
+            rel="icon"
+            type="image/png"
+            href="/icon/favicon-32x32.png"
+            sizes="32x32"
+        />
+        <link
+            rel="icon"
+            type="image/png"
+            href="/icon/favicon-16x16.png"
+            sizes="16x16"
+        />
+        <link rel="stylesheet" href="/home.css" />
+        <link rel="stylesheet" href="./style.css" />
+        <script>
+            document.documentElement.dataset.theme =
+                localStorage.getItem('theme') === 'light' ? 'light' : 'dark';
+
+            document.documentElement.style.setProperty(
+                '--accent',
+                localStorage.getItem('accent') || '#7a8a3a',
+            );
+        </script>
+    </head>
+    <body></body>
+</html>

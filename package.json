@@ -6,7 +6,7 @@
         "node": "24.x"
     },
     "scripts": {
-        "build": "cd src && npx skrapa build",
+        "build": "cd src && npx skrapa build && cp ../dist/404/index.html ../dist/404.html",
         "lint": "eslint .",
         "dev": "cd src && API_HOST=local.api.iambrian.com npx skrapa dev"
     },

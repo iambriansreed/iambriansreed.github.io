@@ -1,0 +1,11 @@
+/* Layout only; tokens, .hero-name and .btn come from /home.css. */
+.not-found {
+    max-width: 76rem;
+    margin-inline: auto;
+    padding-inline: clamp(1.25rem, 5vw, 3rem);
+}
+.not-found-text {
+    font-size: clamp(1.1rem, 2vw, 1.4rem);
+    color: var(--muted);
+    margin-bottom: 2.25rem;
+}
