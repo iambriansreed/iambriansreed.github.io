@@ -83,6 +83,11 @@ export type ExperienceItem = {
     compactName?: string;
     detail?: string;
 
+    // A professional role rendered as a compact row on the résumé instead of a
+    // full entry: the roles with no measurable outcome on record, so one line
+    // beats a list of generic bullets. The site's experience grid ignores it.
+    compact?: boolean;
+
     // Force a print page break before this entry to match the PDF pagination.
     pageBreakBefore?: boolean;
 };
@@ -116,8 +121,7 @@ export type ResumeContact = {
 export type SiteData = {
     name: string;
     subtitle: string;
-    introduction: string; // site hero copy
-    summary: string; // résumé summary paragraph
+    summary: string; // résumé summary paragraph, and the home page lede
     contact: ResumeContact; // résumé contact block
     contactLinks: ContactLink[]; // site contact links
     skills: SkillGroup[]; // résumé skill groups
@@ -131,18 +135,15 @@ const data: SiteData = {
     name: 'Brian S. Reed',
     subtitle: 'Design Systems Engineer · Front-End Architect',
 
-    introduction:
-        'Design Systems Engineer, Senior Full-Stack (Frontend-Focused), with 17+ years building scalable UI systems. Deep expertise in React, TypeScript, and design systems, with a strong focus on accessibility, performance, and developer experience.',
-
     // All three spans derive from the epochs below and need a bump each year:
-    // "seventeen" from City of Virginia Beach (Jul 2009), "seven" from the
-    // architect title at Anthem (Feb 2019), "two" from BSPK at Anywhere (Oct
-    // 2024). Design systems counts BSPK only — the earlier shared-library work
-    // is deliberately described as component libraries, not design systems, so
-    // the bullets below agree with this sentence. The 17 also appears in
-    // `introduction` and in the two index.html meta descriptions.
+    // "nearly twenty" from the first software work in 2007 (at Alutiiq),
+    // "seven" from the architect title at Anthem (Feb 2019), "two" from BSPK
+    // at Anywhere (Oct 2024). Design systems counts BSPK only — the earlier
+    // shared-library work is deliberately described as component libraries,
+    // not design systems, so the bullets below agree with this sentence. The
+    // 19+ also appears in the index.html meta descriptions.
     summary:
-        "Seventeen years in software — full-stack early, seven in front-end architecture, the last two leading the engineering group behind BSPK, Anywhere Real Estate's design system and its first open-source project. Design-trained, so accessibility and performance are requirements rather than cleanup. U.S. Army veteran.",
+        "Nearly twenty years in software, full-stack early, seven in front-end architecture, the last two leading the engineering group behind BSPK, Anywhere Real Estate's design system and its first open-source project. Design-trained, so accessibility and performance are requirements rather than cleanup. U.S. Army veteran.",
 
     contact: {
         location: 'Chesapeake, VA (Remote)',
@@ -238,20 +239,22 @@ const data: SiteData = {
                 'CI/CD',
                 'Team Leadership',
             ],
+            // Figures here (86 components, 10 brands, 62 releases, 2,000+
+            // tokens) are the case study's, src/bspk/content.ts. Change them
+            // there first, then here, and regenerate public/Brian_Reed_Resume.pdf.
             description: [
-                'Lead the design systems engineering group; setting technical direction, prioritization, and day-to-day mentorship while partnering with design leadership and product.',
-                "Own BSPK, Anywhere Real Estate's design system and its first open-source project: a React library of 70+ components, an Angular library, and per-brand stylesheets for 9 brands.",
-                "Built the Figma plugin that syncs 2,000+ design tokens into those stylesheets, plus a documentation site built out of BSPK's own components, keeping design and code one source of truth.",
-                'Standardized component APIs, docs, and CI/CD integration to improve onboarding, consistency, and delivery velocity.',
+                "Built BSPK, Anywhere Real Estate's design system, from zero as its only engineer, then led the team of three that grew it to 86 React components and an Angular library serving 10 brands across 62 releases.",
+                'Built the Figma plugin that syncs 2,000+ design tokens into per-brand stylesheets, with a build check that fails on any unknown token, so design renames surface at build time rather than in production.',
+                "Built the documentation site out of BSPK's own components, with axe-core running on every live example, so accessibility checks kept working after the team lost its dedicated reviewer.",
+                "Made BSPK the company's first open-source project; teams were still shipping on it and asking for upgrades after the funded work ended.",
             ],
-            // Figures here are the ones published on bspk.anywhere.re, so the
-            // résumé and the linked artifact agree. Update both together.
+            // Kept to two lines each so page one of the PDF still holds this
+            // role and the next; a longer section jumps to page two whole.
             bullets: [
-                "Own BSPK, Anywhere's design system and its first open-source project: 70+ React components, an Angular library, and Figma-generated themes for 9 brands.",
-                'Built the Figma plugin that syncs 2,000+ design tokens into per-brand stylesheets, keeping design and code one source of truth.',
-                "Built the documentation site out of BSPK's own components, so API and accessibility gaps surface on the team before they reach consumers.",
-                'Lead the design systems engineering group: technical direction, day-to-day mentorship, and partnership with design and product leadership.',
-                'Standardized component APIs, documentation, and CI/CD release workflows, and set the front-end bar for accessibility and performance.',
+                "Built Anywhere's design system, BSPK, from zero as its only engineer, then led a team of three to 86 React components, an Angular library and 10 brand themes over 62 releases.",
+                'Built the Figma plugin that syncs 2,000+ design tokens into per-brand stylesheets, with a build check that fails on any unknown token.',
+                "Built the docs site from BSPK's own components, with axe-core on every live example, so accessibility checks outlived the team's dedicated reviewer.",
+                "Made BSPK the company's first open-source project; teams were still shipping on it and requesting upgrades after the funded work ended.",
             ],
         },
         {
@@ -277,9 +280,9 @@ const data: SiteData = {
                 'Helped remove technical and organizational blockers, increasing team efficiency and predictability.',
             ],
             bullets: [
+                "Ran the team's process as Certified ScrumMaster, cutting defects and rework through tighter acceptance criteria and front-end testing.",
                 'Led the shared React component library behind a cloud-based enterprise SaaS platform.',
                 'Partnered with product and design to turn business requirements into technical specifications and well-scoped stories.',
-                "Ran the team's process as Certified ScrumMaster, cutting defects and rework through tighter acceptance criteria and front-end testing.",
             ],
         },
         {
@@ -317,6 +320,8 @@ const data: SiteData = {
             startedOn: 1548997200000,
             finishedOn: 1561953600000,
             dateRange: 'Feb 2019 – Jul 2019',
+            compact: true,
+            detail: 'Anthem, Inc. · Norfolk, VA · Unified several teams on one React Native architecture with reusable cross-platform component patterns.',
             skills: [
                 'React Native',
                 'React',
@@ -340,6 +345,8 @@ const data: SiteData = {
             startedOn: 1506830400000,
             finishedOn: 1548997200000,
             dateRange: 'Oct 2017 – Feb 2019',
+            compact: true,
+            detail: 'ADP · Norfolk, VA · Set front-end quality standards through code review and shaped architecture decisions with product and UX while modernizing legacy code.',
             skills: ['React', 'Node.js', 'Architecture', 'Mentorship', 'UX'],
             description: [
                 'Provided technical leadership on front-end implementation, setting quality standards through code reviews and shared best practices.',
@@ -361,6 +368,8 @@ const data: SiteData = {
             startedOn: 1422766800000,
             finishedOn: 1506830400000,
             dateRange: 'Feb 2015 – Oct 2017',
+            compact: true,
+            detail: '80/20 Software Consulting · Array Digital, LLC · Virginia Beach, VA · React and Angular apps for finance clients on Node.js, PHP, and ASP.NET.',
             skills: [
                 'React',
                 'Angular',
@@ -387,6 +396,8 @@ const data: SiteData = {
             startedOn: 1246420800000,
             finishedOn: 1422766800000,
             dateRange: 'Jul 2009 – Feb 2015',
+            compact: true,
+            detail: 'City of Virginia Beach · Virginia Beach, VA · Public-facing web apps and custom mapping tools (Google Maps, ESRI APIs).',
             skills: [
                 'User Experience Design (UED)',
                 'C#',
@@ -566,7 +577,7 @@ const data: SiteData = {
             url: 'https://sordle.iambrian.com',
             thumbnail: 'projects/sordle.svg',
             description:
-                'Enjoy unlimited Wordle games with this Wordle clone. Features a static backend and provides the definition of each word.',
+                'A Wordle clone without the daily limit. The word bank is a set of static JSON files, one per word, served from GitHub Pages, and every solved word comes with its dictionary definition.',
             category: 'Games',
             skills: ['TypeScript', 'SASS', 'Vite'],
             sources: [
@@ -585,7 +596,7 @@ const data: SiteData = {
             url: 'https://connect4.iambrian.com',
             thumbnail: 'projects/connect4.svg',
             description:
-                'Challenge yourself to a game of Connect 4 against a basic AI, competitive enough to keep you entertained but still beatable.',
+                'Connect Four against a rule-based AI: it takes a win, blocks yours, builds toward three in a row and avoids handing you a move, with a random fallback. Beatable, but it punishes an obvious mistake.',
             category: 'Games',
             skills: ['TypeScript', 'SASS', 'Vite'],
             sources: [
@@ -595,25 +606,25 @@ const data: SiteData = {
                 },
             ],
         },
-        {
-            title: 'Comms',
-            url: 'https://chat.iambrian.com',
-            thumbnail: 'projects/comms.svg',
-            description:
-                "A chat application supporting multiple private rooms, with data stored exclusively on clients' devices.",
-            category: 'Apps',
-            skills: ['TypeScript', 'Socket.io', 'Tailwind', 'Vite'],
-            sources: [
-                {
-                    title: 'Frontend',
-                    url: 'https://github.com/iambriansreed/comm-client',
-                },
-                {
-                    title: 'Backend',
-                    url: 'https://github.com/iambriansreed/comm-server',
-                },
-            ],
-        },
+        // {
+        //     title: 'Comms',
+        //     url: 'https://chat.iambrian.com',
+        //     thumbnail: 'projects/comms.svg',
+        //     description:
+        //         'A chat client over Socket.IO with nothing stored on the server: it relays messages between up to five people in a room, so a conversation lives only in the browsers that are in it.',
+        //     category: 'Apps',
+        //     skills: ['TypeScript', 'Socket.io', 'Tailwind', 'Vite'],
+        //     sources: [
+        //         {
+        //             title: 'Frontend',
+        //             url: 'https://github.com/iambriansreed/comm-client',
+        //         },
+        //         {
+        //             title: 'Backend',
+        //             url: 'https://github.com/iambriansreed/comm-server',
+        //         },
+        //     ],
+        // },
     ],
 
     questions: [
@@ -633,7 +644,7 @@ const data: SiteData = {
             title: 'This role requires:',
             answers: [
                 {
-                    title: 'A bachelors or masters degree',
+                    title: "A bachelor's or master's degree",
                     failReason:
                         "Even though I love learning, I don't have a college degree.",
                 },
@@ -653,44 +664,41 @@ const data: SiteData = {
                     title: 'Junior / Intermediate',
                     failReason: 'I am looking for a Senior or higher role.',
                 },
-                { title: 'Other' },
-                { title: 'Senior' },
-                { title: 'Team Lead' },
+                { title: 'Senior / Team Lead' },
+                { title: 'Principal / Staff' },
                 { title: 'Architect / Advisor' },
+                { title: 'Other' },
             ],
         },
         {
+            // Rendered as a number input plus a "not disclosed" checkbox
+            // (index.tsx), so the only answer here is the one that fails.
             id: 'compensation',
             title: 'What is the annual base compensation, salary not including bonuses?',
             answers: [
                 {
                     title: 'Unavailable',
                     failReason:
-                        "If budgets aren't transparent we can't move forward.",
+                        "A role without compensation transparency is one I can't evaluate yet; happy to talk once there's a range.",
                 },
-                { title: 'below $150k' },
-                { title: '$150k - $200k' },
-                { title: '$200k - $250k' },
-                { title: 'above $250k' },
             ],
         },
         {
-            id: 'sign-on-bonus',
-            title: 'Is a sign-on bonus available?',
-            answers: [{ title: 'Yes' }, { title: 'No' }],
-        },
-        {
+            // Rendered as multi-select pills (index.tsx). No answer fails:
+            // a stack outside the ones listed is a stretch, not a stop.
             id: 'expertise',
             title: 'This role requires expert knowledge in:',
             answers: [
-                {
-                    title: 'Java / Python',
-                    failReason:
-                        'I am not an expert in Java or Python. I do have experience in other OOP languages, like C#.',
-                },
+                { title: 'Design Systems' },
+                { title: 'Figma' },
+                { title: 'Accessibility' },
                 { title: 'React' },
                 { title: 'React Native' },
                 { title: 'Angular' },
+                { title: 'iOS' },
+                { title: 'Android' },
+                { title: 'Java' },
+                { title: 'Python' },
                 { title: 'Other' },
             ],
         },
@@ -707,19 +715,20 @@ const data: SiteData = {
             id: 'interviews',
             title: 'How many interviews are part of the hiring process?',
             answers: [
-                { title: '3 or less' },
-                { title: '4 or more' },
+                { title: '3 or fewer' },
+                { title: '4' },
                 { title: '5 or more' },
             ],
         },
         {
             id: 'vacation',
-            title: "How is the company's PTO benefit structured?",
+            title: 'How much paid time off comes with the role, not counting holidays?',
             answers: [
-                { title: 'Unlimited' },
-                { title: '20 days or more including holidays' },
-                { title: '10 days or more excluding holidays' },
-                { title: 'Other' },
+                { title: 'Unlimited or flexible' },
+                { title: '4 weeks or more' },
+                { title: '3 weeks' },
+                { title: '2 weeks or less' },
+                { title: 'Not sure yet' },
             ],
         },
     ],

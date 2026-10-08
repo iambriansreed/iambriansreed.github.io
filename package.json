@@ -8,6 +8,7 @@
     "scripts": {
         "build": "cd src && npx skrapa build && cp ../dist/404/index.html ../dist/404.html",
         "lint": "eslint .",
+        "resume:pdf": "npm run build && node scripts/resume-pdf.mts",
         "dev": "cd src && API_HOST=local.api.iambrian.com npx skrapa dev"
     },
     "devDependencies": {

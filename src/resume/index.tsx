@@ -45,6 +45,7 @@ function EntryHead({ title, dates }: { title: string; dates: string }) {
 }
 
 function JobEntry(job: ExperienceItem) {
+    if (job.compact) return CompactRow(job);
     return (
         <article class="job">
             <EntryHead title={job.title} dates={job.dateRange} />

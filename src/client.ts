@@ -359,11 +359,11 @@ messageFormInit();
 
 // ── Header reveal ────────────────────────────────────────────────────────────────
 // The header sits hidden just above the viewport (top: -4rem). Drop it into view
-// once the hero is about half scrolled out: the rootMargin trims the top 45% of
-// the viewport, so the hero stops intersecting when its bottom edge rises past
-// that line.
+// once the hero has scrolled past it: the rootMargin trims the header's own
+// height off the top of the viewport, so the hero stops intersecting when its
+// bottom edge slides under where the header will land.
 (() => {
-    const header = qs('header');
+    const header = qs<HTMLElement>('header');
     const hero = qs('.hero');
     if (!header || !hero) return;
 
@@ -371,7 +371,7 @@ messageFormInit();
         ([entry]) => {
             header.classList.toggle('is-pinned', !entry.isIntersecting);
         },
-        { rootMargin: '-45% 0px 0px 0px' },
+        { rootMargin: `-${header.offsetHeight}px 0px 0px 0px` },
     );
     observer.observe(hero);
 })();
@@ -456,19 +456,46 @@ messageFormInit();
     };
     const hasFail = () => fieldsets().some(isFailed);
 
+    // The quiz has a shareable address, iambrian.com/#quiz, so a recruiter can
+    // be sent straight to it. Opening pushes the hash, so the back button
+    // closes the dialog; closing strips it, so a reload or a copied tab does
+    // not reopen it.
+    const QUIZ_HASH = '#quiz';
+    const openQuiz = () => {
+        quizForm.reset();
+        quizForm.classList.remove('submitted');
+        passForm.reset();
+        passForm.classList.remove('submitted');
+        setState('quiz');
+        dialog.showModal();
+        if (location.hash !== QUIZ_HASH) history.pushState(null, '', QUIZ_HASH);
+    };
+
     qsa('[data-open-quiz]').forEach((btn) =>
-        btn.addEventListener('click', () => {
-            quizForm.reset();
-            quizForm.classList.remove('submitted');
-            passForm.reset();
-            passForm.classList.remove('submitted');
-            setState('quiz');
-            dialog.showModal();
-        }),
+        btn.addEventListener('click', openQuiz),
     );
     qsa('[data-close-quiz]', dialog).forEach((btn) =>
         btn.addEventListener('click', () => dialog.close()),
     );
+    // Fires for the close button, Escape, and the back button alike.
+    dialog.addEventListener('close', () => {
+        if (location.hash === QUIZ_HASH) {
+            history.replaceState(null, '', location.pathname + location.search);
+        }
+    });
+    window.addEventListener('hashchange', () => {
+        if (location.hash === QUIZ_HASH && !dialog.open) openQuiz();
+        else if (location.hash !== QUIZ_HASH && dialog.open) dialog.close();
+    });
+    if (location.hash === QUIZ_HASH) {
+        // Land on the contact section first, so closing the dialog leaves the
+        // form and the LinkedIn and GitHub links in view.
+        qs('#contact')?.scrollIntoView({
+            block: 'start',
+            behavior: 'instant' as ScrollBehavior,
+        });
+        openQuiz();
+    }
 
     // As soon as a disqualifying answer is picked, flip to the fail state (and
     // back if they change it). Also clear the "unanswered" mark once answered.

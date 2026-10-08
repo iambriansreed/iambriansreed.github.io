@@ -142,6 +142,6 @@
     <circle cx="156" cy="0" r="13" fill="none" stroke="rgba(0,0,0,0.18)" stroke-width="3"/>
 
     <text x="0" y="92" font-size="92" font-weight="800" letter-spacing="-3" fill="#f8fafc">Connect 4</text>
-    <text x="2" y="140" font-size="30" font-weight="500" letter-spacing="0.3" fill="#94a3b8">Crappy AI vs Human</text>
+    <text x="2" y="140" font-size="30" font-weight="500" letter-spacing="0.3" fill="#94a3b8">It blocks. It punishes. It loses.</text>
   </g>
 </svg>
