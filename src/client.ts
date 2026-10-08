@@ -506,7 +506,20 @@ messageFormInit();
         fieldsets().forEach((fs) => {
             if (isAnswered(fs)) fs.classList.remove('unanswered');
         });
-        setState(hasFail() ? 'fail' : 'quiz');
+        const wasFailed = dialog.dataset.state === 'fail';
+        const failed = hasFail();
+        setState(failed ? 'fail' : 'quiz');
+        // The verdict renders below the questions and the submit button hides,
+        // so on the switch into the fail state bring the verdict to the reader.
+        // Only on the switch: later edits while still failing leave focus be.
+        if (failed && !wasFailed) {
+            const heading = qs<HTMLElement>('.quiz-fail h3', dialog);
+            if (heading) {
+                heading.tabIndex = -1;
+                heading.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                heading.focus({ preventScroll: true });
+            }
+        }
     };
     quizForm.addEventListener('change', onQuizChange);
     quizForm.addEventListener('input', onQuizChange);
@@ -522,6 +535,14 @@ messageFormInit();
         });
         if (!ok) {
             setState('quiz');
+            const first = qs<HTMLFieldSetElement>(
+                '.quiz-question.unanswered',
+                quizForm,
+            );
+            first?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            first?.querySelector<HTMLElement>('input')?.focus({
+                preventScroll: true,
+            });
             return;
         }
         setState(hasFail() ? 'fail' : 'pass');

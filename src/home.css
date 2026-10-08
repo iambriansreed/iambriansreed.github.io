@@ -214,6 +214,20 @@ a {
     }
 }
 
+/* Visually hidden, still announced: labels for inputs whose purpose the
+   layout already shows. */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
 /* ---------- Global focus ---------- */
 /* Every focusable element gets the same themed accent ring by default.
    Components with non-rectangular shapes (skewed .btn, clipped .fa-btn)
@@ -1397,12 +1411,12 @@ header {
     padding: 0;
     margin: 0;
 }
-.quiz-question h4 {
+.quiz-question legend {
     font-size: 1rem;
     font-weight: 700;
     margin-bottom: 0.75rem;
 }
-.quiz-question.unanswered h4 {
+.quiz-question.unanswered legend {
     color: var(--danger);
 }
 

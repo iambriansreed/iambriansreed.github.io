@@ -492,13 +492,18 @@ export function Page(): Skrapa.Page {
                                     class="msg-card u-skew"
                                     aria-label="Send a message"
                                 >
+                                    <label for="msg-textarea" class="sr-only">
+                                        Your message (include your email so I
+                                        can reply)
+                                    </label>
                                     <textarea
                                         class="msg-textarea"
                                         id="msg-textarea"
                                         placeholder="Write your message; drop your email in anywhere so I can reply."
+                                        aria-describedby="msg-hint"
                                     />
                                     <div class="msg-actions">
-                                        <p class="msg-hint" id="msg-hint">
+                                        <p class="msg-hint" id="msg-hint" aria-live="polite">
                                             Include your email anywhere in your
                                             message.
                                         </p>
@@ -696,11 +701,14 @@ export function Page(): Skrapa.Page {
                         id="recruiter-quiz"
                         class="quiz-modal"
                         data-state="quiz"
+                        aria-labelledby="quiz-title"
                     >
                         <div class="quiz-head">
                             <div>
                                 <span class="eyebrow">Recruiters</span>
-                                <h3 class="quiz-title">A quick fit check</h3>
+                                <h3 id="quiz-title" class="quiz-title">
+                                    A quick fit check
+                                </h3>
                             </div>
                             <button
                                 type="button"
@@ -746,13 +754,20 @@ export function Page(): Skrapa.Page {
                                             data-title={question.title}
                                             data-type="amount"
                                         >
-                                            <h4>{question.title}</h4>
+                                            <legend>{question.title}</legend>
                                             <div class="quiz-amount">
                                                 <span class="quiz-amount-prefix">
                                                     $
                                                 </span>
+                                                <label
+                                                    for="quiz-amount-input"
+                                                    class="sr-only"
+                                                >
+                                                    Annual base compensation
+                                                </label>
                                                 <input
                                                     type="number"
+                                                    id="quiz-amount-input"
                                                     class="quiz-amount-input"
                                                     min="0"
                                                     step="1000"
@@ -795,7 +810,7 @@ export function Page(): Skrapa.Page {
                                             data-title={question.title}
                                             data-type="multi"
                                         >
-                                            <h4>{question.title}</h4>
+                                            <legend>{question.title}</legend>
                                             <div class="quiz-pills">
                                                 {skills.map((skill) => {
                                                     const poison =
@@ -829,7 +844,7 @@ export function Page(): Skrapa.Page {
                                         data-id={question.id}
                                         data-title={question.title}
                                     >
-                                        <h4>{question.title}</h4>
+                                        <legend>{question.title}</legend>
                                         <div class="quiz-options">
                                             {question.answers.map(
                                                 (answer, index) => {
@@ -874,7 +889,7 @@ export function Page(): Skrapa.Page {
                                 );
                             })}
                             <footer class="quiz-foot">
-                                <p class="quiz-error">
+                                <p class="quiz-error" role="alert">
                                     Please answer every question.
                                 </p>
                                 <button type="submit" class="btn btn-primary">
@@ -911,6 +926,9 @@ export function Page(): Skrapa.Page {
                                 answers are sent along too.
                             </p>
                             <div class="quiz-email">
+                                <label for="quiz-email" class="sr-only">
+                                    Your email
+                                </label>
                                 <input
                                     type="email"
                                     id="quiz-email"
