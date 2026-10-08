@@ -223,11 +223,17 @@ export function Page(): Skrapa.Page {
                                     </div>
                                 </div>
                                 <div class="hero-photo about-photo">
+                                    {/* Hidden below 720px; lazy keeps a hidden
+                                        image from downloading at all. */}
                                     <img
-                                        src="/me.jpg"
+                                        src="/me-480.jpg"
+                                        srcset="/me-480.jpg 480w, /me-960.jpg 960w"
+                                        sizes="396px"
                                         alt="Brian S. Reed"
                                         width="480"
                                         height="480"
+                                        loading="lazy"
+                                        decoding="async"
                                     />
                                 </div>
                             </div>

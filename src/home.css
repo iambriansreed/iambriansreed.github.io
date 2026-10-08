@@ -1942,3 +1942,64 @@ footer {
     height: 1px;
     overflow: hidden;
 }
+
+/* ---------- Print ----------
+   Always print the light palette, whatever theme is saved. The theme blocks
+   above match :root[data-theme], so these need the same specificity. */
+@media print {
+    :root,
+    :root[data-theme='dark'],
+    :root[data-theme='light'] {
+        --bg: #fff;
+        --text: #1a1814;
+        --muted: #5a544c;
+        --border: #d9d3c8;
+        --accent-subtle: transparent;
+        --accent-text: oklch(from var(--accent) 42% c h);
+        --tag-bg: transparent;
+        --tag-text: #1a1814;
+        --danger: #b93a2f;
+    }
+    html {
+        background: #fff;
+    }
+    header,
+    .fab-group,
+    #recruiter-quiz,
+    .hero-rail,
+    .nav-cta,
+    #msg-form,
+    .msg-card {
+        display: none !important;
+    }
+    .hero {
+        min-height: 0;
+        padding-block: 1.5rem;
+    }
+    .section,
+    .about,
+    .skills,
+    .projects,
+    .connect,
+    #experience {
+        padding-block: 1.25rem;
+    }
+    .project-item,
+    .exp-item,
+    .connect-item,
+    .about-grid {
+        break-inside: avoid;
+    }
+    a[href^='http']::after {
+        content: ' (' attr(href) ')';
+        font-size: 0.75em;
+        font-weight: 400;
+        color: var(--muted);
+        overflow-wrap: anywhere;
+    }
+    /* These rows already print the handle, and the narrow row would wrap the
+       URL a character per line. */
+    .connect-item a::after {
+        content: none;
+    }
+}
