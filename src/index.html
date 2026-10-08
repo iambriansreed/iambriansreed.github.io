@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-theme="dark">
+<html lang="en">
     <head>
         <meta charset="utf-8" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -127,8 +127,14 @@
             content="/icon/mstile-144x144.png"
         />
         <script>
+            // Saved choice first, then the OS preference, then dark.
+            const savedTheme = localStorage.getItem('theme');
             document.documentElement.dataset.theme =
-                localStorage.getItem('theme') === 'light' ? 'light' : 'dark';
+                savedTheme === 'light' || savedTheme === 'dark'
+                    ? savedTheme
+                    : matchMedia('(prefers-color-scheme: light)').matches
+                      ? 'light'
+                      : 'dark';
 
             document.documentElement.style.setProperty(
                 '--accent',

@@ -16,7 +16,7 @@
     --text: #1a1814;
     --muted: #6e675f;
     --border: #e6e0d6;
-    --accent: #4a7fa5;
+    --accent: #7a8a3a;
     --accent-subtle: oklch(from var(--accent) l c h / 0.12);
     --radius: 6px;
     --skewX: skewX(-6deg);

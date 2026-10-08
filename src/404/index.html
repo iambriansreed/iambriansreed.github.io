@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-theme="dark">
+<html lang="en">
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -28,8 +28,14 @@
         <link rel="stylesheet" href="/home.css" />
         <link rel="stylesheet" href="./style.css" />
         <script>
+            // Saved choice first, then the OS preference, then dark.
+            const savedTheme = localStorage.getItem('theme');
             document.documentElement.dataset.theme =
-                localStorage.getItem('theme') === 'light' ? 'light' : 'dark';
+                savedTheme === 'light' || savedTheme === 'dark'
+                    ? savedTheme
+                    : matchMedia('(prefers-color-scheme: light)').matches
+                      ? 'light'
+                      : 'dark';
 
             document.documentElement.style.setProperty(
                 '--accent',

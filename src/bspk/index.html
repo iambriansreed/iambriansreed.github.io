@@ -39,9 +39,15 @@
         <link rel="stylesheet" href="./style.css" />
         <script>
             // Same restore as the home page, so a theme or accent picked there
-            // carries over. Dark is the default.
+            // carries over.
+            // Saved choice first, then the OS preference, then dark.
+            const savedTheme = localStorage.getItem('theme');
             document.documentElement.dataset.theme =
-                localStorage.getItem('theme') === 'light' ? 'light' : 'dark';
+                savedTheme === 'light' || savedTheme === 'dark'
+                    ? savedTheme
+                    : matchMedia('(prefers-color-scheme: light)').matches
+                      ? 'light'
+                      : 'dark';
 
             document.documentElement.style.setProperty(
                 '--accent',

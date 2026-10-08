@@ -49,7 +49,14 @@ const ACCENTS = [
 localStorage.removeItem('state');
 localStorage.removeItem('cookie');
 
-let theme: Theme = localStorage.getItem('theme') === 'light' ? 'light' : 'dark';
+// The same order as the inline script in index.html: saved, then OS, then dark.
+const savedTheme = localStorage.getItem('theme');
+let theme: Theme =
+    savedTheme === 'light' || savedTheme === 'dark'
+        ? savedTheme
+        : matchMedia('(prefers-color-scheme: light)').matches
+          ? 'light'
+          : 'dark';
 const storedAccent = localStorage.getItem('accent') as Accent | null;
 let accent: Accent =
     storedAccent && ACCENTS.includes(storedAccent) ? storedAccent : ACCENTS[0];
@@ -58,27 +65,27 @@ function persist(key: string, value: string) {
     localStorage.setItem(key, value);
 }
 
-function setTheme(next: Theme) {
+function setTheme(next: Theme, save = true) {
     theme = next;
     html.dataset.theme = theme;
-    persist('theme', theme);
+    if (save) persist('theme', theme);
 }
 
-function setAccent(next: Accent | '+1') {
+function setAccent(next: Accent | '+1', save = true) {
     if (next === '+1') {
         const currentIndex = ACCENTS.indexOf(accent);
         next = ACCENTS[(currentIndex + 1) % ACCENTS.length];
     }
     accent = next;
     html.style.setProperty('--accent', accent);
-    persist('accent', accent);
+    if (save) persist('accent', accent);
 }
 
-/* Paint the restored preferences before anything is interactive. index.html
-   ships data-theme="dark", so only a saved *light* theme changes anything here
-   — but accent has no markup default and relies on this. */
-setTheme(theme);
-setAccent(accent);
+/* Paint the restored preferences before anything is interactive. The inline
+   script in index.html already set both, so this re-applies them without
+   saving: a visitor who never picks a theme keeps following their OS. */
+setTheme(theme, false);
+setAccent(accent, false);
 
 const REDUCE_MOTION = window.matchMedia(
     '(prefers-reduced-motion: reduce)',

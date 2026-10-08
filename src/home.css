@@ -15,7 +15,7 @@
     --border: #e6e0d6;
     --gap: 4.5rem;
     --radius: 6px;
-    --accent: #4a7fa5;
+    --accent: #7a8a3a;
     /* Shared focus ring, used by the global :focus-visible rule and every
        component that needs a themed override (skewed buttons, clipped FABs). */
     --focus-color: var(--accent);
@@ -208,9 +208,11 @@ a {
     text-underline-offset: 3px;
     transition: color 0.15s;
 
-    &:not(.btn):hover {
-        color: var(--accent-text);
-        opacity: 1;
+    @media (hover: hover) and (pointer: fine) {
+        &:not(.btn):hover {
+            color: var(--accent-text);
+            opacity: 1;
+        }
     }
 }
 
@@ -281,8 +283,10 @@ a {
     color: #fff;
 
     /* Keep the accent background; just invert the icon to the bg color. */
-    &:hover {
-        color: var(--bg);
+    @media (hover: hover) and (pointer: fine) {
+        &:hover {
+            color: var(--bg);
+        }
     }
 
     /* Triple-click slot-machine spin (see client.ts). */
@@ -313,11 +317,13 @@ a {
         box-shadow: inset 0 0 0 1px var(--bg);
     }
 
-    &:hover {
-        --para-bg: var(--muted);
-    }
-    &:hover::before {
-        box-shadow: inset 0 0 0 2px var(--bg);
+    @media (hover: hover) and (pointer: fine) {
+        &:hover {
+            --para-bg: var(--muted);
+        }
+        &:hover::before {
+            box-shadow: inset 0 0 0 2px var(--bg);
+        }
     }
 
     /* Default: light mode shows moon, dark mode shows sun */
@@ -412,8 +418,10 @@ a {
     line-height: 0;
     transition: color 0.15s;
 }
-.icon-btn:hover {
-    color: var(--text);
+@media (hover: hover) and (pointer: fine) {
+    .icon-btn:hover {
+        color: var(--text);
+    }
 }
 .icon-btn:focus-visible {
     outline: 2px solid var(--accent);
@@ -689,9 +697,11 @@ header {
     color: var(--muted);
     transition: color 0.15s;
 }
-.hero-rail a:hover {
-    color: #fff;
-    --para-bg: var(--accent-fill);
+@media (hover: hover) and (pointer: fine) {
+    .hero-rail a:hover {
+        color: #fff;
+        --para-bg: var(--accent-fill);
+    }
 }
 .hero-rail .icon {
     width: 1.1rem;
@@ -901,9 +911,12 @@ header {
     border: none;
     transition: color 0.15s;
 
-    &:hover {
-        --para-bg: var(--accent-fill);
-        color: #fff;
+    @media (hover: hover) and (pointer: fine) {
+        /* Not on .skill-chip: it borrows .btn's shape but is not clickable. */
+        &:hover:where(:not(.skill-chip)) {
+            --para-bg: var(--accent-fill);
+            color: #fff;
+        }
     }
 
     .icon {
@@ -916,9 +929,11 @@ header {
     --para-bg: var(--accent-fill);
     color: #fff;
 
-    &:hover {
-        --para-bg: color-mix(in srgb, var(--accent-fill) 85%, black);
-        color: #fff;
+    @media (hover: hover) and (pointer: fine) {
+        &:hover {
+            --para-bg: color-mix(in srgb, var(--accent-fill) 85%, black);
+            color: #fff;
+        }
     }
 }
 
@@ -1014,8 +1029,10 @@ header {
     color: var(--accent-text);
     text-decoration: none;
 
-    &:hover {
-        text-decoration: underline;
+    @media (hover: hover) and (pointer: fine) {
+        &:hover {
+            text-decoration: underline;
+        }
     }
 
     .icon {
@@ -1060,8 +1077,10 @@ header {
     /* .u-skew parallelogram; thumb mark + body counter-skew (see markup). */
     transition: transform 0.15s;
 }
-.project-item:hover {
-    transform: var(--skewX) translateY(-4px);
+@media (hover: hover) and (pointer: fine) {
+    .project-item:hover {
+        transform: var(--skewX) translateY(-4px);
+    }
 }
 .project-item[hidden] {
     display: none;
@@ -1139,8 +1158,10 @@ header {
     height: 1.25em;
 }
 
-.source-link:hover {
-    color: var(--accent-text);
+@media (hover: hover) and (pointer: fine) {
+    .source-link:hover {
+        color: var(--accent-text);
+    }
 }
 
 /* A wide card (Project.wide) takes two grid columns. Gated on width because
@@ -1197,8 +1218,10 @@ header {
     .project-item.u-skew {
         transform: none;
     }
-    .project-item:hover {
-        transform: translateY(-4px);
+    @media (hover: hover) and (pointer: fine) {
+        .project-item:hover {
+            transform: translateY(-4px);
+        }
     }
     .project-body.u-unskew,
     .project-thumb-mark.u-unskew {
@@ -1246,11 +1269,13 @@ header {
     transition: background 0.15s;
 }
 /* Light up with a diagonal accent sweep, matching the angled form block. */
-.connect-item:hover {
-    background: var(--accent-fill);
-}
-.connect-item:hover .connect-label {
-    color: #fff;
+@media (hover: hover) and (pointer: fine) {
+    .connect-item:hover {
+        background: var(--accent-fill);
+    }
+    .connect-item:hover .connect-label {
+        color: #fff;
+    }
 }
 /* The whole card is the visual button, so show focus on the card (not the
    inner control, which would draw a cramped rectangle inside the border).
@@ -1316,9 +1341,13 @@ header {
     width: 0.95em;
     height: 0.95em;
 }
-.connect-item:hover .connect-action,
 .connect-item:has(:focus-visible) .connect-action {
     color: #fff;
+}
+@media (hover: hover) and (pointer: fine) {
+    .connect-item:hover .connect-action {
+        color: #fff;
+    }
 }
 .connect-meta {
     margin-top: 2rem;
@@ -1501,8 +1530,10 @@ header {
     opacity: 0;
     pointer-events: none;
 }
-.quiz-pill:hover {
-    border-color: var(--accent);
+@media (hover: hover) and (pointer: fine) {
+    .quiz-pill:hover {
+        border-color: var(--accent);
+    }
 }
 .quiz-pill:focus-within {
     outline: 2px solid var(--accent);
@@ -1540,8 +1571,10 @@ header {
         border-color 0.15s,
         background 0.15s;
 }
-.quiz-options label:hover {
-    border-color: var(--accent);
+@media (hover: hover) and (pointer: fine) {
+    .quiz-options label:hover {
+        border-color: var(--accent);
+    }
 }
 .quiz-options label:has(:checked) {
     border-color: var(--accent);
@@ -1907,8 +1940,10 @@ footer {
             color: var(--muted);
             transition: color 0.15s;
 
-            &:hover {
-                color: var(--accent-text);
+            @media (hover: hover) and (pointer: fine) {
+                &:hover {
+                    color: var(--accent-text);
+                }
             }
         }
     }
@@ -2001,5 +2036,35 @@ footer {
        URL a character per line. */
     .connect-item a::after {
         content: none;
+    }
+}
+
+/* ---------- Forced colors (Windows High Contrast) ----------
+   The system palette replaces every background, which would erase the shapes
+   that carry meaning here: the accent marks, the button fills and the quiz's
+   checked and failed states. Pin them to system colors instead. */
+@media (forced-colors: active) {
+    .hero-name-dot,
+    .hero-badge-dot,
+    .quote-band-dot,
+    .quiz-options input:checked::before,
+    .quiz-na input[type='checkbox']:checked::before {
+        forced-color-adjust: none;
+        background: CanvasText;
+    }
+    .btn::before,
+    .fa-btn::before {
+        forced-color-adjust: none;
+        background: ButtonFace;
+        border: 1px solid ButtonText;
+    }
+    .btn,
+    .fa-btn {
+        color: ButtonText;
+    }
+    .quiz-options label:has(:checked)[for$='fail'],
+    .quiz-na:has(:checked) {
+        forced-color-adjust: none;
+        outline: 2px solid Mark;
     }
 }
