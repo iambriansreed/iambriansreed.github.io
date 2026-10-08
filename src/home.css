@@ -88,8 +88,8 @@
 }
 
 ::selection {
-    background: var(--accent-subtle);
-    color: var(--text);
+    background: var(--accent-fill);
+    color: #fff;
 }
 
 @keyframes nudge {
@@ -1670,6 +1670,10 @@ header {
 }
 .quiz-result a {
     color: var(--accent-text);
+    /* The global underline uses --border, about 1.3:1 on the dark ground. */
+    text-decoration-color: color-mix(in srgb, currentColor 45%, transparent);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
 }
 .quiz-email {
     display: flex;
