@@ -9,15 +9,19 @@
         "build": "cd src && npx skrapa build && cp ../dist/404/index.html ../dist/404.html",
         "lint": "eslint .",
         "resume:pdf": "npm run build && node scripts/resume-pdf.mts",
+        "test": "npm run build && npm run test:a11y",
+        "test:a11y": "node --test \"tests/**/*.test.mts\"",
         "dev": "cd src && API_HOST=local.api.iambrian.com npx skrapa dev"
     },
     "devDependencies": {
         "@eslint/js": "^9.39.4",
         "@types/node": "^24.13.6",
+        "axe-core": "^4.14.0",
         "eslint": "^9.39.4",
         "eslint-plugin-jsx-a11y": "^6.10.2",
         "globals": "^17.4.0",
         "prettier": "^3.8.1",
+        "puppeteer-core": "^25.13.0",
         "skrapa": "0.8.0",
         "typescript": "~6.0.2",
         "typescript-eslint": "^8.58.0"

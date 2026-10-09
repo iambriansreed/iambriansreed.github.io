@@ -1,0 +1,380 @@
+/* The accent and theme controls, shared by every page shell. Markup is
+   appearance.tsx and behaviour is appearance-client.ts. A shell links this before its
+   own stylesheet, so a page can override any rule here at equal specificity.
+
+   Relies on the page's --bg, --text, --muted, --border, --accent,
+   --accent-subtle and --radius, with fallbacks where a page lacks one. */
+
+/* ---------- Compact pair (header, hero) ---------- */
+.appearance {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+/* A bare icon button at link weight: muted, then the text colour on hover. */
+.appearance-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    padding: 0;
+    border: none;
+    border-radius: var(--radius, 6px);
+    background: none;
+    color: var(--muted);
+    cursor: pointer;
+    /* A long press opens the palette, so keep the OS from selecting the button
+       or offering its own menu first. */
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
+    transition:
+        color 0.15s,
+        background 0.15s,
+        scale 0.12s;
+
+    .icon {
+        width: 1.1rem;
+        height: 1.1rem;
+    }
+
+    @media (hover: hover) and (pointer: fine) {
+        &:hover {
+            color: var(--text);
+            background: var(--accent-subtle);
+        }
+    }
+
+    &:active {
+        scale: 0.9;
+    }
+
+    &:focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 2px;
+    }
+}
+
+/* ---------- Accent ---------- */
+/* The brush carries the accent itself, in its text-safe shade. */
+.appearance-btn.accent-toggle {
+    color: var(--accent-text, var(--accent));
+
+    @media (hover: hover) and (pointer: fine) {
+        &:hover {
+            color: var(--accent-text, var(--accent));
+        }
+    }
+}
+
+.accent-toggle {
+    .icon-brush {
+        transform-origin: 70% 30%;
+    }
+
+    @media (hover: hover) and (pointer: fine) {
+        &:hover .icon-brush {
+            animation: brush-wiggle 0.6s ease-in-out;
+        }
+    }
+
+    /* appearance-client.ts adds .is-painting on each change and drops it when the
+       stroke ends, so a quick second click restarts it from the top. */
+    &.is-painting .icon-brush {
+        animation: brush-stroke 0.45s cubic-bezier(0.3, 1.3, 0.5, 1);
+    }
+
+    /* Triple-click slot-machine spin (see appearance-client.ts). */
+    &.spinning {
+        animation: accent-spin-pulse 0.28s ease-in-out infinite;
+    }
+}
+
+@keyframes brush-wiggle {
+    0%,
+    100% {
+        rotate: 0deg;
+    }
+    25% {
+        rotate: -14deg;
+    }
+    60% {
+        rotate: 9deg;
+    }
+    80% {
+        rotate: -4deg;
+    }
+}
+
+/* A dab: the brush dips down-left as if laying paint, then springs back. */
+@keyframes brush-stroke {
+    0% {
+        translate: 0 0;
+        rotate: 0deg;
+        scale: 1;
+    }
+    35% {
+        translate: -0.18rem 0.18rem;
+        rotate: -28deg;
+        scale: 1.15;
+    }
+    100% {
+        translate: 0 0;
+        rotate: 0deg;
+        scale: 1;
+    }
+}
+
+@keyframes accent-spin-pulse {
+    0%,
+    100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.14);
+    }
+}
+
+/* ---------- Swatches ---------- */
+/* The footer row (rendered) and the pop-over (built by appearance-client.ts) share
+   the swatch; the pop-over is the fixed, floating one. */
+.swatch-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.accent-palette {
+    position: fixed;
+    z-index: 1000;
+    display: grid;
+    grid-template-columns: repeat(4, 1.6rem);
+    gap: 0.45rem;
+    padding: 0.5rem;
+    border-radius: var(--radius, 6px);
+    border: 1px solid
+        var(--border, color-mix(in srgb, var(--text) 15%, var(--bg)));
+    background: var(--bg);
+    box-shadow: 0 10px 28px rgb(0 0 0 / 0.22);
+
+    &[hidden] {
+        display: none;
+    }
+}
+
+.accent-swatch {
+    width: 1.4rem;
+    height: 1.4rem;
+    padding: 0;
+    border: none;
+    border-radius: 50%;
+    background: var(--swatch);
+    cursor: pointer;
+    forced-color-adjust: none;
+    transition:
+        scale 0.12s,
+        box-shadow 0.15s;
+
+    .accent-palette & {
+        width: 1.6rem;
+        height: 1.6rem;
+        animation: swatch-pop 0.3s cubic-bezier(0.3, 1.4, 0.5, 1) backwards;
+        animation-delay: calc(var(--i) * 28ms);
+    }
+
+    @media (hover: hover) and (pointer: fine) {
+        &:hover {
+            scale: 1.15;
+        }
+    }
+
+    &[aria-pressed='true'] {
+        box-shadow:
+            0 0 0 2px var(--bg),
+            0 0 0 4px var(--swatch);
+    }
+
+    &:focus-visible {
+        outline: 2px solid var(--text);
+        outline-offset: 2px;
+    }
+}
+
+@keyframes swatch-pop {
+    from {
+        scale: 0;
+        opacity: 0;
+    }
+}
+
+/* ---------- Footer row ---------- */
+/* A full-width first row in a footer that lays its brand and links out with
+   flex-wrap and space-between. */
+.appearance-row {
+    flex: 1 0 100%;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem 1.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.appearance-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+}
+
+.theme-pair {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-left: auto;
+    color: var(--muted);
+}
+
+.theme-choice {
+    padding: 0;
+    border: none;
+    background: none;
+    font: inherit;
+    font-size: 0.9rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--muted);
+    cursor: pointer;
+    transition: color 0.15s;
+
+    @media (hover: hover) and (pointer: fine) {
+        &:hover {
+            color: var(--text);
+        }
+    }
+
+    &[aria-pressed='true'] {
+        color: var(--text);
+        text-decoration: underline;
+        text-decoration-color: var(--accent);
+        text-decoration-thickness: 2px;
+        text-underline-offset: 0.3em;
+    }
+
+    &:focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 3px;
+        border-radius: 2px;
+    }
+}
+
+/* ---------- Theme icon ---------- */
+/* One icon, two states. Dark mode shows the sun (switch to light), light mode
+   the moon. The sun sits a quarter turn back, which its symmetry hides, so the
+   change of state spins the icon on its way to the moon. */
+.icon-theme {
+    overflow: visible;
+    rotate: -90deg;
+    transition: rotate 0.5s cubic-bezier(0.65, 0, 0.35, 1);
+
+    .theme-disc {
+        transition: r 0.5s cubic-bezier(0.65, 0, 0.35, 1);
+    }
+
+    .theme-bite {
+        transition:
+            cx 0.5s cubic-bezier(0.65, 0, 0.35, 1),
+            cy 0.5s cubic-bezier(0.65, 0, 0.35, 1);
+    }
+
+    .theme-rays {
+        transform-origin: 12px 12px;
+        transition:
+            transform 0.4s cubic-bezier(0.65, 0, 0.35, 1),
+            opacity 0.3s;
+    }
+
+    [data-theme='light'] & {
+        rotate: 0deg;
+
+        .theme-disc {
+            r: 9;
+        }
+
+        .theme-bite {
+            cx: 17;
+            cy: 7;
+        }
+
+        .theme-rays {
+            transform: scale(0) rotate(90deg);
+            opacity: 0;
+        }
+    }
+}
+
+/* ---------- Theme and accent wipes (View Transitions) ---------- */
+/* appearance-client.ts animates a circular clip-path on the new snapshot, growing out
+   of the control pressed. Turn off the default cross-fade so the old page sits
+   still underneath and the new one is simply revealed. */
+::view-transition-old(root),
+::view-transition-new(root) {
+    animation: none;
+    mix-blend-mode: normal;
+}
+
+::view-transition-old(root) {
+    z-index: 0;
+}
+
+::view-transition-new(root) {
+    z-index: 1;
+}
+
+/* The leading edge of a wipe: appearance-client.ts appends it, centres it on the
+   pressed control and grows it in step with the clip. It sits in the live DOM,
+   so the new snapshot shows it, and only its band inside the clip edge is
+   visible. */
+.wipe-edge {
+    position: fixed;
+    z-index: 1000;
+    width: 0;
+    height: 0;
+    translate: -50% -50%;
+    border: 6px solid var(--accent-fill, var(--accent));
+    border-radius: 50%;
+    box-shadow: inset 0 0 28px 4px
+        oklch(from var(--accent-fill, var(--accent)) l c h / 0.45);
+    pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .appearance-btn,
+    .accent-toggle .icon-brush,
+    .accent-swatch,
+    .theme-choice,
+    .icon-theme,
+    .icon-theme .theme-disc,
+    .icon-theme .theme-bite,
+    .icon-theme .theme-rays {
+        transition: none;
+        animation: none;
+    }
+}
+
+@media print {
+    .appearance,
+    .appearance-row {
+        display: none !important;
+    }
+}
+
+@media (forced-colors: active) {
+    .accent-swatch {
+        border: 1px solid ButtonText;
+    }
+}

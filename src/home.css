@@ -11,7 +11,9 @@
 :root {
     --bg: #f9f7f4;
     --text: #1a1814;
-    --muted: #6e675f;
+    /* Dark enough to hold 4.5:1 on cards tinted by --accent-subtle under every
+       accent (#6e675f fell to 4.45 on the rust and purple tints). */
+    --muted: #67605a;
     --border: #e6e0d6;
     --gap: 4.5rem;
     --radius: 6px;
@@ -30,9 +32,12 @@
     --tag-text: oklch(from var(--accent) 28% calc(c * 0.7) h);
     /* Accent as text and as a fill behind white text: lightness is clamped so
        every one of the eight accents passes WCAG AA, the same way --tag-text
-       does for chips. Raw --accent stays for dots, rules and borders. */
+       does for chips. Raw --accent stays for dots, rules and borders. The fill
+       is darker on the light theme: next to a near-white page a 50% fill reads
+       washed out and white text on it strains, while on the dark theme 50%
+       keeps the button from sinking into the ground. */
     --accent-text: oklch(from var(--accent) 42% c h);
-    --accent-fill: oklch(from var(--accent) 50% c h);
+    --accent-fill: oklch(from var(--accent) 44% c h);
     --border-strong: color-mix(in srgb, var(--text) 50%, var(--bg));
     --danger: #b93a2f;
 
@@ -46,19 +51,21 @@
         --tag-bg: oklch(from var(--accent) 14% calc(c * 0.4) h);
         --tag-text: oklch(from var(--accent) 72% c h);
         --accent-text: oklch(from var(--accent) 76% calc(c * 0.9) h);
+        --accent-fill: oklch(from var(--accent) 50% c h);
         --danger: #ef6b60;
     }
 
     &[data-theme='light'] {
         --bg: #f9f7f4;
         --text: #1a1814;
-        --muted: #6e675f;
+        --muted: #67605a;
         --border: #e6e0d6;
         --accent-faded: oklch(from var(--accent) l c h / 0.3);
         --accent-subtle: oklch(from var(--accent) l c h / 0.12);
         --tag-bg: oklch(from var(--accent) 93% calc(c * 0.25) h);
         --tag-text: oklch(from var(--accent) 28% calc(c * 0.7) h);
         --accent-text: oklch(from var(--accent) 42% c h);
+        --accent-fill: oklch(from var(--accent) 44% c h);
         --danger: #b93a2f;
     }
 
@@ -72,6 +79,7 @@
         --tag-bg: oklch(from var(--accent) 14% calc(c * 0.4) h);
         --tag-text: oklch(from var(--accent) 72% c h);
         --accent-text: oklch(from var(--accent) 76% calc(c * 0.9) h);
+        --accent-fill: oklch(from var(--accent) 50% c h);
         --danger: #ef6b60;
     }
 }
@@ -195,157 +203,6 @@ a {
 }
 
 /* ---------- Floating controls group (bottom-left) ---------- */
-.fab-group {
-    position: fixed;
-    bottom: 1.25rem;
-    left: 1.25rem;
-    z-index: 100;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-/* ---------- Floating control toggles ---------- */
-/* Shared FAB; .accent-toggle / .theme-toggle add only colors. */
-.fa-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 2.5rem;
-    height: 2.5rem;
-    border: none;
-    cursor: pointer;
-    z-index: 100;
-
-    .icon {
-        width: 1.1rem;
-        height: 1.1rem;
-    }
-}
-
-.accent-toggle {
-    --btn-bg: var(--accent-fill);
-    color: #fff;
-
-    /* Keep the accent background; just invert the icon to the bg color. */
-    @media (hover: hover) and (pointer: fine) {
-        &:hover {
-            color: var(--bg);
-        }
-    }
-
-    /* Triple-click slot-machine spin (see client.ts). */
-    &.spinning {
-        animation: accent-spin-pulse 0.28s ease-in-out infinite;
-    }
-}
-@keyframes accent-spin-pulse {
-    0%,
-    100% {
-        transform: scale(1);
-    }
-    50% {
-        transform: scale(1.14);
-    }
-}
-@media (prefers-reduced-motion: reduce) {
-    .accent-toggle.spinning {
-        animation: none;
-    }
-}
-
-.theme-toggle {
-    --btn-bg: var(--text);
-    color: var(--bg);
-    box-shadow: inset 0 0 0 1px var(--bg);
-
-    @media (hover: hover) and (pointer: fine) {
-        &:hover {
-            --btn-bg: var(--muted);
-            box-shadow: inset 0 0 0 2px var(--bg);
-        }
-    }
-
-    /* Default: light mode shows moon, dark mode shows sun */
-    .icon-sun {
-        display: none;
-
-        @media (prefers-color-scheme: dark) {
-            display: block;
-        }
-        [data-theme='dark'] & {
-            display: block;
-        }
-        [data-theme='light'] & {
-            display: none;
-        }
-    }
-
-    .icon-moon {
-        display: block;
-
-        @media (prefers-color-scheme: dark) {
-            display: none;
-        }
-        [data-theme='dark'] & {
-            display: none;
-        }
-        [data-theme='light'] & {
-            display: block;
-        }
-    }
-}
-
-/* ---------- Theme switch (View Transitions wipe) ---------- */
-/* Replace the default cross-fade with a directional clip-path wipe so the new
-   theme sweeps across the screen. JS sets [data-theme-switch] to the target
-   theme to pick the direction; old snapshot sits still, new one is revealed. */
-::view-transition-old(root),
-::view-transition-new(root) {
-    animation: none;
-    mix-blend-mode: normal;
-}
-
-::view-transition-old(root) {
-    z-index: 0;
-}
-
-::view-transition-new(root) {
-    z-index: 1;
-    /* Default → switching to light: wipe in left → right. */
-    animation: theme-wipe 0.45s cubic-bezier(0.65, 0, 0.35, 1) forwards;
-}
-
-/* Switching to dark: wipe in right → left. */
-[data-theme-switch='dark']::view-transition-new(root) {
-    animation-name: theme-wipe-rtl;
-}
-
-@keyframes theme-wipe {
-    from {
-        clip-path: inset(0 100% 0 0);
-    }
-    to {
-        clip-path: inset(0 0 0 0);
-    }
-}
-
-@keyframes theme-wipe-rtl {
-    from {
-        clip-path: inset(0 0 0 100%);
-    }
-    to {
-        clip-path: inset(0 0 0 0);
-    }
-}
-
-@media (prefers-reduced-motion: reduce) {
-    ::view-transition-old(root),
-    ::view-transition-new(root) {
-        animation: none;
-    }
-}
-
 /* Bare icon button: an unstyled control that shows only its icon. */
 .icon-btn {
     display: inline-flex;
@@ -427,6 +284,11 @@ header {
         text-transform: uppercase;
         color: var(--muted);
     }
+    .nav-end {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
     .nav-cta {
         white-space: nowrap;
     }
@@ -447,6 +309,51 @@ header {
 @media (prefers-reduced-motion: reduce) {
     header {
         transition: none;
+    }
+}
+
+/* ---------- Pull quote ---------- */
+/* The thesis line between Work and Experience: a centred interstitial at
+   section scale, set like the hero statement (same weight, tracking and accent
+   full stop) so it reads as a peer of the hero rather than a stray heading.
+   The first sentence is muted and the second full-strength, so the line turns
+   where the point lands. Its own cite paragraph, not a <footer>: the global
+   footer rule would give it the site footer's border and padding. */
+.pull-quote {
+    max-width: 76rem;
+    margin-inline: auto;
+    padding-inline: clamp(1.25rem, 5vw, 3rem);
+    padding-block: clamp(3.5rem, 9vw, 7rem);
+    text-align: center;
+
+    p:first-child {
+        font-size: clamp(2.25rem, 6vw, 4.5rem);
+        font-weight: 700;
+        letter-spacing: -0.035em;
+        line-height: 1.02;
+        color: var(--text);
+        text-wrap: balance;
+    }
+}
+/* Each sentence on its own line, so the turn from muted to full lands at a
+   line break rather than mid-line. */
+.pull-quote-setup,
+.pull-quote-turn {
+    display: block;
+}
+.pull-quote-setup {
+    color: var(--muted);
+}
+.pull-quote-cite {
+    margin-top: 1.5rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent-text);
+
+    cite {
+        font-style: normal;
     }
 }
 
@@ -498,7 +405,8 @@ header {
     margin-bottom: 1rem;
     color: var(--text);
 }
-/* The period after "S" and after the statement, as small accent squares. */
+/* The period after the statement, and after "404" on the not-found page, as
+   small accent squares. */
 .hero-name-dot,
 .hero-dot {
     display: inline-block;
@@ -510,16 +418,19 @@ header {
     margin-left: 0.02em;
 }
 .hero-kicker {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
     font-size: 0.85rem;
     font-weight: 600;
     letter-spacing: 0.12em;
     text-transform: uppercase;
     color: var(--muted);
 }
-.hero-kicker .hero-name-dot {
-    width: 0.3em;
-    height: 0.3em;
-    margin-left: 0.05em;
+/* The name in the accent's text-safe shade; the role stays muted. */
+.hero-kicker-name {
+    color: var(--accent-text);
 }
 .hero-statement {
     margin: 1.25rem 0 1.75rem;
@@ -531,11 +442,101 @@ header {
     color: var(--text);
     text-wrap: balance;
 }
+/* The dot is the accent control in the hero: a button with its chrome
+   stripped, so it keeps reading as the sentence's full stop. It grows on
+   hover and pops on each change (.is-painting from appearance-client.ts). */
 .hero-dot {
+    /* A button does not inherit font-size, and the em sizes below need the
+       headline's. */
+    font: inherit;
     width: 0.14em;
     height: 0.14em;
     margin-left: 0.04em;
+    padding: 0;
+    border: none;
+    vertical-align: baseline;
     background: var(--accent);
+    cursor: pointer;
+    transition: scale 0.15s cubic-bezier(0.3, 1.4, 0.5, 1);
+
+    @media (hover: hover) and (pointer: fine) {
+        &:hover {
+            scale: 1.35;
+        }
+    }
+
+    &:focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 0.08em;
+    }
+
+    &.is-painting {
+        animation: dot-pop 0.45s cubic-bezier(0.3, 1.3, 0.5, 1);
+    }
+}
+@keyframes dot-pop {
+    0% {
+        scale: 1;
+    }
+    35% {
+        scale: 1.8;
+    }
+    100% {
+        scale: 1;
+    }
+}
+@media (prefers-reduced-motion: reduce) {
+    .hero-dot {
+        transition: none;
+        animation: none;
+    }
+}
+/* Lens flare on the statement, clipped to the glyphs: two gradient layers
+   sweep through the text, so nothing shows outside the letterforms. The lower
+   layer carries a bright accent core with a wide soft halo; the upper one is
+   a thin darker streak at a steeper angle, trailing just behind. One pass
+   takes about five seconds. client.ts adds .is-flaring at random intervals
+   and removes it when the pass ends, so the flare never settles into a beat.
+   Off entirely for reduced motion, and in forced colors, where a transparent
+   text fill would leave nothing to see. */
+@media (prefers-reduced-motion: no-preference) and (forced-colors: none) {
+    .hero-statement {
+        --flare: color-mix(in oklch, var(--accent-text) 80%, var(--text));
+        --flare-halo: color-mix(in oklch, var(--accent-text) 30%, var(--text));
+        --flare-line: color-mix(in oklch, var(--text) 70%, var(--bg));
+        background-image:
+            linear-gradient(
+                118deg,
+                transparent 0 57%,
+                var(--flare-line) 59% 60%,
+                transparent 62% 100%
+            ),
+            linear-gradient(
+                100deg,
+                var(--text) 0 30%,
+                var(--flare-halo) 44%,
+                var(--flare) 50%,
+                var(--flare-halo) 56%,
+                var(--text) 70% 100%
+            );
+        background-size: 300% 100%;
+        background-position: 100% 0;
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+
+        &.is-flaring {
+            animation: hero-flare-sweep 5.5s ease-in-out 1;
+        }
+    }
+}
+@keyframes hero-flare-sweep {
+    from {
+        background-position: 100% 0;
+    }
+    to {
+        background-position: 0% 0;
+    }
 }
 .hero-lede {
     max-width: 44rem;
@@ -566,10 +567,9 @@ header {
     gap: 0.75rem;
 }
 
-/* Buttons, chips and FABs share one fill: consumers set --btn-bg. */
+/* Buttons and chips share one fill: consumers set --btn-bg. */
 .btn,
-.tag,
-.fa-btn {
+.tag {
     border-radius: var(--radius);
     background: var(--btn-bg, var(--accent-subtle));
     transition:
@@ -598,8 +598,7 @@ header {
         animation: none;
     }
 }
-.btn:focus-visible,
-.fa-btn:focus-visible {
+.btn:focus-visible {
     outline: 2px solid var(--accent);
     outline-offset: 3px;
     box-shadow: 0 0 0 5px var(--accent-subtle);
@@ -1636,19 +1635,19 @@ footer {
 }
 
 @media (max-width: 720px) {
-    /* Stack the footer into a single left-aligned column. The desktop layout
-       reserves a 10rem left gutter for the docked toggles and spreads its rows
-       with space-between, which collapses into a cramped sliver on narrow
-       screens. Drop the gutter and clear the controls that float over the
-       bottom of the viewport: the accent/theme toggles (bottom-left) sit at
-       bottom:1.25rem and are 2.5rem tall, so reserve past that (plus the device
-       safe-area) as bottom padding so footer content never sits behind them. */
+    /* Stack the footer into a single left-aligned column; space-between
+       collapses into a cramped sliver on narrow screens. */
     footer {
         flex-direction: column;
         align-items: flex-start;
         gap: 1.25rem;
-        padding-left: clamp(1.25rem, 5vw, 3rem);
-        padding-bottom: calc(5rem + env(safe-area-inset-bottom, 0px));
+        padding-bottom: calc(3rem + env(safe-area-inset-bottom, 0px));
+    }
+    .appearance-row {
+        align-self: stretch;
+    }
+    .theme-pair {
+        margin-left: 0;
     }
 }
 
@@ -1685,7 +1684,6 @@ footer {
         background: #fff;
     }
     header,
-    .fab-group,
     #recruiter-quiz,
     .nav-cta,
     #msg-form,
@@ -1733,8 +1731,7 @@ footer {
         forced-color-adjust: none;
         background: CanvasText;
     }
-    .btn,
-    .fa-btn {
+    .btn {
         forced-color-adjust: none;
         background: ButtonFace;
         border: 1px solid ButtonText;

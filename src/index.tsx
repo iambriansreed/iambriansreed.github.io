@@ -1,5 +1,6 @@
 import data, { type Project, type ExperienceItem } from './data';
 import { getApiOriginScript } from './utils';
+import { AppearanceControls, AppearanceRow, ThemeButton } from './appearance';
 
 const githubIcon = raw(
     `<svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" aria-hidden="true"><path fill="currentColor" d="M316.8 72C178.1 72 72 177.3 72 316C72 426.9 141.8 521.8 241.5 555.2C254.3 557.5 258.8 549.6 258.8 543.1C258.8 536.9 258.5 502.7 258.5 481.7C258.5 481.7 188.5 496.7 173.8 451.9C173.8 451.9 162.4 422.8 146 415.3C146 415.3 123.1 399.6 147.6 399.9C147.6 399.9 172.5 401.9 186.2 425.7C208.1 464.3 244.8 453.2 259.1 446.6C261.4 430.6 267.9 419.5 275.1 412.9C219.2 406.7 162.8 398.6 162.8 302.4C162.8 274.9 170.4 261.1 186.4 243.5C183.8 237 175.3 210.2 189 175.6C209.9 169.1 258 202.6 258 202.6C278 197 299.5 194.1 320.8 194.1C342.1 194.1 363.6 197 383.6 202.6C383.6 202.6 431.7 169 452.6 175.6C466.3 210.3 457.8 237 455.2 243.5C471.2 261.2 481 275 481 302.4C481 398.9 422.1 406.6 366.2 412.9C375.4 420.8 383.2 435.8 383.2 459.3C383.2 493 382.9 534.7 382.9 542.9C382.9 549.4 387.5 557.3 400.2 555C500.2 521.8 568 426.9 568 316C568 177.3 455.5 72 316.8 72z"/></svg>`,
@@ -74,7 +75,7 @@ function SiteHeader({ title }: { title: string }) {
     return (
         <header>
             <a class="nav-brand" href="#top">
-                <span class="nav-brand-name">Brian • Reed</span>
+                <span class="nav-brand-name">{data.name}</span>
                 <span class="nav-brand-role">{title}</span>
             </a>
             <nav class="nav-links" aria-label="Sections">
@@ -82,64 +83,13 @@ function SiteHeader({ title }: { title: string }) {
                     <a href={l.href}>{l.label}</a>
                 ))}
             </nav>
-            <a class="btn btn-primary nav-cta" href="#contact">
-                Let's Talk
-            </a>
+            <div class="nav-end">
+                <AppearanceControls id="nav" />
+                <a class="btn btn-primary nav-cta" href="#contact">
+                    Let's Talk
+                </a>
+            </div>
         </header>
-    );
-}
-
-/** Accent and theme toggles; client.ts finds them by class. */
-function Fabs() {
-    return (
-        <div class="fab-group">
-            <button
-                class="fa-btn accent-toggle"
-                aria-label="Cycle accent color"
-            >
-                <svg
-                    class="icon"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    xmlns="http://www.w3.org/2000/svg"
-                    aria-hidden="true"
-                >
-                    <path d="m9.06 11.9 8.07-8.06a2.85 2.85 0 1 1 4.03 4.03l-8.06 8.08" />
-                    <path d="M7.07 14.94c-1.66 0-3 1.35-3 3.02 0 1.33-2.5 1.52-2 2.02 1 1 2.49 2.02 4 2.02 2.2 0 4-1.8 4-4.04a3.01 3.01 0 0 0-3-3.02z" />
-                </svg>
-            </button>
-            <button class="fa-btn theme-toggle" aria-label="Toggle color theme">
-                <svg
-                    class="icon icon-sun"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    xmlns="http://www.w3.org/2000/svg"
-                    aria-hidden="true"
-                >
-                    <circle cx="12" cy="12" r="4" />
-                    <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" />
-                </svg>
-                <svg
-                    class="icon icon-moon"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    xmlns="http://www.w3.org/2000/svg"
-                    aria-hidden="true"
-                >
-                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
-                </svg>
-            </button>
-        </div>
     );
 }
 
@@ -159,7 +109,33 @@ function ProjectCard({ project, i }: { project: Project; i: number }) {
                 aria-hidden="true"
                 tabindex="-1"
             >
-                {project.thumbnail ? (
+                {project.thumbnail && project.thumbnailLight ? (
+                    // No src: client.ts sets it from data-light or data-dark
+                    // to match data-theme and swaps it on toggle, so only the
+                    // current theme's file is fetched. Without JS the noscript
+                    // copy shows the dark variant, the default theme.
+                    <>
+                        <img
+                            data-light={`/${project.thumbnailLight}`}
+                            data-dark={`/${project.thumbnail}`}
+                            alt=""
+                            loading="lazy"
+                            decoding="async"
+                            width="480"
+                            height="300"
+                        />
+                        <noscript>
+                            <img
+                                src={`/${project.thumbnail}`}
+                                alt=""
+                                loading="lazy"
+                                decoding="async"
+                                width="480"
+                                height="300"
+                            />
+                        </noscript>
+                    </>
+                ) : project.thumbnail ? (
                     <img
                         src={`/${project.thumbnail}`}
                         alt=""
@@ -353,8 +329,9 @@ function SiteFooter({
 }) {
     return (
         <footer>
+            <AppearanceRow />
             <div class="footer-brand">
-                <span class="footer-name">Brian S. Reed</span>
+                <span class="footer-name">{data.name}</span>
                 <span class="footer-role">
                     Design Systems Engineer · Front-End Architect
                 </span>
@@ -409,8 +386,8 @@ function Quiz() {
 
             <p class="quiz-intro">
                 If you think I might be a good fit, answer a few quick questions
-                first so we both know early whether a call is worth it. No
-                exact match? Pick the closest and we'll talk it through.
+                first so we both know early whether a call is worth it. No exact
+                match? Pick the closest and we'll talk it through.
             </p>
 
             <form class="quiz" novalidate>
@@ -639,17 +616,25 @@ export function Page(): Skrapa.Page {
 
                 <main>
                     <section id="top" class="hero">
+                        {/* The theme flip sits here so it is on screen before
+                            the header pins in; the accent's control above the
+                            fold is the headline's dot. */}
                         <p class="hero-kicker">
-                            Brian S
-                            <span
-                                class="hero-name-dot"
-                                aria-hidden="true"
-                            ></span>{' '}
-                            Reed · Design Systems Engineer · Front-End Architect
+                            <span>
+                                <span class="hero-kicker-name">
+                                    {data.name}
+                                </span>{' '}
+                                · {data.subtitle}
+                            </span>
+                            <ThemeButton id="hero" />
                         </p>
                         <h1 class="hero-statement">
                             I build the system other teams build on
-                            <span class="hero-dot" aria-hidden="true"></span>
+                            <button
+                                class="hero-dot accent-toggle"
+                                type="button"
+                                aria-label="Cycle accent color"
+                            ></button>
                         </h1>
                         <p class="hero-lede">{summary}</p>
                         <p class="hero-links">
@@ -697,6 +682,21 @@ export function Page(): Skrapa.Page {
                         </div>
                     </section>
 
+                    <blockquote class="pull-quote">
+                        <p>
+                            <span class="pull-quote-setup">
+                                Everything is designed.
+                            </span>{' '}
+                            <span class="pull-quote-turn">
+                                Few things are designed well
+                                <span class="hero-dot" aria-hidden="true"></span>
+                            </span>
+                        </p>
+                        <p class="pull-quote-cite">
+                            <cite>{data.name}</cite>
+                        </p>
+                    </blockquote>
+
                     <section id="experience">
                         <div class="section-head">
                             <span class="eyebrow">02 · Experience</span>
@@ -722,7 +722,6 @@ export function Page(): Skrapa.Page {
                     <ContactSection />
                 </main>
 
-                <Fabs />
                 <SiteFooter links={FOOTER_LINKS} />
                 <Quiz />
                 <Scripts />

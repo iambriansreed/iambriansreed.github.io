@@ -97,6 +97,10 @@ export type Project = {
     url: string;
     internal?: boolean;
     thumbnail?: string;
+    // A variant for the light theme. With one set, the card carries both as
+    // data attributes and client.ts picks the one matching data-theme; without
+    // it, `thumbnail` is used in both themes (BSPK, whose card is a screenshot).
+    thumbnailLight?: string;
     // Spans two grid columns on screens wide enough for more than one.
     wide?: boolean;
     description: string;
@@ -143,7 +147,7 @@ const data: SiteData = {
     // not design systems, so the bullets below agree with this sentence. The
     // 19+ also appears in the index.html meta descriptions.
     summary:
-        "Nearly twenty years in software, full-stack early, seven in front-end architecture, the last two leading the engineering group behind BSPK, Anywhere Real Estate's design system and its first open-source project. Design-trained, so accessibility and performance are requirements rather than cleanup. U.S. Army veteran.",
+        "Nearly twenty years in software, full-stack early, seven in front-end architecture, the last two leading the engineering group behind BSPK, Anywhere Real Estate's design system and its first open-source project. Design-trained, so accessibility and performance are requirements rather than cleanup. I build with AI tools daily, and systems those tools can see. U.S. Army veteran.",
 
     contact: {
         location: 'Chesapeake, VA (Remote)',
@@ -242,17 +246,20 @@ const data: SiteData = {
             // Figures here (86 components, 10 brands, 62 releases, 2,000+
             // tokens) are the case study's, src/bspk/content.ts. Change them
             // there first, then here, and regenerate public/Brian_Reed_Resume.pdf.
+            // The home page shows the first three, so the AI port sits third.
             description: [
                 "Built BSPK, Anywhere Real Estate's design system, from zero as its only engineer, then led the team of three that grew it to 86 React components and an Angular library serving 10 brands across 62 releases.",
                 'Built the Figma plugin that syncs 2,000+ design tokens into per-brand stylesheets, with a build check that fails on any unknown token, so design renames surface at build time rather than in production.',
+                'Ported BSPK to Angular with AI coding tools: 88 components on the React stylesheets unchanged, so both libraries render the same DOM and behave the same for assistive technology.',
                 "Built the documentation site out of BSPK's own components, with axe-core running on every live example, so accessibility checks kept working after the team lost its dedicated reviewer.",
                 "Made BSPK the company's first open-source project; teams were still shipping on it and asking for upgrades after the funded work ended.",
             ],
             // Kept to two lines each so page one of the PDF still holds this
             // role and the next; a longer section jumps to page two whole.
             bullets: [
-                "Built Anywhere's design system, BSPK, from zero as its only engineer, then led a team of three to 86 React components, an Angular library and 10 brand themes over 62 releases.",
+                "Built BSPK, Anywhere's design system, from zero as its only engineer, then led a team of three to 86 React components, 10 brand themes and 62 releases.",
                 'Built the Figma plugin that syncs 2,000+ design tokens into per-brand stylesheets, with a build check that fails on any unknown token.',
+                'Ported BSPK to Angular with AI coding tools: 88 components on the same stylesheets, rendering the same DOM for assistive technology.',
                 "Built the docs site from BSPK's own components, with axe-core on every live example, so accessibility checks outlived the team's dedicated reviewer.",
                 "Made BSPK the company's first open-source project; teams were still shipping on it and requesting upgrades after the funded work ended.",
             ],
@@ -535,8 +542,9 @@ const data: SiteData = {
             title: 'Skrapa',
             url: 'https://iambrian.com/skrapa',
             thumbnail: 'projects/skrapa.svg',
+            thumbnailLight: 'projects/skrapa-light.svg',
             description:
-                'A zero-config static site generator that renders TypeScript JSX templates and client code into a single HTML file; no framework, no virtual DOM, no bundler. It builds this very site.',
+                'A zero-config static site generator that renders TypeScript JSX templates and client code into a single HTML file; no framework, no virtual DOM, no third-party bundler. It builds this very site. Written by hand at first, then cleaned up and improved dramatically with Claude Code.',
             category: 'Dev Tools',
             skills: ['TypeScript', 'JSX', 'Node.js', 'CLI'],
             sources: [
@@ -557,8 +565,9 @@ const data: SiteData = {
             // menu-otp-alt-code.svg (the six-digit display) and
             // menu-otp-alt-mark.svg (the app icon + wordmark).
             thumbnail: 'projects/menu-otp.svg',
+            thumbnailLight: 'projects/menu-otp-light.svg',
             description:
-                'A native macOS menu bar app for two-factor codes: click an account, its current six-digit code is on the clipboard. Accounts are AES-256 encrypted with the key in the login Keychain, and no secret ever leaves the Mac.',
+                'A native macOS menu bar app for two-factor codes: click an account, its current six-digit code is on the clipboard. Accounts are AES-256 encrypted with the key in the login Keychain, and no secret ever leaves the Mac. Rewritten with AI from a memory-hungry Electron app into a light native Swift one.',
             category: 'Apps',
             skills: ['Swift 6', 'AppKit', 'macOS', 'Cryptography'],
             sources: [
@@ -576,6 +585,7 @@ const data: SiteData = {
             title: 'Sordle',
             url: 'https://sordle.iambrian.com',
             thumbnail: 'projects/sordle.svg',
+            thumbnailLight: 'projects/sordle-light.svg',
             description:
                 'A Wordle clone without the daily limit. The word bank is a set of static JSON files, one per word, served from GitHub Pages, and every solved word comes with its dictionary definition.',
             category: 'Games',
@@ -595,6 +605,7 @@ const data: SiteData = {
             title: 'Connect 4',
             url: 'https://connect4.iambrian.com',
             thumbnail: 'projects/connect4.svg',
+            thumbnailLight: 'projects/connect4-light.svg',
             description:
                 'Connect Four against a rule-based AI: it takes a win, blocks yours, builds toward three in a row and avoids handing you a move, with a random fallback. Beatable, but it punishes an obvious mistake.',
             category: 'Games',

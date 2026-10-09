@@ -210,7 +210,9 @@ main[data-view='pair'] .day[data-show] {
     color: var(--ink-soft);
 }
 .day-head.today .count {
-    background: rgba(255, 255, 255, 0.16);
+    /* 10% white over --today-bg keeps the white label at 4.8:1 (16% dropped
+       it to 4.2, under AA). */
+    background: rgba(255, 255, 255, 0.1);
     color: #fff;
 }
 

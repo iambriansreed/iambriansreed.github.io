@@ -224,6 +224,16 @@ const content: BspkContent = {
             ],
         },
         {
+            id: 'building-with-ai',
+            heading: 'Building with AI',
+            body: [
+                'The React library predates the team having AI coding tools at all; every one of its components was written by hand. The Angular library is the opposite case, and the two sit side by side as a fair comparison.',
+                'By the time Angular was on the roadmap the company had granted access to AI coding tools, and we used them to port the components. The port had a strict brief: reuse the React stylesheets and CSS custom properties exactly, produce the same DOM, and pass the same accessibility checks. That brief is what made the port tractable. The hard part of a component, its visual and accessible behaviour, was already settled in CSS and in the React reference, so the tools were translating a known answer into a second framework rather than inventing one. Eighty-eight components came out the other side, and the two docs sites still match.',
+                "> AI did the typing. The stylesheets, the reference implementation and the checks did the thinking.",
+                "That experience is why the next system treats AI as a consumer, not just a contributor. An engineer's coding assistant reaches for whatever library it saw most in training, so a design system it cannot see is one it will route around. The MCP server described under What I'd do differently gives it the real components, icons and tokens, and the same build rules that failed BSPK on an unknown variable validate what the model writes.",
+            ],
+        },
+        {
             id: 'getting-it-open-sourced',
             heading: 'Getting it open sourced',
             body: [

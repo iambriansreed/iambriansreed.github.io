@@ -12,6 +12,7 @@ import {
     type ContactInput,
     type QuizInput,
 } from './api';
+import { initAppearance } from './appearance-client';
 
 const qs = <T extends Element = HTMLElement>(
     s: string,
@@ -22,70 +23,23 @@ const qsa = <T extends Element = HTMLElement>(
     parentNode?: ParentNode,
 ) => Array.from((parentNode || document).querySelectorAll<T>(s)) as T[];
 
-const html = document.documentElement;
-const themeBtn = qs<HTMLButtonElement>('.theme-toggle')!;
-const accentBtn = qs<HTMLButtonElement>('.accent-toggle')!;
-
-const ACCENTS = [
-    '#7a8a3a',
-    '#5a8a6a',
-    '#4a7fa5',
-    '#c97a3a',
-    '#b5542a',
-    '#b56070',
-    '#7a5a9a',
-    '#3a8a8a',
-] as const;
-
 // ── State ─────────────────────────────────────────────────────────────────────
 
-/* One key per preference rather than a single JSON blob, and every change goes
-   through a setter that owns *both* the DOM and storage — they cannot drift.
-
-   Theme and accent are functional preferences kept in localStorage, which needs
-   no consent, so they are always persisted. */
-
-// remove previous state ('cookie' held the consent choice the old cookie bar asked for)
+// Remove previous state ('cookie' held the consent choice the old cookie bar
+// asked for; 'state' was a JSON blob of everything). Theme and accent live in
+// their own keys now, owned by appearance-client.ts.
 localStorage.removeItem('state');
 localStorage.removeItem('cookie');
 
-// The same order as the inline script in index.html: saved, then OS, then dark.
-const savedTheme = localStorage.getItem('theme');
-let theme: Theme =
-    savedTheme === 'light' || savedTheme === 'dark'
-        ? savedTheme
-        : matchMedia('(prefers-color-scheme: light)').matches
-          ? 'light'
-          : 'dark';
-const storedAccent = localStorage.getItem('accent') as Accent | null;
-let accent: Accent =
-    storedAccent && ACCENTS.includes(storedAccent) ? storedAccent : ACCENTS[0];
-
-function persist(key: string, value: string) {
-    localStorage.setItem(key, value);
-}
-
-function setTheme(next: Theme, save = true) {
-    theme = next;
-    html.dataset.theme = theme;
-    if (save) persist('theme', theme);
-}
-
-function setAccent(next: Accent | '+1', save = true) {
-    if (next === '+1') {
-        const currentIndex = ACCENTS.indexOf(accent);
-        next = ACCENTS[(currentIndex + 1) % ACCENTS.length];
-    }
-    accent = next;
-    html.style.setProperty('--accent', accent);
-    if (save) persist('accent', accent);
-}
-
-/* Paint the restored preferences before anything is interactive. The inline
-   script in index.html already set both, so this re-applies them without
-   saving: a visitor who never picks a theme keeps following their OS. */
-setTheme(theme, false);
-setAccent(accent, false);
+// The project thumbnails with a light variant carry both as data-light and
+// data-dark and no src (see ProjectCard in index.tsx), so only the current
+// theme's file is ever requested.
+const themedImgs = qsa<HTMLImageElement>('img[data-light][data-dark]');
+initAppearance({
+    onTheme(theme) {
+        for (const img of themedImgs) img.src = img.dataset[theme]!;
+    },
+});
 
 const REDUCE_MOTION = window.matchMedia(
     '(prefers-reduced-motion: reduce)',
@@ -129,71 +83,6 @@ function botFilterFields(honeypotId: string) {
    rides along on the wire — the API validates it off the DTO before the handler
    ever sees a ContactInput/QuizInput — which is why this intersection exists. */
 type BotFilterFields = ReturnType<typeof botFilterFields>;
-
-// ── Theme ─────────────────────────────────────────────────────────────────────
-
-themeBtn.addEventListener('click', () => {
-    // Read from the live value, the one setTheme keeps in step with the DOM.
-    const next: Theme = theme === 'dark' ? 'light' : 'dark';
-
-    // No View Transitions support (or reduced motion) → switch instantly.
-    if (REDUCE_MOTION || !document.startViewTransition) {
-        setTheme(next);
-        return;
-    }
-
-    // Target theme drives the wipe direction (see ::view-transition in style.css).
-    html.dataset.themeSwitch = next;
-    const transition = document.startViewTransition(() => setTheme(next));
-    transition.finished.finally(() => delete html.dataset.themeSwitch);
-});
-
-// ── Accent ──────────────────────────────────────────────────────────────────────
-// Single click cycles to the next accent. Three quick clicks kick off a slot-
-// machine spin: accents flicker fast, ease out, and land on a random color.
-let accentClicks: number[] = [];
-let accentSpinning = false;
-
-function spinAccent() {
-    accentSpinning = true;
-    accentBtn.classList.add('spinning');
-    const len = ACCENTS.length;
-    const startIdx = ACCENTS.indexOf(accent);
-    const target = Math.floor(Math.random() * len);
-    // Two full loops, then advance to the random target (~16-23 flips).
-    const steps = len * 2 + ((target - startIdx + len) % len);
-    let step = 0;
-    const tick = () => {
-        step += 1;
-        setAccent('+1');
-        if (step >= steps) {
-            accentSpinning = false;
-            accentBtn.classList.remove('spinning');
-            return;
-        }
-        // Whips fast (~28ms) for most of the spin, then the steep ease-out
-        // (pow 4) draws the final flips out to ~530ms for a slow, teasing stop.
-        const delay = 28 + Math.pow(step / steps, 4) * 500;
-        window.setTimeout(tick, delay);
-    };
-    tick();
-}
-
-accentBtn.addEventListener('click', () => {
-    if (accentSpinning) return;
-
-    const now = Date.now();
-    accentClicks = accentClicks.filter((t) => now - t < 600);
-    accentClicks.push(now);
-
-    if (!REDUCE_MOTION && accentClicks.length >= 3) {
-        accentClicks = [];
-        spinAccent();
-        return;
-    }
-
-    setAccent('+1');
-});
 
 // ── Message form (inline in #contact) ───────────────────────────────────────────
 
@@ -356,6 +245,26 @@ function messageFormInit() {
 }
 
 messageFormInit();
+
+// ── Hero flare ──────────────────────────────────────────────────────────────────
+// The sweep itself is CSS (.hero-statement.is-flaring in home.css); this only
+// decides when. Each pass is followed by a random rest of 6 to 18 seconds, the
+// first one shorter so the page does not sit still after load. Reduced motion
+// skips it here as well as in the stylesheet.
+(() => {
+    const statement = qs('.hero-statement');
+    if (!statement || REDUCE_MOTION) return;
+
+    const flare = () => statement.classList.add('is-flaring');
+    const rest = (min: number, max: number) =>
+        setTimeout(flare, min + Math.random() * (max - min));
+
+    statement.addEventListener('animationend', () => {
+        statement.classList.remove('is-flaring');
+        rest(6000, 18000);
+    });
+    rest(1500, 4000);
+})();
 
 // ── Header reveal ────────────────────────────────────────────────────────────────
 // The header sits hidden just above the viewport (top: -4rem). Drop it into view
