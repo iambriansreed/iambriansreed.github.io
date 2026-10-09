@@ -226,8 +226,12 @@ const data: SiteData = {
         {
             category: 'professional',
             title: 'Senior Software Engineer / Front-End Architect',
-            companyName: 'Anywhere Real Estate Inc.',
-            companyResume: 'Anywhere Real Estate',
+            // Compass closed its acquisition of Anywhere on 9 Jan 2026, and
+            // LinkedIn lists the role under Compass. One entry rather than two,
+            // since the role did not change; the bullets keep saying Anywhere
+            // because BSPK was built there, as the case study tells it.
+            companyName: 'Compass (formerly Anywhere Real Estate)',
+            companyResume: 'Compass, formerly Anywhere Real Estate',
             location: 'Remote',
             // Off until the fork is live at bspk.iambrian.com — pointing at an
             // employer-controlled domain risks a dead link on a résumé already
@@ -368,15 +372,16 @@ const data: SiteData = {
         {
             category: 'professional',
             title: 'Software Developer',
-            companyName: 'Array Digital, LLC.',
-            companyResume: '80/20 Software Consulting · Array Digital, LLC',
+            // 80/20 Software Consulting merged into Array Digital during this
+            // role, so it is one entry under the current name, like Compass.
+            companyName: 'Array Digital (formerly 80/20 Software Consulting)',
+            companyResume: 'Array Digital, formerly 80/20 Software Consulting',
             location: 'Chesapeake, VA',
-            locationResume: 'Virginia Beach, VA',
             startedOn: 1422766800000,
             finishedOn: 1506830400000,
             dateRange: 'Feb 2015 – Oct 2017',
             compact: true,
-            detail: '80/20 Software Consulting · Array Digital, LLC · Virginia Beach, VA · React and Angular apps for finance clients on Node.js, PHP, and ASP.NET.',
+            detail: 'Array Digital, formerly 80/20 Software Consulting · Chesapeake, VA · React and Angular apps for finance clients on Node.js, PHP, and ASP.NET.',
             skills: [
                 'React',
                 'Angular',
