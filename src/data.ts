@@ -587,6 +587,22 @@ const data: SiteData = {
             ],
         },
         {
+            title: 'dev.localhost',
+            url: 'https://devlocal.iambrian.com',
+            thumbnail: 'projects/devlocal.svg',
+            thumbnailLight: 'projects/devlocal-light.svg',
+            description:
+                'A native Mac menu bar app that turns localhost:PORT into a real https domain, at a .localhost name or one of your own. It starts, stops and opens the log of every dev server, and nginx runs as you, so none of it asks for a password.',
+            category: 'Dev Tools',
+            skills: ['Swift', 'nginx', 'Node.js', 'macOS'],
+            sources: [
+                {
+                    title: 'Source',
+                    url: 'https://github.com/iambriansreed/dev.local',
+                },
+            ],
+        },
+        {
             title: 'Sordle',
             url: 'https://sordle.iambrian.com',
             thumbnail: 'projects/sordle.svg',

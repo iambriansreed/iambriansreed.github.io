@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="800" viewBox="0 0 1600 800" role="img" aria-label="dev.localhost: localhost:8675 becomes https://local.jenny.com">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1c1c20"/>
+      <stop offset="1" stop-color="#0e0e11"/>
+    </linearGradient>
+    <linearGradient id="tile" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#6366f1"/>
+      <stop offset="1" stop-color="#4338ca"/>
+    </linearGradient>
+    <filter id="drop" x="-20%" y="-20%" width="140%" height="150%">
+      <feDropShadow dx="0" dy="18" stdDeviation="24" flood-color="#000" flood-opacity="0.6"/>
+    </filter>
+  </defs>
+  <rect width="1600" height="800" fill="url(#bg)"/>
+  <g font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">
+    <text x="128" y="246" font-size="26" font-weight="700" letter-spacing="7" fill="#71717a">MAC MENU BAR APP</text>
+    <text x="124" y="372" font-size="112" font-weight="800" letter-spacing="-3" fill="#fafafa">dev.localhost</text>
+    <text x="128" y="442" font-size="34" font-weight="500" fill="#a1a1aa">Give localhost a real name.</text>
+    <text x="128" y="700" font-size="29" font-weight="500" fill="#71717a">Swift · nginx · mkcert · no password prompts.</text>
+  </g>
+  <g filter="url(#drop)">
+    <rect x="880" y="150" width="620" height="500" rx="22" fill="#141414" stroke="#3a3a3a" stroke-width="1.5"/>
+  </g>
+  <g font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace">
+    <rect x="928" y="206" width="524" height="84" rx="16" fill="#1f1f23" stroke="#3a3a3a" stroke-width="1.5"/>
+    <text x="1190" y="260" font-size="34" text-anchor="middle" fill="#a1a1aa">localhost:8675</text>
+  </g>
+  <path d="M1190 322v76m-26-26 26 26 26-26" fill="none" stroke="#818cf8" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+  <g font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace">
+    <rect x="928" y="430" width="524" height="84" rx="16" fill="#4f46e5"/>
+    <text x="1190" y="484" font-size="34" font-weight="700" text-anchor="middle" fill="#ffffff">https://local.jenny.com</text>
+  </g>
+  <rect x="928" y="546" width="524" height="1.5" fill="#343434"/>
+  <g font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="26" font-weight="600">
+    <circle cx="952" cy="594" r="9" fill="#22c55e"/>
+    <text x="976" y="603" fill="#ececec">Start, stop and read the log</text>
+  </g>
+</svg>
