@@ -26,7 +26,7 @@ const RULE_TAGS = ['wcag2a', 'wcag2aa'];
 /** Pages whose shell restores theme and accent from localStorage. */
 const THEMED_PAGES = ['/', '/bspk/', '/404/'];
 /** Single-theme pages with no accent. */
-const PLAIN_PAGES = ['/resume/', '/chores/'];
+const PLAIN_PAGES = ['/resume/', '/chores/', '/spinner/'];
 
 const chrome = CHROME_CANDIDATES.find((p) => existsSync(p));
 if (!chrome) {
