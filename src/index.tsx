@@ -629,7 +629,7 @@ export function Page(): Skrapa.Page {
                             <ThemeButton id="hero" />
                         </p>
                         <h1 class="hero-statement">
-                            I build the system other teams build on
+                            I build the systems other teams build on
                             <button
                                 class="hero-dot accent-toggle"
                                 type="button"
@@ -689,7 +689,10 @@ export function Page(): Skrapa.Page {
                             </span>{' '}
                             <span class="pull-quote-turn">
                                 Few things are designed well
-                                <span class="hero-dot" aria-hidden="true"></span>
+                                <span
+                                    class="hero-dot"
+                                    aria-hidden="true"
+                                ></span>
                             </span>
                         </p>
                         <p class="pull-quote-cite">
