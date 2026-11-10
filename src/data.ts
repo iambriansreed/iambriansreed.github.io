@@ -60,6 +60,10 @@ export type ExperienceItem = {
     location: string;
     locationResume?: string;
 
+    // Industry, shown beside the company on both surfaces so a reader
+    // screening for a domain (healthcare first of all) sees it at a glance.
+    industry?: string;
+
     // Public artifact for the role, shown as a bare domain on the entry's meta
     // line. Bare so it survives PDF text extraction as a usable link.
     link?: string;
@@ -78,6 +82,8 @@ export type ExperienceItem = {
     bullets?: string[]; // résumé bullets (professional entries)
 
     // Compact résumé rows (early / military): a bold lead + a single blurb.
+    // On a professional role marked `compact`, detail is the blurb only; the
+    // résumé prefixes it with company · industry · location from the fields.
     // compactName defaults to title when omitted (used for early entries where the
     // bold lead is the role; military bolds the organization instead).
     compactName?: string;
@@ -232,6 +238,7 @@ const data: SiteData = {
             // because BSPK was built there, as the case study tells it.
             companyName: 'Compass (formerly Anywhere Real Estate)',
             companyResume: 'Compass, formerly Anywhere Real Estate',
+            industry: 'Real estate',
             location: 'Remote',
             // Off until the fork is live at bspk.iambrian.com — pointing at an
             // employer-controlled domain risks a dead link on a résumé already
@@ -272,6 +279,7 @@ const data: SiteData = {
             category: 'professional',
             title: 'Senior Software Engineer / Front-End Lead',
             companyName: 'Butterfly Network, Inc.',
+            industry: 'Medical imaging',
             location: 'Remote',
             startedOn: 1630468800000,
             finishedOn: 1728993600000,
@@ -285,14 +293,14 @@ const data: SiteData = {
                 'Component Libraries',
             ],
             description: [
-                'Led development and evolution of the shared React component library supporting a cloud-based SaaS platform.',
+                "Led development and evolution of the shared React component library behind Butterfly's cloud platform, where clinicians store and review scans from its handheld ultrasound devices.",
                 'Partnered closely with product managers and designers to translate requirements into clear technical specifications and well-scoped user stories.',
                 'Served as Certified Scrum Master, facilitating agile ceremonies and improving team delivery through clearer dependency tracking and process improvements.',
                 'Helped remove technical and organizational blockers, increasing team efficiency and predictability.',
             ],
             bullets: [
+                "Led the shared React component library behind Butterfly's cloud platform, where clinicians store and review scans from its handheld ultrasound devices.",
                 "Ran the team's process as Certified ScrumMaster, cutting defects and rework through tighter acceptance criteria and front-end testing.",
-                'Led the shared React component library behind a cloud-based enterprise SaaS platform.',
                 'Partnered with product and design to turn business requirements into technical specifications and well-scoped stories.',
             ],
         },
@@ -300,6 +308,7 @@ const data: SiteData = {
             category: 'professional',
             title: 'Senior Software Engineer (Frontend Focused)',
             companyName: 'CoStar Group',
+            industry: 'Commercial real estate data',
             location: 'Richmond, VA',
             startedOn: 1561953600000,
             finishedOn: 1630468800000,
@@ -327,12 +336,13 @@ const data: SiteData = {
             category: 'professional',
             title: 'Engineer Advisor / React Native Architect',
             companyName: 'Anthem, Inc.',
+            industry: 'Healthcare (payer)',
             location: 'Norfolk, VA',
             startedOn: 1548997200000,
             finishedOn: 1561953600000,
             dateRange: 'Feb 2019 – Jul 2019',
             compact: true,
-            detail: 'Anthem, Inc. · Norfolk, VA · Unified several teams on one React Native architecture with reusable cross-platform component patterns.',
+            detail: 'Unified several teams on one React Native architecture with reusable cross-platform component patterns.',
             skills: [
                 'React Native',
                 'React',
@@ -352,12 +362,13 @@ const data: SiteData = {
             category: 'professional',
             title: 'Senior Application Engineer (Frontend Focused)',
             companyName: 'ADP',
+            industry: 'HR and payroll',
             location: 'Norfolk, VA',
             startedOn: 1506830400000,
             finishedOn: 1548997200000,
             dateRange: 'Oct 2017 – Feb 2019',
             compact: true,
-            detail: 'ADP · Norfolk, VA · Set front-end quality standards through code review and shaped architecture decisions with product and UX while modernizing legacy code.',
+            detail: 'Set front-end quality standards through code review and shaped architecture decisions with product and UX while modernizing legacy code.',
             skills: ['React', 'Node.js', 'Architecture', 'Mentorship', 'UX'],
             description: [
                 'Provided technical leadership on front-end implementation, setting quality standards through code reviews and shared best practices.',
@@ -376,12 +387,13 @@ const data: SiteData = {
             // role, so it is one entry under the current name, like Compass.
             companyName: 'Array Digital (formerly 80/20 Software Consulting)',
             companyResume: 'Array Digital, formerly 80/20 Software Consulting',
+            industry: 'Software consulting',
             location: 'Chesapeake, VA',
             startedOn: 1422766800000,
             finishedOn: 1506830400000,
             dateRange: 'Feb 2015 – Oct 2017',
             compact: true,
-            detail: 'Array Digital, formerly 80/20 Software Consulting · Chesapeake, VA · React and Angular apps for finance clients on Node.js, PHP, and ASP.NET.',
+            detail: 'React and Angular apps for finance clients on Node.js, PHP, and ASP.NET.',
             skills: [
                 'React',
                 'Angular',
@@ -404,12 +416,13 @@ const data: SiteData = {
             category: 'professional',
             title: 'Software Engineer II',
             companyName: 'City of Virginia Beach',
+            industry: 'Local government',
             location: 'Virginia Beach, VA',
             startedOn: 1246420800000,
             finishedOn: 1422766800000,
             dateRange: 'Jul 2009 – Feb 2015',
             compact: true,
-            detail: 'City of Virginia Beach · Virginia Beach, VA · Public-facing web apps and custom mapping tools (Google Maps, ESRI APIs).',
+            detail: 'Public-facing web apps and custom mapping tools (Google Maps, ESRI APIs).',
             skills: [
                 'User Experience Design (UED)',
                 'C#',

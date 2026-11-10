@@ -214,6 +214,12 @@ function ExperienceCard({ item }: { item: ExperienceItem }) {
                     <span class="exp-label">Location</span>
                     <span class="exp-value">{item.location}</span>
                 </div>
+                {item.industry && (
+                    <div class="exp-meta-col">
+                        <span class="exp-label">Industry</span>
+                        <span class="exp-value">{item.industry}</span>
+                    </div>
+                )}
             </div>
             <h3 class="exp-role">{item.title}</h3>
             <p class="exp-company">{item.companyName}</p>
