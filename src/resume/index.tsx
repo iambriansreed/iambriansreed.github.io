@@ -51,6 +51,12 @@ function JobEntry(job: ExperienceItem) {
             <EntryHead title={job.title} dates={job.dateRange} />
             <p class="job-meta">
                 {job.companyResume ?? job.companyName}
+                {job.industry && (
+                    <>
+                        <Dot />
+                        {job.industry}
+                    </>
+                )}
                 <Dot />
                 {job.locationResume ?? job.location}
                 {job.link && (
@@ -72,15 +78,32 @@ function JobEntry(job: ExperienceItem) {
 }
 
 // Early / military rows: one head line plus a single blurb, no bullets. The
-// bold lead is `compactName` when set (military bolds the organization).
+// bold lead is `compactName` when set (military bolds the organization). A
+// professional role shown compact leads its blurb with company · industry ·
+// location, the same meta a full entry prints.
 function CompactRow(entry: ExperienceItem) {
+    const meta = entry.compact
+        ? [
+              entry.companyResume ?? entry.companyName,
+              entry.industry,
+              entry.locationResume ?? entry.location,
+          ].filter(Boolean)
+        : [];
     return (
         <article class="job compact">
             <EntryHead
                 title={entry.compactName ?? entry.title}
                 dates={entry.dateRange}
             />
-            <p class="job-meta">{entry.detail}</p>
+            <p class="job-meta">
+                {meta.map((part) => (
+                    <>
+                        {part}
+                        <Dot />
+                    </>
+                ))}
+                {entry.detail}
+            </p>
         </article>
     );
 }
